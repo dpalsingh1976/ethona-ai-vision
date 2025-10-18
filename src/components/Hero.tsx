@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroPerson1 from "@/assets/hero-person-1.jpg";
-import heroPerson2 from "@/assets/hero-person-2.jpg";
-import heroPerson3 from "@/assets/hero-person-3.jpg";
+import heroTeamVisual from "@/assets/hero-team-visual.png";
 
 const Hero = () => {
   return (
@@ -33,20 +31,13 @@ const Hero = () => {
             </Button>
           </div>
           
-          <div className="relative h-[600px]">
-            {/* Person 1 - Top right with subtle rotation */}
-            <div className="absolute top-0 right-12 w-56 h-56 rounded-3xl overflow-hidden shadow-card transform hover:scale-105 transition-all duration-300 rotate-3 animate-fade-in" style={{ animationDelay: '0.5s', opacity: 0 }}>
-              <img src={heroPerson1} alt="Happy team member" className="w-full h-full object-cover" />
-            </div>
-            
-            {/* Person 2 - Middle left with opposite rotation */}
-            <div className="absolute top-48 left-0 w-48 h-48 rounded-3xl overflow-hidden shadow-card transform hover:scale-105 transition-all duration-300 -rotate-2 animate-fade-in" style={{ animationDelay: '1.2s', opacity: 0 }}>
-              <img src={heroPerson2} alt="Thoughtful team member" className="w-full h-full object-cover" />
-            </div>
-            
-            {/* Person 3 - Bottom right with subtle rotation */}
-            <div className="absolute bottom-12 right-0 w-52 h-52 rounded-3xl overflow-hidden shadow-card transform hover:scale-105 transition-all duration-300 rotate-2 animate-fade-in" style={{ animationDelay: '1.8s', opacity: 0 }}>
-              <img src={heroPerson3} alt="Professional team member" className="w-full h-full object-cover" />
+          <div className="relative flex items-center justify-center lg:justify-end">
+            <div className="w-full max-w-[600px] animate-fade-in">
+              <img 
+                src={heroTeamVisual} 
+                alt="Creative team collaboration with connected ideas" 
+                className="w-full h-auto object-contain"
+              />
             </div>
           </div>
         </div>
