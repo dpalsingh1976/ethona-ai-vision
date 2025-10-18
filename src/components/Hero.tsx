@@ -34,50 +34,6 @@ const Hero = () => {
           </div>
           
           <div className="relative h-[600px]">
-            {/* Artistic flowing connection line */}
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 500 600">
-              <defs>
-                <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: 'hsl(var(--gradient-blue))', stopOpacity: 0.8 }} />
-                  <stop offset="50%" style={{ stopColor: 'hsl(var(--gradient-yellow))', stopOpacity: 0.8 }} />
-                  <stop offset="100%" style={{ stopColor: 'hsl(var(--gradient-pink))', stopOpacity: 0.8 }} />
-                </linearGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                  <feMerge>
-                    <feMergeNode in="coloredBlur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
-              </defs>
-              
-              {/* Main artistic flowing path */}
-              <path
-                d="M 380 80 C 350 120, 320 140, 280 160 C 240 180, 180 200, 120 240 C 80 270, 60 310, 80 350 C 100 390, 160 420, 240 440 C 300 455, 360 460, 400 480"
-                fill="none"
-                stroke="url(#pathGradient)"
-                strokeWidth="3"
-                strokeLinecap="round"
-                filter="url(#glow)"
-                className="animate-draw-line"
-                style={{
-                  strokeDasharray: 1000,
-                  strokeDashoffset: 1000,
-                  animation: 'draw 2s ease-out forwards'
-                }}
-              />
-              
-              {/* Decorative nodes/pins at connection points */}
-              <circle cx="380" cy="80" r="8" fill="hsl(var(--gradient-blue))" className="animate-fade-in" style={{ animationDelay: '0.5s', opacity: 0 }} />
-              <circle cx="120" cy="240" r="8" fill="hsl(var(--gradient-yellow))" className="animate-fade-in" style={{ animationDelay: '1.2s', opacity: 0 }} />
-              <circle cx="400" cy="480" r="8" fill="hsl(var(--gradient-pink))" className="animate-fade-in" style={{ animationDelay: '1.8s', opacity: 0 }} />
-              
-              {/* Small sparkle decorations along the path */}
-              <circle cx="280" cy="160" r="3" fill="hsl(var(--accent))" className="animate-pulse" />
-              <circle cx="180" cy="220" r="2" fill="hsl(var(--accent))" className="animate-pulse" style={{ animationDelay: '0.5s' }} />
-              <circle cx="300" cy="440" r="3" fill="hsl(var(--accent))" className="animate-pulse" style={{ animationDelay: '1s' }} />
-            </svg>
-            
             {/* Person 1 - Top right with subtle rotation */}
             <div className="absolute top-0 right-12 w-56 h-56 rounded-3xl overflow-hidden shadow-card transform hover:scale-105 transition-all duration-300 rotate-3 animate-fade-in" style={{ animationDelay: '0.5s', opacity: 0 }}>
               <img src={heroPerson1} alt="Happy team member" className="w-full h-full object-cover" />
