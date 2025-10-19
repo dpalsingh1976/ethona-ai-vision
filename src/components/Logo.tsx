@@ -1,4 +1,4 @@
-import logoIcon from "@/assets/ethona-logo-icon.png";
+import logoIcon from "@/assets/logo-icon.png";
 
 const Logo = ({ className = "" }: { className?: string }) => {
   return (
@@ -6,7 +6,7 @@ const Logo = ({ className = "" }: { className?: string }) => {
       {/* Creative AI Brain Icon with glow effect */}
       <div className="relative group">
         <div className="absolute inset-0 bg-gradient-to-br from-[#f59e0b] via-[#ec4899] to-[#8b5cf6] rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
-        <div className="relative w-14 h-14 bg-white rounded-2xl p-2 shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+        <div className="relative w-14 h-14 p-2 transform group-hover:scale-110 transition-transform duration-300">
           <img 
             src={logoIcon} 
             alt="Ethona Digital Lab AI Icon" 
