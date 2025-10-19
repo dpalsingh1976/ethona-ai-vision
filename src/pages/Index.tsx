@@ -4,7 +4,6 @@ import Services from "@/components/Services";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import Partners from "@/components/Partners";
 
 const Index = () => {
   return (
@@ -12,7 +11,6 @@ const Index = () => {
       <Navbar />
       <Hero />
       <Services />
-      <Partners />
       
       {/* CTA Section */}
       <section className="py-24 px-6 bg-gradient-to-b from-background to-[#FDE9DD]">
