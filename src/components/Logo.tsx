@@ -7,7 +7,7 @@ const Logo = () => {
       <img
         src={logoIcon}
         alt="Ethona Digital Lab"
-        className="h-22 w-auto object-contain drop-shadow-md"
+        className="h-13 w-auto object-contain drop-shadow-md"
         style={{ backgroundColor: "transparent" }}
       />
 
