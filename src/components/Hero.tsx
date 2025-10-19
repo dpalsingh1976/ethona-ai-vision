@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroTeamVisual from "@/assets/hero-team-visual.png";
+import heroTeamVisual from "@/assets/hero-team-visual.jpg";
 
 const Hero = () => {
   return (
@@ -35,7 +35,7 @@ const Hero = () => {
             <div className="w-full max-w-[90vw] md:max-w-[500px] lg:max-w-[600px] mx-auto lg:mx-0 animate-fade-in">
               <img 
                 src={heroTeamVisual} 
-                alt="Connected team members with social media integration and creative collaboration" 
+                alt="Digital marketing team connected through social media platforms including Facebook, Instagram, Twitter, LinkedIn and TikTok" 
                 className="w-full h-auto object-contain drop-shadow-lg"
               />
             </div>
