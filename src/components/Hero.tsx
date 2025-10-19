@@ -4,7 +4,7 @@ import heroTeamVisual from "@/assets/hero-team-visual.png";
 const Hero = () => {
   return (
     <section id="home" className="min-h-screen pt-24 pb-16 px-6 relative overflow-hidden">
-      <div className="absolute inset-0 gradient-bg opacity-30" />
+      <div className="absolute inset-0 gradient-bg" />
       
       <div className="container mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -16,7 +16,7 @@ const Hero = () => {
               </div>
             </div>
             
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-glow">
               Digital
               <br />
               marketing
@@ -26,7 +26,7 @@ const Hero = () => {
               Extract real business value from social media. Ensuring the best return on investment for your bespoke SEO campaign requirement.
             </p>
             
-            <Button size="lg" className="bg-primary hover:bg-primary/90 rounded-full px-8 text-base">
+            <Button size="lg" className="bg-primary hover:bg-primary/90 rounded-full px-8 text-base shadow-lg hover:shadow-xl transition-shadow">
               CONTACT TODAY
             </Button>
           </div>

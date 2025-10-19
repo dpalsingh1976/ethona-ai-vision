@@ -44,6 +44,10 @@ All colors MUST be HSL.
     --gradient-pink: 340 100% 90%;
     --gradient-cyan: 180 100% 88%;
     
+    /* Pastel gradient colors for hero */
+    --gradient-peach: 20 100% 93%;
+    --gradient-cream: 40 100% 97%;
+    
     /* Custom shadows */
     --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
     --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.12);
@@ -121,7 +125,7 @@ All colors MUST be HSL.
 
 @layer utilities {
   .gradient-bg {
-    background: linear-gradient(135deg, hsl(var(--gradient-blue)) 0%, hsl(var(--gradient-yellow)) 50%, hsl(var(--gradient-pink)) 100%);
+    background: linear-gradient(180deg, hsl(var(--gradient-peach)) 0%, hsl(var(--gradient-cream)) 100%);
   }
   
   .gradient-soft {
@@ -138,6 +142,14 @@ All colors MUST be HSL.
 
   .shadow-hover {
     box-shadow: var(--shadow-hover);
+  }
+
+  .hero-glow {
+    box-shadow: 0 8px 32px rgba(253, 233, 221, 0.3);
+  }
+
+  .text-glow {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 
   .animate-float {
