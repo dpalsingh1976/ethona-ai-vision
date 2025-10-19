@@ -31,12 +31,12 @@ const Hero = () => {
             </Button>
           </div>
           
-          <div className="relative flex items-center justify-center lg:justify-end">
-            <div className="w-full max-w-[600px] animate-fade-in">
+          <div className="relative flex items-center justify-center lg:justify-end px-4 md:px-6 lg:px-0">
+            <div className="w-full max-w-[90vw] md:max-w-[500px] lg:max-w-[600px] mx-auto lg:mx-0 animate-fade-in">
               <img 
                 src={heroTeamVisual} 
-                alt="Creative team collaboration with connected ideas" 
-                className="w-full h-auto object-contain"
+                alt="Connected team members with social media integration and creative collaboration" 
+                className="w-full h-auto object-contain drop-shadow-lg"
               />
             </div>
           </div>
