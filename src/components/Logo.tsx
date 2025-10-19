@@ -7,8 +7,11 @@ const Logo = () => {
       <img
         src={logoIcon}
         alt="Ethona Digital Lab"
-        className="h-16 w-auto object-contain drop-shadow-md"
-        style={{ backgroundColor: "transparent" }}
+        className="h-16 w-auto object-contain"
+        style={{
+          mixBlendMode: 'multiply',
+          filter: 'brightness(1.1) contrast(1.15) drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+        }}
       />
 
       {/* Logo Text */}

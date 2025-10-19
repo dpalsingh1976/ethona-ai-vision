@@ -3,7 +3,7 @@ import Logo from "./Logo";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border shadow-sm">
       {/* Full-width bar; adjust px to taste */}
       <div className="w-full px-4 md:px-6 py-3">
         {/* Single flex row controlling layout */}
@@ -14,10 +14,7 @@ const Navbar = () => {
             className="flex items-center hover:opacity-90 transition-opacity"
             aria-label="Ethona Digital Lab"
           >
-            {/* Scale up if your Logo component feels small */}
-            <div className="scale-110 md:scale-125">
-              <Logo />
-            </div>
+            <Logo />
           </a>
 
           {/* 🧭 Desktop Navigation on the right */}
