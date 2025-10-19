@@ -7,7 +7,7 @@ const Logo = () => {
       <img
         src={logoIcon}
         alt="Ethona Digital Lab"
-        className="h-[4.5rem] w-[auto] object-contain"
+        className="h-[4.5rem] w-[4.5rem] object-contain"
         style={{
           transform: "scale(1.1)",
           mixBlendMode: "multiply",
