@@ -16,6 +16,7 @@ import AffiliateMarketing from "./pages/services/AffiliateMarketing";
 import CRO from "./pages/services/CRO";
 import ORM from "./pages/services/ORM";
 import NotFound from "./pages/NotFound";
+import Header from "./components/Header";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+       <Header />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
