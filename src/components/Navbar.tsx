@@ -9,7 +9,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between w-full px-6 py-3">
           {/* ✅ LOGO - anchored fully left */}
           <div className="flex items-center">
-            <a href="#home" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <a href="#home" className="flex items-left gap-3 hover:opacity-90 transition-opacity">
               <Logo />
             </a>
           </div>
