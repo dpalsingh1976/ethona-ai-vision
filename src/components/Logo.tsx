@@ -9,7 +9,7 @@ const Logo = () => {
         alt="Ethona Digital Lab"
         className="h-[4.5rem] w-[15rem] object-contain"
         style={{
-          transform: "scale(1.1)",
+          transform: "scaleX(1.2) scaleY(1.05)",
           mixBlendMode: "multiply",
           filter: "brightness(1.1) contrast(1.15) drop-shadow(0 2px 4px rgba(0,0,0,0.1))",
         }}
