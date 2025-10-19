@@ -34,7 +34,7 @@ const Hero = () => {
           <div className="relative flex items-center justify-center lg:justify-end">
             <div className="relative w-full max-w-[90vw] md:max-w-[500px] lg:max-w-[600px] mx-auto lg:mx-0">
               {/* Background matching hero gradient - fills transparent areas */}
-              <div className="absolute inset-0 gradient-bg rounded-3xl" />
+              <div className="absolute inset-0 gradient-bg" />
               
               {/* Image with gradient background showing through transparent areas */}
               <img 
