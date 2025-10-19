@@ -1,31 +1,40 @@
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
 
 interface ServiceCardProps {
   icon: LucideIcon;
   title: string;
   description: string;
-  link: string;
-  colorFrom: string;
-  colorTo: string;
+  aiFeature: string;
+  bgColor: string;
   iconColor: string;
+  featureColor: string;
+  link: string;
 }
 
-const ServiceCard = ({ icon: Icon, title, description, link, colorFrom, colorTo, iconColor }: ServiceCardProps) => {
+const ServiceCard = ({ icon: Icon, title, description, aiFeature, bgColor, iconColor, featureColor, link }: ServiceCardProps) => {
   return (
     <Link to={link} className="block">
-      <Card className="p-8 bg-card hover:shadow-hover transition-all duration-300 border-none rounded-3xl group cursor-pointer transform hover:-translate-y-2 h-full">
-        <div
-          className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${colorFrom} ${colorTo} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
-        >
-          <Icon className={`w-10 h-10 ${iconColor}`} strokeWidth={1.5} />
+      <Card className={`${bgColor} p-8 border-2 border-gray-200 rounded-3xl hover:shadow-xl transition-all duration-300 group cursor-pointer transform hover:-translate-y-1 h-full relative`}>
+        {/* Decorative dot - top right */}
+        <div className="absolute top-6 right-6 w-2 h-2 bg-gray-400 rounded-full"></div>
+        
+        {/* Icon circle - white background */}
+        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm">
+          <Icon className={`w-8 h-8 ${iconColor}`} strokeWidth={2} />
         </div>
-        <h3 className="text-xl font-semibold mb-4 text-foreground">{title}</h3>
-        <p className="text-muted-foreground leading-relaxed mb-6">{description}</p>
-        <div className="flex items-center text-primary font-medium group-hover:gap-3 gap-2 transition-all">
-          Learn More <ArrowRight className="w-4 h-4" />
+        
+        {/* Title */}
+        <h3 className="text-2xl font-bold mb-4 text-gray-900">{title}</h3>
+        
+        {/* Description */}
+        <p className="text-gray-700 leading-relaxed mb-6 text-base">{description}</p>
+        
+        {/* AI Feature callout */}
+        <div className="flex items-center gap-2 mt-auto">
+          <Sparkles className={`w-4 h-4 ${featureColor}`} />
+          <span className={`text-sm font-medium ${featureColor}`}>{aiFeature}</span>
         </div>
       </Card>
     </Link>

@@ -1,25 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import { Search, Target, Share2, Mail, Smartphone, ShoppingCart, Users, TrendingUp, Shield } from "lucide-react";
-
-const services = [
-  { icon: Search, title: "SEO", link: "/services/seo" },
-  { icon: Target, title: "Performance Marketing", link: "/services/ppc" },
-  { icon: Share2, title: "Social Media Marketing", link: "/services/smm" },
-  { icon: Mail, title: "Email Marketing", link: "/services/email-marketing" },
-  { icon: Smartphone, title: "App Marketing & ASO", link: "/services/app-marketing" },
-  { icon: ShoppingCart, title: "Marketplace Optimization", link: "/services/marketplace-optimization" },
-  { icon: Users, title: "Affiliate Marketing", link: "/services/affiliate-marketing" },
-  { icon: TrendingUp, title: "CRO", link: "/services/cro" },
-  { icon: Shield, title: "ORM", link: "/services/orm" },
-];
 
 const Navbar = () => {
   return (
@@ -36,29 +16,7 @@ const Navbar = () => {
           
           <div className="hidden md:flex items-center gap-8">
             <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">Home</Link>
-            
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-sm font-medium">Services</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid w-[600px] grid-cols-3 gap-3 p-6 bg-background">
-                      {services.map((service) => (
-                        <Link
-                          key={service.link}
-                          to={service.link}
-                          className="flex items-center gap-3 rounded-lg p-3 hover:bg-accent transition-colors group"
-                        >
-                          <service.icon className="w-5 h-5 text-primary flex-shrink-0" />
-                          <span className="text-sm font-medium group-hover:text-primary transition-colors">{service.title}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-            
+            <a href="/#services" className="text-sm font-medium hover:text-primary transition-colors">Services</a>
             <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">About Us</Link>
             <Link to="/contact">
               <Button className="bg-primary hover:bg-primary/90 rounded-full">Get in Touch</Button>
