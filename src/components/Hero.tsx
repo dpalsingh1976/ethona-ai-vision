@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import heroTeamVisual from "@/assets/hero-team-ai-enhanced.png";
+import { useBackgroundRemoval } from "@/hooks/useBackgroundRemoval";
 
 const Hero = () => {
+  const { processedImageUrl, isProcessing } = useBackgroundRemoval(heroTeamVisual);
+
   return (
     <section id="home" className="min-h-screen pt-24 pb-16 px-6 relative overflow-hidden">
       <div className="absolute inset-0 gradient-bg" />
@@ -42,9 +45,10 @@ const Hero = () => {
 
               {/* Image with gradient background showing through transparent areas */}
               <img
-                src={heroTeamVisual}
+                src={processedImageUrl || heroTeamVisual}
                 alt="Digital marketing team connected through social media platforms including Facebook, Instagram, Twitter, LinkedIn and TikTok"
                 className="relative w-full h-auto object-contain"
+                style={{ opacity: isProcessing ? 0.7 : 1, transition: 'opacity 0.3s' }}
               />
             </div>
           </div>
