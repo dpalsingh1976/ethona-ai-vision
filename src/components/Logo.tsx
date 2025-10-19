@@ -7,12 +7,12 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo + wordmark (no background) */}
-          <a href="#home" className="flex items-center gap-3" aria-label="Ethona Digital Lab">
+          <a href="#home" className="flex items-center gap-3 w-full" aria-label="Ethona Digital Lab">
             <img
               src={logoIcon}
               alt="Ethona Digital Lab logo"
-              className="h-10 w-auto object-contain select-none"
-              style={{ backgroundColor: "transparent" }}   // <-- make sure no box shows
+              className="w-full h-auto object-contain select-none"
+              style={{ backgroundColor: "transparent" }}
               loading="eager"
               decoding="async"
             />
