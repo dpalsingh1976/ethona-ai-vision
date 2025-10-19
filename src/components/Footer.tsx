@@ -19,17 +19,17 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm opacity-80">
-              <li><a href="#services" className="hover:opacity-100 transition-opacity">Services</a></li>
-              <li><a href="#cases" className="hover:opacity-100 transition-opacity">Case Studies</a></li>
-              <li><a href="#testimonials" className="hover:opacity-100 transition-opacity">Testimonials</a></li>
+              <li><a href="/#services" className="hover:opacity-100 transition-opacity">Services</a></li>
+              <li><a href="/about" className="hover:opacity-100 transition-opacity">About Us</a></li>
+              <li><a href="/contact" className="hover:opacity-100 transition-opacity">Contact Us</a></li>
             </ul>
           </div>
           
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm opacity-80">
-              <li>contact@ethonadigital.com</li>
-              <li>+1 (555) 123-4567</li>
+              <li>info@ethonadigitallab.com</li>
+              <li>+1 (646) 284-4268</li>
             </ul>
           </div>
         </div>
