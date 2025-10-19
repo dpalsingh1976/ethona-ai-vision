@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroTeamVisual from "@/assets/hero-team-ai-enhanced.png";
+import heroTeamVisual from "@/assets/hero-team-visual.jpg";
 
 const Hero = () => {
   return (
@@ -43,8 +43,12 @@ const Hero = () => {
               {/* Image with gradient background showing through transparent areas */}
               <img
                 src={heroTeamVisual}
-                alt="Digital marketing team connected through social media platforms including Facebook, Instagram, Twitter, LinkedIn and TikTok"
+                alt="..."
                 className="relative w-full h-auto object-contain"
+                style={{
+                  mixBlendMode: "multiply",
+                  filter: "brightness(1.1) saturate(0.8)",
+                }}
               />
             </div>
           </div>
