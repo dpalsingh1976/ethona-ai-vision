@@ -1,90 +1,38 @@
 const Logo = ({ className = "" }: { className?: string }) => {
   return (
-    <svg
-      viewBox="0 0 800 200"
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Circuit E Icon */}
-      <g transform="translate(20, 40)">
-        {/* Outer circuit paths */}
-        <path
-          d="M 60 10 L 80 10 L 80 0 M 60 30 L 80 30 L 80 40 M 60 50 L 80 50 L 80 60 M 60 70 L 80 70 L 80 80"
-          stroke="url(#gradient1)"
-          strokeWidth="4"
-          fill="none"
-          strokeLinecap="round"
-        />
+    <div className={`flex items-center gap-3 ${className}`}>
+      {/* Animated gradient icon */}
+      <div className="relative">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#f59e0b] via-[#ec4899] to-[#8b5cf6] flex items-center justify-center shadow-lg transform hover:scale-110 transition-transform duration-300">
+          <span className="text-2xl font-black text-white">E</span>
+        </div>
+        {/* Sparkle effect */}
+        <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#f59e0b] rounded-full animate-pulse" />
+      </div>
+      
+      {/* Text content */}
+      <div className="flex flex-col leading-none">
+        {/* Main brand name */}
+        <div className="flex items-baseline gap-1">
+          <span className="text-2xl font-black bg-gradient-to-r from-[#374151] to-[#1f2937] bg-clip-text text-transparent">
+            ETHONA
+          </span>
+          <span className="text-2xl font-black bg-gradient-to-r from-[#ec4899] via-[#db2777] to-[#8b5cf6] bg-clip-text text-transparent">
+            DIGITAL
+          </span>
+        </div>
         
-        {/* E shape with circuit design */}
-        <path
-          d="M 10 10 L 50 10 M 10 10 L 10 80 M 10 45 L 45 45 M 10 80 L 50 80"
-          stroke="url(#gradient1)"
-          strokeWidth="6"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        
-        {/* Circuit nodes */}
-        <circle cx="60" cy="10" r="5" fill="url(#gradient1)" />
-        <circle cx="60" cy="30" r="5" fill="url(#gradient1)" />
-        <circle cx="60" cy="50" r="5" fill="url(#gradient1)" />
-        <circle cx="60" cy="70" r="5" fill="url(#gradient1)" />
-        <circle cx="10" cy="10" r="5" fill="url(#gradient1)" />
-        <circle cx="10" cy="45" r="5" fill="url(#gradient1)" />
-        <circle cx="10" cy="80" r="5" fill="url(#gradient1)" />
-      </g>
-
-      {/* Ethona Text */}
-      <text
-        x="130"
-        y="90"
-        fontFamily="Poppins, sans-serif"
-        fontSize="48"
-        fontWeight="700"
-        fill="#374151"
-      >
-        Ethona
-      </text>
-
-      {/* Digital Lab Text */}
-      <text
-        x="130"
-        y="135"
-        fontFamily="Poppins, sans-serif"
-        fontSize="48"
-        fontWeight="700"
-        fill="url(#gradient2)"
-      >
-        Digital Lab
-      </text>
-
-      {/* Tagline */}
-      <text
-        x="130"
-        y="165"
-        fontFamily="Poppins, sans-serif"
-        fontSize="20"
-        fontWeight="400"
-        fill="#6B7280"
-      >
-        Where strategy meets AI
-      </text>
-
-      {/* Gradient Definitions */}
-      <defs>
-        <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f59e0b" />
-          <stop offset="50%" stopColor="#ec4899" />
-          <stop offset="100%" stopColor="#8b5cf6" />
-        </linearGradient>
-        <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#ec4899" />
-          <stop offset="100%" stopColor="#8b5cf6" />
-        </linearGradient>
-      </defs>
-    </svg>
+        {/* Subtitle with AI emphasis */}
+        <div className="flex items-center gap-1.5 mt-0.5">
+          <span className="text-xs font-semibold text-[#6B7280] tracking-wide">
+            WHERE STRATEGY MEETS
+          </span>
+          <span className="text-xs font-black bg-gradient-to-r from-[#f59e0b] to-[#ec4899] bg-clip-text text-transparent tracking-wide">
+            AI
+          </span>
+        </div>
+      </div>
+    </div>
   );
 };
 
