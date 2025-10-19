@@ -47,7 +47,7 @@ All colors MUST be HSL.
     /* Pastel gradient colors for hero */
 
     --gradient-peach: 40 30% 94%;
-    --gradient-cream: 40 30% 100%;
+    --gradient-cream: 40 40% 100%;
 
     /* Custom shadows */
     --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
