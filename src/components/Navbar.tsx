@@ -8,7 +8,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between w-full">
         <div className="flex items-center justify-between w-full px-6 py-3">
           {/* ✅ LOGO - anchored fully left */}
-          <div className="flex items-center">
+          <div className="flex items-left">
             <a href="#home" className="flex items-left gap-3 hover:opacity-90 transition-opacity">
               <Logo />
             </a>
