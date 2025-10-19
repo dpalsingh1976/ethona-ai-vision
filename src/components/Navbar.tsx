@@ -4,17 +4,23 @@ import Logo from "./Logo";
 const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
-      {/* Reduced container padding so logo hugs the left edge */}
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between w-full">
-        <div className="flex items-center justify-between w-full px-6 py-3">
-          {/* ✅ LOGO - anchored fully left */}
-          <div className="flex items-left">
-            <a href="#home" className="flex items-left gap-3 hover:opacity-90 transition-opacity">
+      {/* Full-width bar; adjust px to taste */}
+      <div className="w-full px-4 md:px-6 py-3">
+        {/* Single flex row controlling layout */}
+        <div className="flex items-center justify-between w-full">
+          {/* ✅ Logo truly left (no extra wrappers, no extra px) */}
+          <a
+            href="#home"
+            className="flex items-center hover:opacity-90 transition-opacity"
+            aria-label="Ethona Digital Lab"
+          >
+            {/* Scale up if your Logo component feels small */}
+            <div className="scale-110 md:scale-125">
               <Logo />
-            </a>
-          </div>
+            </div>
+          </a>
 
-          {/* 🧭 Desktop Navigation */}
+          {/* 🧭 Desktop Navigation on the right */}
           <div className="hidden lg:flex items-center gap-8 ml-auto">
             <a href="#home" className="text-sm font-medium hover:text-primary transition-colors">
               Home
@@ -34,8 +40,8 @@ const Navbar = () => {
             <Button className="bg-primary hover:bg-primary/90 rounded-full px-6 py-2 shadow-md">Get in Touch</Button>
           </div>
 
-          {/* 📱 Mobile Menu Button */}
-          <button className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors ml-auto">
+          {/* 📱 Mobile Menu Button (stays right) */}
+          <button className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors ml-4" aria-label="Open menu">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
