@@ -7,18 +7,16 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-6 py-3">
         <div className="flex items-center justify-between">
-          {/* Masked, background-free logo filled with brand gradient */}
+          {/* Logo only */}
           <a href="#home" className="flex items-center">
-            <div
-              aria-label="Ethona Digital Lab"
-              className="
-                h-9 w-40                        /* adjust width to your logo’s aspect */
-                bg-gradient-to-r from-[#f59e0b] via-[#ec4899] to-[#8b5cf6]
-                [mask-image:url('/src/assets/ethona-logo.png')]
-                [mask-repeat:no-repeat] [mask-size:contain] [mask-position:left center]
-                [-webkit-mask-image:url('/src/assets/ethona-logo.png')]
-                [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:contain] [-webkit-mask-position:left_center]
-              "
+            <img
+              src={logo}
+              alt="Ethona Digital Lab"
+              className="h-9 w-auto object-contain select-none
+                         mix-blend-screen          /* removes dark box on light bg */
+                         drop-shadow-sm transition-all duration-300"
+              loading="eager"
+              decoding="async"
             />
           </a>
 
