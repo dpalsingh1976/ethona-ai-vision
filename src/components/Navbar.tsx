@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
       {/* Reduced container padding so logo hugs the left edge */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-3">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between w-full">
         <div className="flex items-center justify-between w-full px-6 py-3">
           {/* ✅ LOGO - anchored fully left */}
           <div className="flex items-center">
