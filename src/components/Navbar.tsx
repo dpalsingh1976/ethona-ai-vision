@@ -1,20 +1,22 @@
 // src/components/Navbar.tsx
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/ethona-logo.png";
+import logo from "@/assets/ethona-logo-generated.png";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-md border-b border-border">
-      <div className="container mx-auto px-6 py-3">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+      <div className="container mx-auto px-6 py-2.5">
         <div className="flex items-center justify-between">
-          {/* Logo only */}
+          {/* Logo */}
           <a href="#home" className="flex items-center">
             <img
               src={logo}
-              alt="Ethona Digital Lab"
-              className="h-9 w-auto object-contain select-none
-                         mix-blend-screen          /* removes dark box on light bg */
-                         drop-shadow-sm transition-all duration-300"
+              alt="Ethona Digital Lab - Where Strategy Meets AI"
+              className="h-12 md:h-14 w-auto object-contain select-none transition-all duration-300"
+              style={{
+                mixBlendMode: 'screen',
+                filter: 'brightness(1.2) drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+              }}
               loading="eager"
               decoding="async"
             />
