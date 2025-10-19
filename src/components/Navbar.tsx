@@ -9,11 +9,7 @@ const Navbar = () => {
         {/* Single flex row controlling layout */}
         <div className="flex items-center justify-between w-full">
           {/* ✅ Logo truly left (no extra wrappers, no extra px) */}
-          <a
-            href="#home"
-            className="flex items-center hover:opacity-90 transition-opacity"
-            aria-label="Ethona Digital Lab"
-          >
+         
             {/* Scale up if your Logo component feels small */}
             <div className="scale-110 md:scale-125">
               <Logo />
