@@ -19,7 +19,7 @@ const Logo = () => {
       <div className="flex flex-col leading-tight font-sans select-none">
         <span
           className="text-2xl md:text-[1.8rem] font-extrabold tracking-[-0.015em]
-               text-black
+               text-white
                font-[ClashDisplay,SpaceGrotesk,Poppins,ui-sans-serif]
                drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]"
         >
