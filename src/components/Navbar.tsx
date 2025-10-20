@@ -1,8 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import Logo from "./Logo";
 
 const Navbar = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navLinks = [
+    { to: "/", label: "Home", isExternal: false },
+    { to: "#ai-automation", label: "AI Automation", isExternal: true },
+    { to: "#services", label: "Services", isExternal: true },
+    { to: "/about", label: "About Us", isExternal: false },
+    { to: "/contact", label: "Contact Us", isExternal: false },
+  ];
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground backdrop-blur-lg border-b border-primary-foreground/20 shadow-sm">
       {/* Full-width bar; adjust px to taste */}
@@ -52,15 +71,51 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* 📱 Mobile Menu Button (stays right) */}
-          <button
-            className="lg:hidden p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors ml-4"
-            aria-label="Open menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
+          {/* 📱 Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                className="lg:hidden p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors ml-4"
+                aria-label="Open menu"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] bg-primary text-primary-foreground">
+              <SheetHeader>
+                <SheetTitle className="text-primary-foreground">Menu</SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-4 mt-8">
+                {navLinks.map((link) => (
+                  link.isExternal ? (
+                    <a
+                      key={link.label}
+                      href={link.to}
+                      className="text-lg font-medium hover:opacity-80 transition-opacity py-2"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.label}
+                      to={link.to}
+                      className="text-lg font-medium hover:opacity-80 transition-opacity py-2"
+                      onClick={(e) => {
+                        if (link.to === '/' && window.location.pathname === '/') {
+                          e.preventDefault();
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </nav>
