@@ -101,6 +101,9 @@ export default {
         float: "float 6s ease-in-out infinite",
         "fade-in-up": "fade-in-up 0.6s ease-out",
       },
+      fontFamily: {
+        'montserrat': ['Montserrat', 'sans-serif'],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
