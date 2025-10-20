@@ -3,7 +3,7 @@ import Logo from "./Logo";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground backdrop-blur-lg border-b border-primary-foreground/20 shadow-sm">
       {/* Full-width bar; adjust px to taste */}
       <div className="w-full px-4 md:px-6 py-3">
         {/* Single flex row controlling layout */}
@@ -19,26 +19,26 @@ const Navbar = () => {
 
           {/* 🧭 Desktop Navigation on the right */}
           <div className="hidden lg:flex items-center gap-8 ml-auto">
-            <a href="#home" className="text-sm font-medium hover:text-primary transition-colors">
+            <a href="#home" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Home
             </a>
-            <a href="#ai-automation" className="text-sm font-medium hover:text-primary transition-colors">
+            <a href="#ai-automation" className="text-sm font-medium hover:opacity-80 transition-opacity">
               AI Automation
             </a>
-            <a href="#services" className="text-sm font-medium hover:text-primary transition-colors">
+            <a href="#services" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Services
             </a>
-            <a href="#about" className="text-sm font-medium hover:text-primary transition-colors">
+            <a href="#about" className="text-sm font-medium hover:opacity-80 transition-opacity">
               About Us
             </a>
-            <a href="#contact" className="text-sm font-medium hover:text-primary transition-colors">
+            <a href="#contact" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Contact Us
             </a>
-            <Button className="bg-primary hover:bg-primary/90 rounded-full px-6 py-2 shadow-md">Get in Touch</Button>
+            <Button className="bg-primary-foreground text-primary hover:opacity-90 rounded-full px-6 py-2 shadow-md">Get in Touch</Button>
           </div>
 
           {/* 📱 Mobile Menu Button (stays right) */}
-          <button className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors ml-4" aria-label="Open menu">
+          <button className="lg:hidden p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors ml-4" aria-label="Open menu">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
