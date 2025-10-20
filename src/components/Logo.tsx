@@ -16,22 +16,19 @@ const Logo = () => {
       />
 
       {/* Logo Text */}
-      {/* Logo Text */}
       <div className="flex flex-col leading-tight font-sans select-none">
         <span
           className="text-2xl md:text-[1.8rem] font-extrabold tracking-[-0.015em]
-               bg-gradient-to-r from-black via-[#1a1a1a] to-[#f97316]
-               bg-clip-text text-transparent
+               text-black
                font-[ClashDisplay,SpaceGrotesk,Poppins,ui-sans-serif]
-               drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]"
+               drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)]"
         >
           Ethona Digital Lab
         </span>
 
         <span
-          className="text-[0.85rem] md:text-[0.95rem] font-semibold italic tracking-[0.06em]
-               bg-gradient-to-r from-black via-[#f59e0b] to-[#f97316]
-               bg-clip-text text-transparent opacity-90
+          className="text-[0.85rem] md:text-[0.95rem] font-medium italic tracking-[0.05em]
+               text-black/70
                font-[DM Sans,Inter,ui-sans-serif]"
         >
           Where strategy meets AI
