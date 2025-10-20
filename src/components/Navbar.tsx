@@ -10,34 +10,19 @@ const Navbar = () => {
         {/* Single flex row controlling layout */}
         <div className="flex items-center justify-between w-full">
           {/* ✅ Logo truly left (no extra wrappers, no extra px) */}
-          <Link
-            to="/"
+          <a
+            href="#home"
             className="flex items-center hover:opacity-90 transition-opacity"
             aria-label="Ethona Digital Lab"
-            onClick={(e) => {
-              if (window.location.pathname === '/') {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
           >
             <Logo />
-          </Link>
+          </a>
 
           {/* 🧭 Desktop Navigation on the right */}
           <div className="hidden lg:flex items-center gap-8 ml-auto">
-            <Link 
-              to="/" 
-              className="text-sm font-medium hover:opacity-80 transition-opacity"
-              onClick={(e) => {
-                if (window.location.pathname === '/') {
-                  e.preventDefault();
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-              }}
-            >
+            <a href="#home" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Home
-            </Link>
+            </a>
             <a href="#ai-automation" className="text-sm font-medium hover:opacity-80 transition-opacity">
               AI Automation
             </a>
@@ -50,9 +35,17 @@ const Navbar = () => {
             <Link to="/contact" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Contact Us
             </Link>
-            <Link to="/contact">
-              <Button className="bg-primary-foreground text-primary hover:opacity-90 rounded-full px-6 py-2 shadow-md">Get in Touch</Button>
-            </Link>
+           <Link to="/contact">
+  <Button
+    className="
+      bg-primary-foreground text-primary 
+      rounded-full px-6 py-2 shadow-md 
+      transition-all duration-200
+      hover:bg-primary-foreground hover:text-primary 
+      hover:shadow-lg hover:translate-y-[-1px]
+      active:translate-y-[1px]
+    "
+  >
           </div>
 
           {/* 📱 Mobile Menu Button (stays right) */}
