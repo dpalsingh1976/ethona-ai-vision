@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import Logo from "./Logo";
 
 const Navbar = () => {
@@ -28,13 +29,15 @@ const Navbar = () => {
             <a href="#services" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Services
             </a>
-            <a href="#about" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            <Link to="/about" className="text-sm font-medium hover:opacity-80 transition-opacity">
               About Us
-            </a>
-            <a href="#contact" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            </Link>
+            <Link to="/contact" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Contact Us
-            </a>
-            <Button className="bg-primary-foreground text-primary hover:opacity-90 rounded-full px-6 py-2 shadow-md">Get in Touch</Button>
+            </Link>
+            <Link to="/contact">
+              <Button className="bg-primary-foreground text-primary hover:opacity-90 rounded-full px-6 py-2 shadow-md">Get in Touch</Button>
+            </Link>
           </div>
 
           {/* 📱 Mobile Menu Button (stays right) */}
