@@ -18,7 +18,7 @@ const Logo = () => {
       />
 
       {/* Logo Text */}
-      <div className="flex flex-col leading-tight font-sans select-none">
+      <div className="flex flex-col leading-tight font-sans select-none ml-2">
         <span
           className="text-2xl md:text-[1.8rem] font-extrabold tracking-tight
                text-primary-foreground
