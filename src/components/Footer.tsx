@@ -1,3 +1,5 @@
+import logoIcon from "@/assets/ethona-logo-icon.png";
+
 const Footer = () => {
   return (
     <footer className="py-12 px-6 bg-primary text-primary-foreground">
@@ -5,7 +7,16 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#f59e0b] via-[#ec4899] to-[#8b5cf6] rounded-lg" />
+              <img
+                src={logoIcon}
+                alt="Ethona Digital Lab"
+                className="h-12 w-16 object-contain"
+                style={{
+                  backgroundColor: "white",
+                  padding: "0.25rem",
+                  borderRadius: "0.375rem",
+                }}
+              />
               <div>
                 <div className="font-bold text-lg">Ethona Digital Lab</div>
                 <div className="text-xs opacity-80">Where Strategy Meets AI</div>
