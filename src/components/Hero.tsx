@@ -26,8 +26,8 @@ const Hero = () => {
 
             {/* Paragraph */}
             <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
-              Extract real business value from social media. Ensuring the best return on investment for your bespoke SEO
-              campaign requirement.
+              Merge creativity with intelligence. Our AI-driven marketing strategies decode audience behavior, amplify
+              your visibility, and deliver unmatched ROI across every digital channel.
             </p>
 
             {/* CTA Button */}
