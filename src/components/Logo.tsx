@@ -5,7 +5,7 @@ const Logo = () => {
     <div className="flex items-center gap-3 select-none">
       {/* Logo Icon */}
       <img
-        src={logoIcon}
+        src={`${logoIcon}?v=2`}
         alt="Ethona Digital Lab"
         className="h-[5.5rem] w-[9rem] object-contain"
         style={{

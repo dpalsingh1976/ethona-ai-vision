@@ -14,13 +14,28 @@ const Navbar = () => {
             to="/"
             className="flex items-center hover:opacity-90 transition-opacity"
             aria-label="Ethona Digital Lab"
+            onClick={(e) => {
+              if (window.location.pathname === '/') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
           >
             <Logo />
           </Link>
 
           {/* 🧭 Desktop Navigation on the right */}
           <div className="hidden lg:flex items-center gap-8 ml-auto">
-            <Link to="/" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            <Link 
+              to="/" 
+              className="text-sm font-medium hover:opacity-80 transition-opacity"
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+            >
               Home
             </Link>
             <a href="#ai-automation" className="text-sm font-medium hover:opacity-80 transition-opacity">
