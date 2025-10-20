@@ -11,7 +11,7 @@ const Logo = () => {
         style={{
           transform: "scaleX(1.2) scaleY(1.05)",
           mixBlendMode: "multiply",
-          filter: "brightness(1.1) contrast(1.15) drop-shadow(0 2px 4px rgba(0,0,0,0.1))",
+          filter: "brightness(1.1) contrast(1.15) drop-shadow(0 0px 0px rgba(0,0,0,0.1))",
         }}
       />
 
