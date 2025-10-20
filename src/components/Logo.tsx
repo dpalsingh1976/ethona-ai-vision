@@ -28,7 +28,7 @@ const Logo = () => {
 
         <span
           className="text-[0.85rem] md:text-[0.95rem] font-medium italic tracking-[0.05em]
-               text-black/70
+               text-white/70
                font-[DM Sans,Inter,ui-sans-serif]"
         >
           Where strategy meets AI
