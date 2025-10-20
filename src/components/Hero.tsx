@@ -8,15 +8,14 @@ const Hero = () => {
 
       <div className="container mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8 animate-fade-in-up">
-            <div className="inline-block">
-              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-4">
-                <div className="w-12 h-[2px] bg-primary" />
-                DIGITAL MARKETING & AI AUTOMATION
-              </div>
+          {/* LEFT: moved up; image on right stays put */}
+          <div className="space-y-7 animate-fade-in-up mt-2 lg:-mt-6">
+            <div className="flex items-center gap-3 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
+              <div className="w-12 h-[2px] bg-primary rounded-full" />
+              <span className="text-primary">Digital Marketing & AI Automation</span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-glow">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-glow text-foreground">
               Digital
               <br />
               marketing
@@ -29,21 +28,19 @@ const Hero = () => {
 
             <Button
               size="lg"
-              className="bg-primary hover:bg-primary/90 rounded-full px-8 text-base shadow-lg hover:shadow-xl transition-shadow"
+              className="bg-primary hover:bg-primary/90 rounded-full px-8 text-base shadow-lg hover:shadow-xl transition-shadow w-fit"
             >
               CONTACT TODAY
             </Button>
           </div>
 
+          {/* RIGHT: hero image — unchanged */}
           <div className="relative flex items-center justify-center lg:justify-end">
             <div className="relative w-full max-w-[90vw] md:max-w-[500px] lg:max-w-[600px] mx-auto lg:mx-0">
-              {/* Background matching hero gradient - fills transparent areas */}
               <div className="absolute inset-0 gradient-bg" />
-
-              {/* Image with gradient background showing through transparent areas */}
               <img
                 src={heroTeamVisual}
-                alt="..."
+                alt="Hero Visual"
                 className="relative w-full h-auto object-contain"
                 style={{
                   mixBlendMode: "multiply",
