@@ -10,19 +10,34 @@ const Navbar = () => {
         {/* Single flex row controlling layout */}
         <div className="flex items-center justify-between w-full">
           {/* ✅ Logo truly left (no extra wrappers, no extra px) */}
-          <a
-            href="#home"
+          <Link
+            to="/"
             className="flex items-center hover:opacity-90 transition-opacity"
             aria-label="Ethona Digital Lab"
+            onClick={(e) => {
+              if (window.location.pathname === '/') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
           >
             <Logo />
-          </a>
+          </Link>
 
           {/* 🧭 Desktop Navigation on the right */}
           <div className="hidden lg:flex items-center gap-8 ml-auto">
-            <a href="#home" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            <Link 
+              to="/" 
+              className="text-sm font-medium hover:opacity-80 transition-opacity"
+              onClick={(e) => {
+                if (window.location.pathname === '/') {
+                  e.preventDefault();
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+            >
               Home
-            </a>
+            </Link>
             <a href="#ai-automation" className="text-sm font-medium hover:opacity-80 transition-opacity">
               AI Automation
             </a>
