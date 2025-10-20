@@ -15,19 +15,24 @@ const Logo = () => {
         }}
       />
 
+      {/* Logo Text */}
+      {/* Logo Text */}
       <div className="flex flex-col leading-tight font-sans select-none">
         <span
-          className="text-2xl md:text-[1.75rem] font-extrabold tracking-tight
-               bg-gradient-to-r from-[#f59e0b] via-[#ec4899] to-[#8b5cf6]
+          className="text-2xl md:text-[1.8rem] font-black tracking-[-0.02em]
+               bg-gradient-to-r from-black via-[#8b5cf6] to-[#f59e0b]
                bg-clip-text text-transparent
-               font-[Poppins,Inter,ui-sans-serif]"
+               font-[ClashDisplay,SpaceGrotesk,Poppins,ui-sans-serif]
+               drop-shadow-[0_1px_1px_rgba(0,0,0,0.4)]"
         >
           Ethona Digital Lab
         </span>
 
         <span
-          className="text-[0.8rem] md:text-[0.9rem]
-               font-medium italic text-muted-foreground tracking-[0.05em]
+          className="text-[0.85rem] md:text-[0.95rem] font-medium
+               italic tracking-[0.08em]
+               bg-gradient-to-r from-black via-[#ec4899] to-[#f59e0b]
+               bg-clip-text text-transparent opacity-90
                font-[DM Sans,Inter,ui-sans-serif]"
         >
           Where strategy meets AI
