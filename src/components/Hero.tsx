@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import heroTeamVisual from "@/assets/hero-team-visual.jpg";
 
 const Hero = () => {
@@ -31,12 +32,14 @@ const Hero = () => {
             </p>
 
             {/* CTA Button */}
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 rounded-full px-8 text-base shadow-lg hover:shadow-xl transition-shadow w-fit"
-            >
-              CONTACT TODAY
-            </Button>
+            <Link to="/contact">
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90 rounded-full px-8 text-base shadow-lg hover:shadow-xl transition-shadow w-fit"
+              >
+                CONTACT TODAY
+              </Button>
+            </Link>
           </div>
 
           {/* ✅ RIGHT IMAGE — unchanged */}
