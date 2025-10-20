@@ -16,6 +16,12 @@ const Logo = () => {
       />
 
       {/* Logo Text */}
+      <div className="flex flex-col leading-tight">
+        <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#f59e0b] via-[#ec4899] to-[#8b5cf6] bg-clip-text text-transparent">
+          Ethona Digital Lab
+        </span>
+        <span className="text-[0.75rem] md:text-sm text-muted-foreground tracking-wide">Where strategy meets AI</span>
+      </div>
     </div>
   );
 };
