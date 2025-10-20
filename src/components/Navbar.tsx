@@ -35,21 +35,13 @@ const Navbar = () => {
             <Link to="/contact" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Contact Us
             </Link>
-           <Link to="/contact">
-  <Button
-    className="
-      bg-primary-foreground text-primary 
-      rounded-full px-6 py-2 shadow-md 
-      transition-all duration-200
-      hover:bg-primary-foreground hover:text-primary 
-      hover:shadow-lg hover:translate-y-[-1px]
-      active:translate-y-[1px]
-    "
-  >
           </div>
 
           {/* 📱 Mobile Menu Button (stays right) */}
-          <button className="lg:hidden p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors ml-4" aria-label="Open menu">
+          <button
+            className="lg:hidden p-2 hover:bg-primary-foreground/10 rounded-lg transition-colors ml-4"
+            aria-label="Open menu"
+          >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
