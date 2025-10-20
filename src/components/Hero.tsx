@@ -9,8 +9,8 @@ const Hero = () => {
 
       <div className="container mx-auto relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* ✅ LEFT CONTENT — Moved to top-left */}
-          <div className="space-y-7 animate-fade-in-up self-start mt-0 lg:-mt-12">
+          {/* ✅ LEFT CONTENT — slightly lower now */}
+          <div className="space-y-7 animate-fade-in-up self-start mt-8 lg:mt-12">
             {/* Section Tagline */}
             <div className="flex items-center gap-3 text-sm font-semibold tracking-wide text-muted-foreground uppercase">
               <div className="w-12 h-[2px] bg-primary rounded-full" />
@@ -39,10 +39,9 @@ const Hero = () => {
             </Button>
           </div>
 
-          {/* ✅ RIGHT IMAGE — stays fixed in position */}
+          {/* ✅ RIGHT IMAGE — unchanged */}
           <div className="relative flex items-center justify-center lg:justify-end">
             <div className="relative w-full max-w-[90vw] md:max-w-[500px] lg:max-w-[600px] mx-auto lg:mx-0">
-              {/* Background filler for transparent image areas */}
               <div className="absolute inset-0 gradient-bg" />
               <img
                 src={heroTeamVisual}
