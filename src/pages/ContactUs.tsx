@@ -43,6 +43,20 @@ const ContactUs = () => {
 
       if (error) throw error;
 
+      // Send email notification
+      const { error: emailError } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: validatedData.name,
+          email: validatedData.email,
+          message: validatedData.message
+        }
+      });
+
+      if (emailError) {
+        console.error('Email notification error:', emailError);
+        // Don't fail the form submission if email fails
+      }
+
       toast({
         title: "Message Sent!",
         description: "We'll get back to you within 24 hours.",
