@@ -18,6 +18,7 @@ const Navbar = () => {
     { to: "/", label: "Home", isExternal: false },
     { to: "#ai-automation", label: "AI Automation", isExternal: true },
     { to: "#services", label: "Services", isExternal: true },
+    { to: "/pricing", label: "Pricing", isExternal: false },
     { to: "/about", label: "About Us", isExternal: false },
     { to: "/contact", label: "Contact Us", isExternal: false },
   ];
@@ -63,6 +64,9 @@ const Navbar = () => {
             <a href="#services" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Services
             </a>
+            <Link to="/pricing" className="text-sm font-medium hover:opacity-80 transition-opacity">
+              Pricing
+            </Link>
             <Link to="/about" className="text-sm font-medium hover:opacity-80 transition-opacity">
               About Us
             </Link>

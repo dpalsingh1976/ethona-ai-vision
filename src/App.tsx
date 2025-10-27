@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
+import Pricing from "./pages/Pricing";
 import SEO from "./pages/services/SEO";
 import PPC from "./pages/services/PPC";
 import SMM from "./pages/services/SMM";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<ContactUs />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/services/seo" element={<SEO />} />
           <Route path="/services/ppc" element={<PPC />} />
           <Route path="/services/smm" element={<SMM />} />
