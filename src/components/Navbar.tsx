@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import {
@@ -12,16 +12,25 @@ import {
 import Logo from "./Logo";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks = [
-    { to: "/", label: "Home", isExternal: false },
-    { to: "#ai-automation", label: "AI Automation", isExternal: true },
-    { to: "#services", label: "Services", isExternal: true },
-    { to: "/pricing", label: "Pricing", isExternal: false },
-    { to: "/about", label: "About Us", isExternal: false },
-    { to: "/contact", label: "Contact Us", isExternal: false },
-  ];
+  const handleScrollToSection = (sectionId: string) => {
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-primary text-primary-foreground backdrop-blur-lg border-b border-primary-foreground/20 shadow-sm">
@@ -58,12 +67,18 @@ const Navbar = () => {
             >
               Home
             </Link>
-            <a href="#ai-automation" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            <button 
+              onClick={() => handleScrollToSection('ai-automation')} 
+              className="text-sm font-medium hover:opacity-80 transition-opacity"
+            >
               AI Automation
-            </a>
-            <a href="#services" className="text-sm font-medium hover:opacity-80 transition-opacity">
+            </button>
+            <button 
+              onClick={() => handleScrollToSection('services')} 
+              className="text-sm font-medium hover:opacity-80 transition-opacity"
+            >
               Services
-            </a>
+            </button>
             <Link to="/pricing" className="text-sm font-medium hover:opacity-80 transition-opacity">
               Pricing
             </Link>
@@ -90,33 +105,58 @@ const Navbar = () => {
                 <SheetTitle className="text-primary-foreground">Menu</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-4 mt-8">
-                {navLinks.map((link) => (
-                  link.isExternal ? (
-                    <a
-                      key={link.label}
-                      href={link.to}
-                      className="text-lg font-medium hover:opacity-80 transition-opacity py-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link
-                      key={link.label}
-                      to={link.to}
-                      className="text-lg font-medium hover:opacity-80 transition-opacity py-2"
-                      onClick={(e) => {
-                        if (link.to === '/' && window.location.pathname === '/') {
-                          e.preventDefault();
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
-                        }
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      {link.label}
-                    </Link>
-                  )
-                ))}
+                <Link
+                  to="/"
+                  className="text-lg font-medium hover:opacity-80 transition-opacity py-2"
+                  onClick={(e) => {
+                    if (window.location.pathname === '/') {
+                      e.preventDefault();
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Home
+                </Link>
+                <button
+                  onClick={() => {
+                    handleScrollToSection('ai-automation');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-lg font-medium hover:opacity-80 transition-opacity py-2 text-left"
+                >
+                  AI Automation
+                </button>
+                <button
+                  onClick={() => {
+                    handleScrollToSection('services');
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-lg font-medium hover:opacity-80 transition-opacity py-2 text-left"
+                >
+                  Services
+                </button>
+                <Link
+                  to="/pricing"
+                  className="text-lg font-medium hover:opacity-80 transition-opacity py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Pricing
+                </Link>
+                <Link
+                  to="/about"
+                  className="text-lg font-medium hover:opacity-80 transition-opacity py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  About Us
+                </Link>
+                <Link
+                  to="/contact"
+                  className="text-lg font-medium hover:opacity-80 transition-opacity py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Contact Us
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>
