@@ -10,7 +10,7 @@ const Pricing = () => {
     <div className="min-h-screen">
       <Navbar />
       {/* Hero Section */}
-      <section className="gradient-bg py-24 px-6">
+      <section className="gradient-bg pt-32 pb-24 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Digital Marketing Plans

@@ -12,7 +12,7 @@ const Index = () => {
       <Hero />
       
       {/* AI Automation Section */}
-      <section id="ai-automation" className="py-24 px-6 bg-background">
+      <section id="ai-automation" className="pt-32 pb-24 px-6 bg-background">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">

@@ -96,7 +96,7 @@ const services = [
 
 const Services = () => {
   return (
-    <section id="services" className="py-24 px-6 bg-gradient-to-b from-[#FDE9DD] to-background">
+    <section id="services" className="pt-32 pb-24 px-6 bg-gradient-to-b from-[#FDE9DD] to-background">
       <div className="container mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-foreground">Comprehensive Digital Marketing Solutions</h2>
         <p className="text-center text-muted-foreground mb-16 max-w-3xl mx-auto text-lg">
