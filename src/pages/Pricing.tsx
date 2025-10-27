@@ -2,10 +2,13 @@ import { Check, Rocket, Palette, Target, Users, TrendingUp } from "lucide-react"
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const Pricing = () => {
   return (
     <div className="min-h-screen">
+      <Navbar />
       {/* Hero Section */}
       <section className="gradient-bg py-24 px-6">
         <div className="max-w-5xl mx-auto text-center">
@@ -163,6 +166,7 @@ const Pricing = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 };
