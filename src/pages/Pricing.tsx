@@ -51,8 +51,21 @@ const Pricing = () => {
               {/* Features List */}
               <div className="space-y-4 mb-8">
                 <h3 className="font-semibold text-foreground mb-4">Includes:</h3>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-foreground text-sm leading-relaxed">Custom WordPress Website (SEO-friendly & mobile optimized)</span>
+                </div>
+                
+                {/* Highlighted Free Audit Feature */}
+                <div className="flex items-start gap-3 bg-gradient-to-r from-blue-100 to-transparent p-3 -mx-3 rounded-lg border-l-4 border-blue-500">
+                  <Check className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <span className="text-foreground text-sm font-semibold leading-relaxed">Free Comprehensive Marketing Audit</span>
+                    <span className="text-blue-600 text-xs ml-2 font-medium">(valued at $500)</span>
+                  </div>
+                </div>
+                
                 {[
-                  "Custom WordPress Website (SEO-friendly & mobile optimized)",
                   "Website Maintenance & Security",
                   "SEO (On-page, Off-page, Local, Technical)",
                   "AI Optimization (Content, Targeting, Analytics)",

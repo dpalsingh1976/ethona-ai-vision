@@ -91,6 +91,20 @@ const Index = () => {
               <h3 className="text-xl font-bold mb-3">Custom AI Solutions</h3>
               <p className="text-muted-foreground">Tailored AI integrations designed specifically for your unique business needs and challenges.</p>
             </div>
+            
+            {/* AI Voice Agent - Coming Soon */}
+            <div className="p-6 bg-gradient-to-br from-teal-50 to-white rounded-xl border border-teal-100 relative">
+              <div className="absolute top-4 right-4 px-3 py-1 bg-teal-500 text-white text-xs font-semibold rounded-full">
+                Coming Soon
+              </div>
+              <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">AI Voice Agents</h3>
+              <p className="text-muted-foreground">Intelligent voice agents that handle calls, schedule appointments, and qualify leads automatically—no human intervention required.</p>
+            </div>
           </div>
         </div>
       </section>
