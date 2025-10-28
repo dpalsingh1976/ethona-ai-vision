@@ -7,9 +7,10 @@ const services = [
     title: "Search Engine Optimization",
     description:
       "Boost your organic visibility and drive quality traffic through data-driven SEO strategies. We optimize your website to rank higher on Google and convert visitors into customers.",
-
+    aiFeature: "AI-powered keyword research & content optimization",
     bgColor: "bg-[#FFF5E6]",
-
+    iconColor: "text-orange-500",
+    featureColor: "text-orange-600",
     link: "/services/seo",
   },
   {
