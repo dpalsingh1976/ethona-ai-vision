@@ -3,6 +3,7 @@ import ServiceCard from "@/components/ServiceCard";
 
 const services = [
   {
+    icon: Search,
     title: "Search Engine Optimization",
     description:
       "Boost your organic visibility and drive quality traffic through data-driven SEO strategies. We optimize your website to rank higher on Google and convert visitors into customers.",
