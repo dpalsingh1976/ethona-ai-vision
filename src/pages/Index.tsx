@@ -25,6 +25,20 @@ const Index = () => {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* AI Voice Agent - Coming Soon */}
+            <div className="p-6 bg-gradient-to-br from-teal-50 to-white rounded-xl border border-teal-100 relative">
+              <div className="absolute top-4 right-4 px-3 py-1 bg-teal-500 text-white text-xs font-semibold rounded-full">
+                Coming Soon
+              </div>
+              <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold mb-3">AI Voice Agents</h3>
+              <p className="text-muted-foreground">Intelligent voice agents that handle calls, schedule appointments, and qualify leads automatically—no human intervention required.</p>
+            </div>
+            
             {/* Workflow Automation */}
             <div className="p-6 bg-gradient-to-br from-blue-50 to-white rounded-xl border border-blue-100">
               <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
@@ -47,17 +61,6 @@ const Index = () => {
               <p className="text-muted-foreground">Deploy intelligent chatbots that handle customer inquiries 24/7, improving satisfaction and reducing support costs.</p>
             </div>
             
-            {/* Data Analytics */}
-            <div className="p-6 bg-gradient-to-br from-green-50 to-white rounded-xl border border-green-100">
-              <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3">Predictive Analytics</h3>
-              <p className="text-muted-foreground">Leverage AI-powered analytics to forecast trends, identify opportunities, and make data-driven decisions.</p>
-            </div>
-            
             {/* Content Generation */}
             <div className="p-6 bg-gradient-to-br from-orange-50 to-white rounded-xl border border-orange-100">
               <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mb-4">
@@ -67,17 +70,6 @@ const Index = () => {
               </div>
               <h3 className="text-xl font-bold mb-3">AI Content Creation</h3>
               <p className="text-muted-foreground">Generate high-quality marketing content, product descriptions, and social media posts at scale.</p>
-            </div>
-            
-            {/* Process Optimization */}
-            <div className="p-6 bg-gradient-to-br from-pink-50 to-white rounded-xl border border-pink-100">
-              <div className="w-12 h-12 bg-pink-500 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3">Process Optimization</h3>
-              <p className="text-muted-foreground">Use AI to identify bottlenecks and optimize your business processes for maximum efficiency.</p>
             </div>
             
             {/* Custom Solutions */}
@@ -90,20 +82,6 @@ const Index = () => {
               </div>
               <h3 className="text-xl font-bold mb-3">Custom AI Solutions</h3>
               <p className="text-muted-foreground">Tailored AI integrations designed specifically for your unique business needs and challenges.</p>
-            </div>
-            
-            {/* AI Voice Agent - Coming Soon */}
-            <div className="p-6 bg-gradient-to-br from-teal-50 to-white rounded-xl border border-teal-100 relative">
-              <div className="absolute top-4 right-4 px-3 py-1 bg-teal-500 text-white text-xs font-semibold rounded-full">
-                Coming Soon
-              </div>
-              <div className="w-12 h-12 bg-teal-500 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold mb-3">AI Voice Agents</h3>
-              <p className="text-muted-foreground">Intelligent voice agents that handle calls, schedule appointments, and qualify leads automatically—no human intervention required.</p>
             </div>
           </div>
         </div>
