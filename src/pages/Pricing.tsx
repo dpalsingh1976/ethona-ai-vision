@@ -12,13 +12,11 @@ const Pricing = () => {
       {/* Hero Section */}
       <section className="gradient-bg pt-32 pb-24 px-6">
         <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
-            Digital Marketing Plans
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Digital Marketing Plans</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            At Ethona Digital Lab, we believe in simplicity and results. Instead of confusing multi-tiered packages, 
-            we offer two straightforward plans that include everything your business needs to grow — from SEO to ads, 
-            AI optimization, CRM, and reporting.
+            At Ethona Digital Lab, we believe in simplicity and results. Instead of confusing multi-tiered packages, we
+            offer two straightforward plans that include everything your business needs to grow — from SEO to ads, AI
+            optimization, CRM, and reporting.
           </p>
         </div>
       </section>
@@ -44,28 +42,16 @@ const Pricing = () => {
                   <span className="text-xl text-muted-foreground">/month</span>
                 </div>
                 <p className="text-muted-foreground mt-2">
-                  A fully inclusive digital marketing plan designed to enhance your brand presence and drive measurable growth.
+                  A fully inclusive digital marketing plan designed to enhance your brand presence and drive measurable
+                  growth.
                 </p>
               </div>
 
               {/* Features List */}
               <div className="space-y-4 mb-8">
                 <h3 className="font-semibold text-foreground mb-4">Includes:</h3>
-                <div className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-foreground text-sm leading-relaxed">Custom WordPress Website (SEO-friendly & mobile optimized)</span>
-                </div>
-                
-                {/* Highlighted Free Audit Feature */}
-                <div className="flex items-start gap-3 bg-gradient-to-r from-blue-100 to-transparent p-3 -mx-3 rounded-lg border-l-4 border-blue-500">
-                  <Check className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div className="flex-1">
-                    <span className="text-foreground text-sm font-semibold leading-relaxed">Free Comprehensive Marketing Audit</span>
-                    <span className="text-blue-600 text-xs ml-2 font-medium">(valued at $500)</span>
-                  </div>
-                </div>
-                
                 {[
+                  "Custom Website (SEO-friendly & mobile optimized)",
                   "Website Maintenance & Security",
                   "SEO (On-page, Off-page, Local, Technical)",
                   "AI Optimization (Content, Targeting, Analytics)",
@@ -73,7 +59,7 @@ const Pricing = () => {
                   "Facebook & Instagram Management",
                   "2 Blog Articles per Month",
                   "CRM & Call Tracking Integration",
-                  "Monthly Reports & Analytics"
+                  "Monthly Reports & Analytics",
                 ].map((feature, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
@@ -131,7 +117,7 @@ const Pricing = () => {
                     "Social Media Management",
                     "Blog & Content Strategy",
                     "CRM Setup & Automation",
-                    "Analytics Dashboard"
+                    "Analytics Dashboard",
                   ].map((service, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -163,7 +149,9 @@ const Pricing = () => {
                     <TrendingUp className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-medium text-foreground text-sm">Conquest</p>
-                      <p className="text-xs text-muted-foreground">Expand audience reach via influencer and cross-platform campaigns</p>
+                      <p className="text-xs text-muted-foreground">
+                        Expand audience reach via influencer and cross-platform campaigns
+                      </p>
                     </div>
                   </div>
                 </div>
