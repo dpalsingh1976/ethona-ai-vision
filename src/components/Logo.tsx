@@ -1,4 +1,4 @@
-import logoIcon from "@/assets/ethona-logo-new.png";
+import logoIcon from "@/assets/ethona-logo-icon.png";
 
 const Logo = () => {
   return (
