@@ -1,4 +1,4 @@
-import { Check, Rocket, Palette, Target, Users, TrendingUp } from "lucide-react";
+import { Check, Rocket, Zap, Building2, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,11 +12,12 @@ const Pricing = () => {
       {/* Hero Section */}
       <section className="gradient-bg pt-32 pb-24 px-6">
         <div className="max-w-5xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Digital Marketing Plans</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            At Ethona Digital Lab, we believe in simplicity and results. Instead of confusing multi-tiered packages, we
-            offer two straightforward plans that include everything your business needs to grow — from SEO to ads, AI
-            optimization, CRM, and reporting.
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Digital Marketing Product Packages</h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-4">
+            We've streamlined digital marketing into two clear packages that make decisions easy and growth predictable.
+          </p>
+          <p className="text-lg text-muted-foreground font-medium">
+            Roofing | Flooring | Furniture | Auto Dealerships
           </p>
         </div>
       </section>
@@ -25,25 +26,25 @@ const Pricing = () => {
       <section className="py-24 px-6 bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Premium Plan Card */}
+            {/* MarketMaster Plan Card */}
             <Card className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-hover transition-all duration-300">
               {/* Icon Badge */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
                   <Rocket className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-foreground">Premium Plan</h2>
+                <h2 className="text-2xl font-bold text-foreground">MarketMaster</h2>
               </div>
 
               {/* Price */}
               <div className="mb-6">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold text-foreground">$1,600</span>
+                  <span className="text-5xl font-bold text-foreground">$599</span>
                   <span className="text-xl text-muted-foreground">/month</span>
                 </div>
-                <p className="text-muted-foreground mt-2">
-                  A fully inclusive digital marketing plan designed to enhance your brand presence and drive measurable
-                  growth.
+                <p className="text-sm font-semibold text-blue-600 mt-1 mb-2">SEO & Website Focus</p>
+                <p className="text-muted-foreground">
+                  Built for local SMBs ready to win on Google and convert more website visitors.
                 </p>
               </div>
 
@@ -51,15 +52,13 @@ const Pricing = () => {
               <div className="space-y-4 mb-8">
                 <h3 className="font-semibold text-foreground mb-4">Includes:</h3>
                 {[
-                  "Custom Website (SEO-friendly & mobile optimized)",
-                  "Website Maintenance & Security",
-                  "SEO (On-page, Off-page, Local, Technical)",
-                  "AI Optimization (Content, Targeting, Analytics)",
-                  "Paid Media Management (Google Ads + Meta Ads up to $2,500 spend)",
-                  "Facebook & Instagram Management",
-                  "2 Blog Articles per Month",
-                  "CRM & Call Tracking Integration",
-                  "Monthly Reports & Analytics",
+                  "Google Organic SEO",
+                  "Google 3-Pack & Local Map presence",
+                  "GMB Optimization & Automated Review Messaging",
+                  "AI Visibility & Insights",
+                  "Website Creation, Hosting & Support",
+                  "Monthly Strategy Meeting",
+                  "Dedicated Account Manager",
                 ].map((feature, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
@@ -68,16 +67,13 @@ const Pricing = () => {
                 ))}
               </div>
 
-              {/* Why it Works */}
+              {/* Benefits */}
               <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg mb-6">
-                <h4 className="font-semibold text-foreground mb-2">Why it works:</h4>
-                <p className="text-sm text-muted-foreground mb-3">
-                  This plan combines advanced tools and expert strategy — everything your business needs in one place.
-                </p>
+                <h4 className="font-semibold text-foreground mb-2">Benefits:</h4>
                 <div className="space-y-1 text-sm text-foreground">
-                  <p>✅ No hidden fees.</p>
-                  <p>✅ No confusing add-ons.</p>
-                  <p>✅ Just transparent, effective results.</p>
+                  <p>✅ Higher local visibility and qualified traffic</p>
+                  <p>✅ More calls, directions, and form fills from nearby customers</p>
+                  <p>✅ Foundation for all digital growth strategies</p>
                 </div>
               </div>
 
@@ -89,81 +85,98 @@ const Pricing = () => {
               </Link>
             </Card>
 
-            {/* Custom Plan Card */}
+            {/* FutureForce Plan Card */}
             <Card className="bg-gradient-to-br from-orange-50 to-white border-2 border-orange-200 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-hover transition-all duration-300">
               {/* Icon Badge */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
-                  <Palette className="w-6 h-6 text-white" />
+                  <Zap className="w-6 h-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-foreground">Custom Plan</h2>
+                <h2 className="text-2xl font-bold text-foreground">FutureForce</h2>
               </div>
 
-              {/* Subtitle */}
+              {/* Price */}
               <div className="mb-6">
-                <p className="text-xl font-semibold text-foreground mb-2">Tailored to Your Needs</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-5xl font-bold text-foreground">$1,099</span>
+                  <span className="text-xl text-muted-foreground">/month</span>
+                </div>
+                <p className="text-sm font-semibold text-orange-600 mt-1 mb-2">Complete Marketing Solution</p>
                 <p className="text-muted-foreground">
-                  Build your perfect marketing mix based on your business goals and budget.
+                  The complete AI-powered growth engine for businesses ready to scale.
                 </p>
               </div>
 
-              {/* Services Selection */}
-              <div className="mb-8">
-                <h3 className="font-semibold text-foreground mb-4">Choose from:</h3>
-                <div className="space-y-3">
-                  {[
-                    "Website Development & SEO",
-                    "Google / Meta Ads Management",
-                    "Social Media Management",
-                    "Blog & Content Strategy",
-                    "CRM Setup & Automation",
-                    "Analytics Dashboard",
-                  ].map((service, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-foreground text-sm leading-relaxed">{service}</span>
-                    </div>
-                  ))}
-                </div>
+              {/* Features List */}
+              <div className="space-y-3 mb-8">
+                <h3 className="font-semibold text-foreground mb-4">Everything in MarketMaster, plus:</h3>
+                {[
+                  "Facebook & Instagram Ads",
+                  "Google Ads Management (up to $2,500 ad spend)",
+                  "Social Media Messaging & Organic Posts",
+                  "CRM, Email Marketing & Automation",
+                  "SMS Marketing",
+                  "Call Tracking with dynamic number insertion",
+                  "AI Chatbot & Virtual Agent (24/7)",
+                  "Performance Analytics dashboards",
+                  "Competitive Intelligence monitoring",
+                  "Priority Technical Support",
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-foreground text-sm leading-relaxed">{feature}</span>
+                  </div>
+                ))}
               </div>
 
-              {/* Strategy Framework */}
+              {/* Benefits */}
               <div className="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-lg mb-6">
-                <h4 className="font-semibold text-foreground mb-4">Strategy Framework:</h4>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <Target className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-foreground text-sm">Dominate</p>
-                      <p className="text-xs text-muted-foreground">Focus on Google SEO + Ads to build visibility</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Users className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-foreground text-sm">Retarget</p>
-                      <p className="text-xs text-muted-foreground">Re-engage warm leads through targeted ads</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <TrendingUp className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-foreground text-sm">Conquest</p>
-                      <p className="text-xs text-muted-foreground">
-                        Expand audience reach via influencer and cross-platform campaigns
-                      </p>
-                    </div>
-                  </div>
+                <h4 className="font-semibold text-foreground mb-2">Benefits:</h4>
+                <div className="space-y-1 text-sm text-foreground">
+                  <p>✅ Complete toolkit for multi-channel marketing</p>
+                  <p>✅ AI-powered systems for faster follow-up and higher close rates</p>
+                  <p>✅ Comprehensive ROI tracking across all channels</p>
                 </div>
               </div>
 
               {/* CTA Button */}
               <Link to="/contact" className="block">
                 <Button className="w-full bg-primary hover:bg-primary/90 rounded-full text-base font-semibold h-12">
-                  Book Free Strategy Call
+                  Get Started Now
                 </Button>
               </Link>
             </Card>
+          </div>
+
+          {/* Add-Ons Section */}
+          <div className="mt-24">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-foreground mb-4">Optional Add-Ons</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Enhance your package with additional services tailored to your specific needs.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { icon: Sparkles, title: "Custom Design Systems", desc: "Branded templates and design frameworks" },
+                { icon: Building2, title: "Additional Social Platforms", desc: "TikTok, LinkedIn, Pinterest, YouTube" },
+                { icon: Zap, title: "Advanced Automation", desc: "Custom workflows and integrations" },
+                { icon: Rocket, title: "Landing Pages & Funnels", desc: "High-converting sales funnels" },
+                { icon: Building2, title: "Additional Ad Budget", desc: "Scale your advertising spend" },
+                { icon: Sparkles, title: "E-commerce Integrations", desc: "Connect your online store systems" },
+              ].map((addon, index) => {
+                const Icon = addon.icon;
+                return (
+                  <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 border-2">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                      <Icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <h3 className="font-semibold text-foreground mb-2">{addon.title}</h3>
+                    <p className="text-sm text-muted-foreground">{addon.desc}</p>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
         </div>
       </section>
