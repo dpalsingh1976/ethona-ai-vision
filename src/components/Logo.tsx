@@ -3,16 +3,21 @@ import logoIcon from "@/assets/ethona-logo-icon.png";
 const Logo = () => {
   return (
     <div className="relative flex items-center gap-4 select-none">
+      {/* Background matching layer */}
+      <div className="absolute -z-20 left-0 h-14 w-14 md:h-20 md:w-20 rounded-lg"
+           style={{ backgroundColor: '#1a2332' }} />
+      
       {/* Glow halo behind the icon */}
       <div className="absolute -z-10 left-2 h-16 w-16 md:h-20 md:w-20 rounded-full blur-2xl opacity-60
                       bg-[radial-gradient(circle_at_60%_40%,#22d3ee_0%,transparent_55%),_radial-gradient(circle_at_40%_60%,#fbbf24_0%,transparent_60%)]" />
 
       {/* Logo Icon – no white tile, richer glow */}
       <img
-        src={`${logoIcon}?v=3`}
+        src={`${logoIcon}?v=4`}
         alt="Ethona Digital Lab"
         className="h-14 w-14 md:h-20 md:w-20 object-contain"
         style={{
+          mixBlendMode: 'screen',
           filter: [
             "drop-shadow(0 6px 12px rgba(0,0,0,0.35))",
             "drop-shadow(0 0 16px rgba(34,211,238,0.35))",   // teal glow
