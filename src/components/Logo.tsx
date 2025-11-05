@@ -3,73 +3,78 @@ import logoIcon from "@/assets/ethona-logo-icon.png";
 const Logo = () => {
   return (
     <div className="relative flex items-center gap-4 select-none">
-      {/* Soft balanced glow */}
+      {/* Subtle halo behind the icon (unchanged look, softer) */}
       <div
-        className="absolute -z-10 left-2 h-16 w-16 md:h-20 md:w-20 rounded-full blur-2xl opacity-50"
+        className="absolute -z-10 left-2 h-16 w-16 md:h-20 md:w-20 rounded-full blur-xl opacity-45"
         style={{
           background:
-            "radial-gradient(circle at 60% 40%, rgba(34,211,238,0.4) 0%, transparent 60%), radial-gradient(circle at 40% 60%, rgba(251,191,36,0.35) 0%, transparent 65%)",
+            "radial-gradient(60% 60% at 60% 40%, rgba(34,211,238,0.38), transparent 62%), radial-gradient(60% 60% at 40% 60%, rgba(251,191,36,0.30), transparent 65%)",
         }}
       />
 
-      {/* Logo Icon – fully blended with transparent edges */}
-      <img
-        src={`${logoIcon}?v=7`}
-        alt="Ethona Digital Lab"
-        className="h-14 w-14 md:h-20 md:w-20 object-contain will-change-transform"
+      {/* === LOGO WRAPPER: protects logo content, trims only the border === */}
+      <span
+        className="
+          relative shrink-0 h-14 w-14 md:h-20 md:w-20
+          rounded-xl overflow-hidden
+          /* ultra-soft edge fade; keeps 98% of pixels intact */
+          [mask-image:radial-gradient(closest-side,black_98%,transparent_100%)]
+          [mask-size:100%_100%] [mask-repeat:no-repeat]
+        "
         style={{
-          // Use a sharper circular fade so outer alpha disappears completely
-          WebkitMaskImage: "radial-gradient(70% 70% at 50% 50%, #000 60%, rgba(0,0,0,0) 80%)",
-          maskImage: "radial-gradient(70% 70% at 50% 50%, #000 60%, rgba(0,0,0,0) 80%)",
+          // If your Tailwind can't pass bracketed properties, move these to CSS.
+          WebkitMaskImage: "radial-gradient(closest-side, black 98%, transparent 100%)",
           WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
-          WebkitMaskSize: "contain",
-          maskSize: "contain",
-
-          // Blend into header without bright rim
-          mixBlendMode: "lighten",
-          opacity: 0.98,
-
-          // Remove any color fringing
-          backgroundColor: "transparent",
-          filter: [
-            "brightness(1.05)",
-            "contrast(1.1)",
-            "saturate(1.1)",
-            "drop-shadow(0 6px 10px rgba(0,0,0,0.4))",
-            "drop-shadow(0 0 12px rgba(34,211,238,0.25))",
-            "drop-shadow(0 0 8px rgba(251,191,36,0.2))",
-          ].join(" "),
+          WebkitMaskSize: "100% 100%",
         }}
-      />
+      >
+        <img
+          src={`${logoIcon}?v=8`}
+          alt="Ethona Digital Lab"
+          className="h-full w-full object-cover"
+          style={{
+            // Default to normal; switch to 'screen' if header is very dark and you want extra pop
+            mixBlendMode: "normal",
+            // Gentle depth without revealing edges
+            filter: [
+              "drop-shadow(0 6px 10px rgba(0,0,0,0.35))",
+              "drop-shadow(0 0 10px rgba(34,211,238,0.18))",
+              "drop-shadow(0 0 8px rgba(251,191,36,0.15))",
+            ].join(" "),
+          }}
+        />
 
-      {/* Wordmark */}
+        {/* 1px inner vignette to hide any remaining light fringe on extreme monitors */}
+        <span
+          className="pointer-events-none absolute inset-0 rounded-xl"
+          style={{ boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.25)" }}
+        />
+      </span>
+
+      {/* Wordmark (unchanged) */}
       <div className="flex flex-col leading-tight font-sans ml-1">
         <h1
-          className="font-extrabold tracking-[-0.02em] text-white
-                     drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]
-                     text-[1.55rem] sm:text-[1.8rem] md:text-[2.1rem] lg:text-[2.35rem]"
+          className="font-extrabold tracking-[-0.02em] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)]
+                       text-[1.55rem] sm:text-[1.8rem] md:text-[2.1rem] lg:text-[2.35rem]"
         >
           <span className="mr-2">Ethona</span>
           <span className="hidden md:inline">Digital Lab</span>
           <span className="block md:hidden">Digital Lab</span>
         </h1>
-
         <div className="relative mt-0.5">
           <span
             className="text-[0.9rem] md:text-[1rem] italic font-medium tracking-wide text-amber-300
-                       drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]"
+                           drop-shadow-[0_1px_1px_rgba(0,0,0,0.35)]"
           >
             Where strategy meets AI
           </span>
           <span
             className="block h-[3px] w-16 rounded-full mt-1
-                       bg-gradient-to-r from-amber-300 via-amber-200 to-cyan-300 opacity-80"
+                           bg-gradient-to-r from-amber-300 via-amber-200 to-cyan-300 opacity-80"
           />
         </div>
       </div>
 
-      {/* Decorative streaks */}
       <div className="pointer-events-none absolute -right-6 -bottom-4 -z-10 hidden md:block opacity-60">
         <div className="h-1 w-24 rounded-full mb-2 bg-cyan-300/70"></div>
         <div className="h-1 w-16 rounded-full mb-2 bg-amber-300/80"></div>
