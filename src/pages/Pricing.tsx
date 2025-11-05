@@ -1,4 +1,4 @@
-import { Check, Rocket, Zap, Building2, Sparkles } from "lucide-react";
+import { Check, Rocket, Zap, Building2, Sparkles, Palette, Target, Users, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,7 +14,7 @@ const Pricing = () => {
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">Digital Marketing Product Packages</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-4">
-            We've streamlined digital marketing into two clear packages that make decisions easy and growth predictable.
+            We've streamlined digital marketing into flexible packages that make decisions easy and growth predictable.
           </p>
           <p className="text-lg text-muted-foreground font-medium">
             Roofing | Flooring | Furniture | Auto Dealerships
@@ -25,7 +25,7 @@ const Pricing = () => {
       {/* Pricing Cards */}
       <section className="py-24 px-6 bg-background">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             {/* MarketMaster Plan Card */}
             <Card className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-hover transition-all duration-300">
               {/* Icon Badge */}
@@ -143,6 +143,80 @@ const Pricing = () => {
               <Link to="/contact" className="block">
                 <Button className="w-full bg-primary hover:bg-primary/90 rounded-full text-base font-semibold h-12">
                   Get Started Now
+                </Button>
+              </Link>
+            </Card>
+
+            {/* Custom Plan Card */}
+            <Card className="bg-gradient-to-br from-amber-50 to-white border-2 border-orange-300 rounded-3xl p-8 hover:-translate-y-1 hover:shadow-hover transition-all duration-300">
+              {/* Icon Badge */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
+                  <Palette className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-foreground">Custom Plan</h2>
+              </div>
+
+              {/* Subtitle & Description */}
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-foreground mb-3">Tailored to Your Needs</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Build your perfect marketing mix based on your business goals and budget.
+                </p>
+              </div>
+
+              {/* Choose From List */}
+              <div className="mb-6">
+                <h4 className="font-semibold text-foreground mb-4">Choose from:</h4>
+                <div className="space-y-3">
+                  {[
+                    "Website Development & SEO",
+                    "Google / Meta Ads Management",
+                    "Social Media Management",
+                    "Blog & Content Strategy",
+                    "CRM Setup & Automation",
+                    "Analytics Dashboard",
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></div>
+                      <span className="text-foreground text-sm">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Strategy Framework */}
+              <div className="bg-orange-50 border-l-4 border-orange-500 p-5 rounded-lg mb-6">
+                <h4 className="font-semibold text-foreground mb-4">Strategy Framework:</h4>
+                <div className="space-y-4">
+                  <div className="flex gap-3">
+                    <Target className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-foreground text-sm mb-1">Dominate</p>
+                      <p className="text-xs text-muted-foreground">Focus on Google SEO + Ads to build visibility</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <Users className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-foreground text-sm mb-1">Retarget</p>
+                      <p className="text-xs text-muted-foreground">Re-engage warm leads through targeted ads</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <TrendingUp className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-foreground text-sm mb-1">Conquest</p>
+                      <p className="text-xs text-muted-foreground">Expand audience reach via influencer and cross-platform campaigns</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <Link to="/contact" className="block">
+                <Button className="w-full bg-foreground hover:bg-foreground/90 text-background rounded-full text-base font-semibold h-12">
+                  Book Free Strategy Call
                 </Button>
               </Link>
             </Card>
