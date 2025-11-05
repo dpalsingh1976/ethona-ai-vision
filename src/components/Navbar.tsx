@@ -33,7 +33,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#1a2332] via-[#1e2940] to-[#1a2332] backdrop-blur-lg border-b border-white/10 shadow-lg overflow-hidden">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#1b2028] backdrop-blur-lg border-b border-white/10 shadow-lg overflow-hidden">
       {/* Decorative SVG Curves */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <svg className="absolute -top-20 -right-20 w-96 h-96 opacity-60" viewBox="0 0 400 400">
@@ -137,7 +137,7 @@ const Navbar = () => {
                 <Menu className="w-6 h-6 text-white" />
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] bg-gradient-to-b from-[#1a2332] to-[#1e2940] text-white border-l border-white/10">
+            <SheetContent side="right" className="w-[300px] bg-[#1b2028] text-white border-l border-white/10">
               <SheetHeader>
                 <SheetTitle className="text-white">Menu</SheetTitle>
               </SheetHeader>

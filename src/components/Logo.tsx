@@ -9,14 +9,14 @@ const Logo = () => {
 
       {/* Logo Icon – no white tile, richer glow */}
       <img
-        src={`${logoIcon}?v=3`}
+        src={`${logoIcon}?v=5`}
         alt="Ethona Digital Lab"
         className="h-14 w-14 md:h-20 md:w-20 object-contain"
         style={{
           filter: [
             "drop-shadow(0 6px 12px rgba(0,0,0,0.35))",
-            "drop-shadow(0 0 16px rgba(34,211,238,0.35))",   // teal glow
-            "drop-shadow(0 0 10px rgba(251,191,36,0.25))"    // yellow glow
+            "drop-shadow(0 0 16px rgba(34,211,238,0.35))",
+            "drop-shadow(0 0 10px rgba(251,191,36,0.25))"
           ].join(" ")
         }}
       />
