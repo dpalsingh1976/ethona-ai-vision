@@ -37,7 +37,7 @@ const Pricing = () => {
               {/* Price */}
               <div className="mb-6">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold text-foreground">$1,099</span>
+                  <span className="text-5xl font-bold text-foreground">$599</span>
                   <span className="text-xl text-muted-foreground">/month</span>
                 </div>
                 <p className="text-sm font-semibold text-blue-600 mt-1 mb-2">SEO & Website Focus</p>
@@ -96,7 +96,7 @@ const Pricing = () => {
               {/* Price */}
               <div className="mb-6">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold text-foreground">$1,599</span>
+                  <span className="text-5xl font-bold text-foreground">$1,099</span>
                   <span className="text-xl text-muted-foreground">/month</span>
                 </div>
                 <p className="text-sm font-semibold text-orange-600 mt-1 mb-2">Complete Marketing Solution</p>
