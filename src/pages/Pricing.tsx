@@ -16,9 +16,7 @@ const Pricing = () => {
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-4">
             We've streamlined digital marketing into flexible packages that make decisions easy and growth predictable.
           </p>
-          <p className="text-lg text-muted-foreground font-medium">
-            Roofing | Flooring | Furniture | Auto Dealerships
-          </p>
+          <p className="text-lg text-muted-foreground font-medium">Roofing | Flooring | Furniture | Auto Dealerships</p>
         </div>
       </section>
 
@@ -39,7 +37,7 @@ const Pricing = () => {
               {/* Price */}
               <div className="mb-6">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-bold text-foreground">$599</span>
+                  <span className="text-5xl font-bold text-foreground">$1099</span>
                   <span className="text-xl text-muted-foreground">/month</span>
                 </div>
                 <p className="text-sm font-semibold text-blue-600 mt-1 mb-2">SEO & Website Focus</p>
@@ -207,7 +205,9 @@ const Pricing = () => {
                     <TrendingUp className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-foreground text-sm mb-1">Conquest</p>
-                      <p className="text-xs text-muted-foreground">Expand audience reach via influencer and cross-platform campaigns</p>
+                      <p className="text-xs text-muted-foreground">
+                        Expand audience reach via influencer and cross-platform campaigns
+                      </p>
                     </div>
                   </div>
                 </div>
