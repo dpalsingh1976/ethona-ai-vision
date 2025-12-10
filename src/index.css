@@ -130,6 +130,10 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
+  #lovable-badge {
+    display: none !important;
+  }
+
   .gradient-bg {
     background: linear-gradient(180deg, hsl(var(--gradient-peach)) 0%, hsl(var(--gradient-cream)) 100%);
   }
