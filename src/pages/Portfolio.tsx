@@ -113,7 +113,7 @@ const portfolioData: Category[] = [
   {
     id: "contractors",
     name: "Home Contractors",
-    icon: <Hammer className="w-5 h-5" />,
+    icon: <Hammer className="w-3 h-3" />,
     clients: [
       { name: "ARC Contracting", url: "https://www.arccontracting.com/" },
       { name: "Gasper Roofing", url: "https://www.gasperroofing.com/" },
