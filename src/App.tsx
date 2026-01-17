@@ -19,6 +19,7 @@ import AffiliateMarketing from "./pages/services/AffiliateMarketing";
 import CRO from "./pages/services/CRO";
 import ORM from "./pages/services/ORM";
 import Portfolio from "./pages/Portfolio";
+import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/demo" element={<Demo />} />
           <Route path="/services/seo" element={<SEO />} />
           <Route path="/services/ppc" element={<PPC />} />
           <Route path="/services/smm" element={<SMM />} />
