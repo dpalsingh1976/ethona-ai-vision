@@ -1,20 +1,20 @@
 import { useState, useMemo } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { 
-  Heart, 
-  Sparkles, 
-  Building2, 
-  Hammer, 
-  Smile, 
-  Plane, 
-  Users, 
-  Scale, 
-  Car, 
+import {
+  Heart,
+  Sparkles,
+  Building2,
+  Hammer,
+  Smile,
+  Plane,
+  Users,
+  Scale,
+  Car,
   ShoppingCart,
   ExternalLink,
   Search,
-  X
+  X,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -51,9 +51,7 @@ const portfolioData: Category[] = [
     id: "legal",
     name: "Legal",
     icon: <Scale className="w-5 h-5" />,
-    clients: [
-      { name: "The Medical Attorney", url: "https://www.themedicalattorney.com/" },
-    ],
+    clients: [{ name: "The Medical Attorney", url: "https://www.themedicalattorney.com/" }],
   },
   {
     id: "medspa",
@@ -69,9 +67,7 @@ const portfolioData: Category[] = [
     id: "dental",
     name: "Dental",
     icon: <Smile className="w-5 h-5" />,
-    clients: [
-      { name: "Florida Smile Design", url: "https://www.floridasmiledesign.com/" },
-    ],
+    clients: [{ name: "Florida Smile Design", url: "https://www.floridasmiledesign.com/" }],
   },
   {
     id: "automotive",
@@ -151,9 +147,7 @@ const Portfolio = () => {
       })
       .map((category) => ({
         ...category,
-        clients: category.clients.filter((client) =>
-          client.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ),
+        clients: category.clients.filter((client) => client.name.toLowerCase().includes(searchQuery.toLowerCase())),
       }))
       .filter((category) => category.clients.length > 0);
   }, [searchQuery, selectedCategory]);
@@ -163,26 +157,24 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-12 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#FDE9DD] to-[#FFF8EE]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,200,150,0.3),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(255,180,120,0.2),transparent_50%)]" />
-        
+
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-6">
             Our Work
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
             Client{" "}
-            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              Portfolio
-            </span>
+            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">Portfolio</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-            We've partnered with {totalClients}+ businesses across diverse industries to deliver 
-            exceptional digital marketing and AI-powered solutions.
+            We've partnered with {totalClients}+ businesses across diverse industries to deliver exceptional digital
+            marketing and AI-powered solutions.
           </p>
         </div>
       </section>
@@ -226,9 +218,7 @@ const Portfolio = () => {
               {portfolioData.map((category) => (
                 <button
                   key={category.id}
-                  onClick={() => setSelectedCategory(
-                    selectedCategory === category.id ? null : category.id
-                  )}
+                  onClick={() => setSelectedCategory(selectedCategory === category.id ? null : category.id)}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     selectedCategory === category.id
                       ? "bg-primary text-primary-foreground shadow-md"
@@ -249,9 +239,7 @@ const Portfolio = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredData.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-lg text-muted-foreground">
-                No clients found matching your search.
-              </p>
+              <p className="text-lg text-muted-foreground">No clients found matching your search.</p>
               <Button
                 variant="outline"
                 onClick={() => {
@@ -273,9 +261,7 @@ const Portfolio = () => {
                       {category.icon}
                     </div>
                     <div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                        {category.name}
-                      </h2>
+                      <h2 className="text-2xl md:text-3xl font-bold text-foreground">{category.name}</h2>
                       <p className="text-sm text-muted-foreground">
                         {category.clients.length} client{category.clients.length !== 1 ? "s" : ""}
                       </p>
@@ -301,10 +287,6 @@ const Portfolio = () => {
                             <span className="truncate max-w-[120px]">{category.name}</span>
                           </span>
                         </div>
-                        <div className="mt-4 flex items-center gap-2 text-sm font-medium text-primary group-hover:text-primary/80 transition-colors">
-                          <span>Visit Website</span>
-                          <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                        </div>
                       </a>
                     ))}
                   </div>
@@ -325,11 +307,10 @@ const Portfolio = () => {
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-b from-background to-[#FDE9DD]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-            Ready to Join Our Success Stories?
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">Ready to Join Our Success Stories?</h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Let's discuss how we can help grow your business with our proven digital marketing strategies and AI-powered solutions.
+            Let's discuss how we can help grow your business with our proven digital marketing strategies and AI-powered
+            solutions.
           </p>
           <a
             href="/contact"
