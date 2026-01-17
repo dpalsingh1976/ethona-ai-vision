@@ -119,6 +119,9 @@ const Navbar = () => {
             <Link to="/pricing" className="text-sm font-medium text-white hover:text-white/80 transition-opacity">
               Pricing
             </Link>
+            <Link to="/portfolio" className="text-sm font-medium text-white hover:text-white/80 transition-opacity">
+              Portfolio
+            </Link>
             <Link to="/about" className="text-sm font-medium text-white hover:text-white/80 transition-opacity">
               About Us
             </Link>
@@ -179,6 +182,13 @@ const Navbar = () => {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Pricing
+                </Link>
+                <Link
+                  to="/portfolio"
+                  className="text-lg font-medium text-white hover:text-white/80 transition-opacity py-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Portfolio
                 </Link>
                 <Link
                   to="/about"
