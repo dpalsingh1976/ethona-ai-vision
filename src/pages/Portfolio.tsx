@@ -188,7 +188,7 @@ const Portfolio = () => {
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
             We've partnered with {totalClients}+ businesses across diverse industries to deliver exceptional digital
-            marketing and AI-powered solutions.
+            marketing.
           </p>
         </div>
       </section>
