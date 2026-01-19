@@ -25,30 +25,6 @@ const intakeSchema = z.object({
 
 type IntakeEmailRequest = z.infer<typeof intakeSchema>;
 
-// Rate limiting with Deno KV
-const kv = await Deno.openKv();
-
-async function checkRateLimit(clientIp: string): Promise<{ allowed: boolean; remaining: number }> {
-  const key = ["intake_rate_limit", clientIp];
-  const now = Date.now();
-  const windowMs = 60 * 60 * 1000; // 1 hour
-  const maxRequests = 3;
-
-  const entry = await kv.get<{ count: number; windowStart: number }>(key);
-  
-  if (!entry.value || now - entry.value.windowStart > windowMs) {
-    await kv.set(key, { count: 1, windowStart: now }, { expireIn: windowMs });
-    return { allowed: true, remaining: maxRequests - 1 };
-  }
-
-  if (entry.value.count >= maxRequests) {
-    return { allowed: false, remaining: 0 };
-  }
-
-  await kv.set(key, { count: entry.value.count + 1, windowStart: entry.value.windowStart }, { expireIn: windowMs });
-  return { allowed: true, remaining: maxRequests - entry.value.count - 1 };
-}
-
 // Escape HTML to prevent XSS
 function escapeHtml(text: string): string {
   const htmlEntities: Record<string, string> = {
@@ -68,27 +44,6 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    // Get client IP for rate limiting
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
-                     req.headers.get("cf-connecting-ip") || 
-                     "unknown";
-
-    // Check rate limit
-    const { allowed, remaining } = await checkRateLimit(clientIp);
-    if (!allowed) {
-      return new Response(
-        JSON.stringify({ error: "Too many submissions. Please try again later." }),
-        { 
-          status: 429, 
-          headers: { 
-            ...corsHeaders, 
-            "Content-Type": "application/json",
-            "X-RateLimit-Remaining": "0"
-          } 
-        }
-      );
-    }
-
     // Parse and validate request
     const body = await req.json();
     const validationResult = intakeSchema.safeParse(body);
@@ -221,8 +176,7 @@ const handler = async (req: Request): Promise<Response> => {
         status: 200, 
         headers: { 
           ...corsHeaders, 
-          "Content-Type": "application/json",
-          "X-RateLimit-Remaining": remaining.toString()
+          "Content-Type": "application/json"
         } 
       }
     );
