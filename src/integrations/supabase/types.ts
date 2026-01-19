@@ -38,6 +38,51 @@ export type Database = {
         }
         Relationships: []
       }
+      intake_submissions: {
+        Row: {
+          biggest_challenge: string | null
+          business_name: string
+          created_at: string
+          email: string
+          full_name: string
+          growth_goal: string
+          id: string
+          industry: string
+          lead_tracking: string
+          location: string
+          phone: string | null
+          website: string | null
+        }
+        Insert: {
+          biggest_challenge?: string | null
+          business_name: string
+          created_at?: string
+          email: string
+          full_name: string
+          growth_goal: string
+          id?: string
+          industry: string
+          lead_tracking: string
+          location: string
+          phone?: string | null
+          website?: string | null
+        }
+        Update: {
+          biggest_challenge?: string | null
+          business_name?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          growth_goal?: string
+          id?: string
+          industry?: string
+          lead_tracking?: string
+          location?: string
+          phone?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
