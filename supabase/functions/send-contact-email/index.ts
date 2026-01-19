@@ -51,7 +51,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to Ethona Digital Lab
     const emailResponse = await resend.emails.send({
-      from: "Ethona Digital Lab <onboarding@resend.dev>",
+      from: "Ethona Digital Lab <noreply@ethonadigitallab.com>",
       to: ["info@ethonadigitallab.com"],
       reply_to: validated.email,
       subject: `New Contact Form Submission from ${safeName}`,
@@ -80,11 +80,23 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    // Check for Resend API errors
+    if (emailResponse.error) {
+      console.error("Resend API error:", emailResponse.error);
+      return new Response(
+        JSON.stringify({ error: emailResponse.error.message }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log("Email sent successfully:", emailResponse.data);
 
     return new Response(JSON.stringify({ 
       success: true, 
-      data: emailResponse
+      data: emailResponse.data
     }), {
       status: 200,
       headers: {

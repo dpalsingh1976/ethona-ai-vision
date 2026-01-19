@@ -98,7 +98,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email
     const emailResponse = await resend.emails.send({
-      from: "Ethona Digital Lab <onboarding@resend.dev>",
+      from: "Ethona Digital Lab <noreply@ethonadigitallab.com>",
       to: ["info@ethonadigitallab.com"],
       subject: `New Growth Assessment: ${safeBusinessName} - ${safeIndustry}`,
       html: `
@@ -168,7 +168,19 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Intake email sent successfully:", emailResponse);
+    // Check for Resend API errors
+    if (emailResponse.error) {
+      console.error("Resend API error:", emailResponse.error);
+      return new Response(
+        JSON.stringify({ error: emailResponse.error.message }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    console.log("Intake email sent successfully:", emailResponse.data);
 
     return new Response(
       JSON.stringify({ success: true, message: "Submission received" }),
