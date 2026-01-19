@@ -20,6 +20,7 @@ import CRO from "./pages/services/CRO";
 import ORM from "./pages/services/ORM";
 import Portfolio from "./pages/Portfolio";
 import Demo from "./pages/Demo";
+import GrowthAssessment from "./pages/GrowthAssessment";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/demo" element={<Demo />} />
+          <Route path="/growth-assessment" element={<GrowthAssessment />} />
           <Route path="/services/seo" element={<SEO />} />
           <Route path="/services/ppc" element={<PPC />} />
           <Route path="/services/smm" element={<SMM />} />
