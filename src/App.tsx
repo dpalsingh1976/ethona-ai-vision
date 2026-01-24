@@ -21,6 +21,7 @@ import ORM from "./pages/services/ORM";
 import Portfolio from "./pages/Portfolio";
 import Demo from "./pages/Demo";
 import GrowthAssessment from "./pages/GrowthAssessment";
+import AiAgents from "./pages/AiAgents";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="/growth-assessment" element={<GrowthAssessment />} />
+          <Route path="/ai-agents" element={<AiAgents />} />
           <Route path="/services/seo" element={<SEO />} />
           <Route path="/services/ppc" element={<PPC />} />
           <Route path="/services/smm" element={<SMM />} />
