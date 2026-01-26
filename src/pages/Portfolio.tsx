@@ -15,6 +15,7 @@ import {
   ExternalLink,
   Search,
   X,
+  UtensilsCrossed,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ interface Category {
 const categoryColors: Record<string, { bg: string; border: string; iconBg: string }> = {
   healthcare: { bg: "bg-emerald-50", border: "border-l-emerald-400", iconBg: "bg-emerald-100 text-emerald-600" },
   legal: { bg: "bg-rose-50", border: "border-l-rose-400", iconBg: "bg-rose-100 text-rose-600" },
+  restaurant: { bg: "bg-red-50", border: "border-l-red-400", iconBg: "bg-red-100 text-red-600" },
   medspa: { bg: "bg-pink-50", border: "border-l-pink-400", iconBg: "bg-pink-100 text-pink-600" },
   dental: { bg: "bg-violet-50", border: "border-l-violet-400", iconBg: "bg-violet-100 text-violet-600" },
   automotive: { bg: "bg-amber-50", border: "border-l-amber-400", iconBg: "bg-amber-100 text-amber-600" },
@@ -66,6 +68,12 @@ const portfolioData: Category[] = [
     name: "Legal",
     icon: <Scale className="w-4 h-4" />,
     clients: [{ name: "The Medical Attorney", url: "https://www.themedicalattorney.com/" }],
+  },
+  {
+    id: "restaurant",
+    name: "Restaurant",
+    icon: <UtensilsCrossed className="w-4 h-4" />,
+    clients: [{ name: "Honest Vegetarian Restaurant", url: "https://honestclifton.com/" }],
   },
   {
     id: "medspa",
