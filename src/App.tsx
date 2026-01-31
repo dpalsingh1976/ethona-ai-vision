@@ -20,6 +20,7 @@ import CRO from "./pages/services/CRO";
 import ORM from "./pages/services/ORM";
 import Portfolio from "./pages/Portfolio";
 import Demo from "./pages/Demo";
+import RealEstateChatbot from "./pages/demos/RealEstateChatbot";
 import GrowthAssessment from "./pages/GrowthAssessment";
 import AiAgents from "./pages/AiAgents";
 import NotFound from "./pages/NotFound";
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/demo" element={<Demo />} />
+          <Route path="/demo/real-estate-chatbot" element={<RealEstateChatbot />} />
           <Route path="/growth-assessment" element={<GrowthAssessment />} />
           <Route path="/ai-agents" element={<AiAgents />} />
           <Route path="/services/seo" element={<SEO />} />
