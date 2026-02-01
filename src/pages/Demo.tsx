@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ExternalLink, Monitor, Sparkles, Building2, Bot } from "lucide-react";
+import { ExternalLink, Monitor, Sparkles, Building2, Bot, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -40,6 +40,17 @@ const realEstateDemos = [
     gradient: "from-sky-50 to-blue-50",
     iconBg: "bg-sky-100",
     iconColor: "text-sky-600",
+  },
+];
+
+const restaurantDemos = [
+  {
+    name: "Khalil Briyani",
+    description: "Modern restaurant website showcasing authentic cuisine with online ordering and menu presentation.",
+    url: "https://khalilbriyani.manus.space/",
+    gradient: "from-orange-50 to-amber-50",
+    iconBg: "bg-orange-100",
+    iconColor: "text-orange-600",
   },
 ];
 
@@ -113,8 +124,56 @@ const Demo = () => {
         </div>
       </section>
 
+      {/* Restaurant Demos Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-3 mb-8 max-w-5xl mx-auto">
+            <div className="p-3 rounded-xl bg-orange-100 text-orange-600">
+              <UtensilsCrossed className="w-6 h-6" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">Restaurant</h2>
+              <p className="text-muted-foreground">{restaurantDemos.length} Demo</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {restaurantDemos.map((demo, index) => (
+              <div
+                key={index}
+                className={`group relative bg-gradient-to-br ${demo.gradient} rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-orange-100`}
+              >
+                <div className={`w-12 h-12 ${demo.iconBg} rounded-xl flex items-center justify-center mb-4`}>
+                  <UtensilsCrossed className={`w-6 h-6 ${demo.iconColor}`} />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-2">
+                  {demo.name}
+                </h3>
+                <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                  {demo.description}
+                </p>
+                <Button
+                  asChild
+                  className="w-full bg-orange-600 hover:bg-orange-700 transition-colors"
+                >
+                  <a
+                    href={demo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2"
+                  >
+                    View Demo
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Real Estate AI Demos Section */}
-      <section className="py-16 bg-muted/30 flex-grow">
+      <section className="py-16 bg-background flex-grow">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-3 mb-8 max-w-5xl mx-auto">
             <div className="p-3 rounded-xl bg-sky-100 text-sky-600">
