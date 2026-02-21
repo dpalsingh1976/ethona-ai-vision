@@ -264,6 +264,7 @@ Deno.serve(async (req) => {
     const tools = [
       {
         type: "custom",
+        tool_id: "save_customer_info",
         name: "save_customer_info",
         description: "Save collected customer information (name, phone, email, budget, timeline, etc.) to the database in real-time during the conversation.",
         url: saveCustomerInfoUrl,
