@@ -30,7 +30,7 @@ const VOICE_MAP: Record<string, string> = {
 function buildConversationFlowNodes(config: AgentConfig) {
   const { company_name, agent_name } = config;
 
-  const nodes = [
+  const nodes: Record<string, unknown>[] = [
     {
       id: "greeting",
       type: "conversation",
@@ -146,34 +146,76 @@ function buildConversationFlowNodes(config: AgentConfig) {
     {
       id: "contact_capture",
       type: "conversation",
-      instruction: { type: "prompt", text: `Collect the caller's contact information: full name, phone, and email. Once you have their contact info, immediately call the save_customer_info function with all the data you've collected during the conversation including caller_name, phone, email, timeline, budget_min, budget_max, financing_status, pre_approved, preferred_locations, bedrooms, bathrooms, must_haves, motivation_reason, and has_agent. Use the agent_id and call_id from the current call context.` },
+      instruction: { type: "prompt", text: `Collect the caller's contact information: full name, phone number, and email address. Be friendly and explain you need this so ${agent_name} can follow up with them.` },
       extract_dynamic_variable: [
         { name: "caller_name", description: "Caller's full name", type: "string" },
         { name: "phone", description: "Caller's phone number", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "contact_to_summary", transition_condition: { type: "prompt", prompt: "Contact information has been collected." }, destination_node_id: "summary" }],
+      edges: [{ id: "contact_to_save", transition_condition: { type: "prompt", prompt: "Contact information has been collected." }, destination_node_id: "save_customer_info_node" }],
+    },
+    // Function node: automatically calls save_customer_info API when entered
+    {
+      id: "save_customer_info_node",
+      type: "function_call",
+      tool_id: "save_customer_info",
+      tool_type: "custom",
+      wait_for_result: true,
+      speak_during_execution: true,
+      speak_during_execution_prompt: "Let me save your information in our system.",
+      edges: [
+        { id: "save_to_summary", transition_condition: { type: "prompt", prompt: "Function has completed execution." }, destination_node_id: "summary" },
+      ],
     },
     {
       id: "consultation",
       type: "conversation",
-      instruction: { type: "prompt", text: `This is a warm lead. Offer a consultation call with ${agent_name}. Collect name, phone, and email. Once you have their contact info, immediately call the save_customer_info function with all collected data including caller_name, phone, email, timeline, budget_min, budget_max, financing_status, pre_approved, preferred_locations, motivation_reason, and has_agent. Use the agent_id and call_id from the current call context.` },
+      instruction: { type: "prompt", text: `This is a warm lead. Offer a consultation call with ${agent_name}. Collect their name, phone, and email so ${agent_name} can reach out.` },
       extract_dynamic_variable: [
         { name: "caller_name", description: "Caller's full name", type: "string" },
         { name: "phone", description: "Caller's phone number", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "consultation_to_summary", transition_condition: { type: "prompt", prompt: "Contact information has been collected or caller declined." }, destination_node_id: "summary" }],
+      edges: [{ id: "consultation_to_save", transition_condition: { type: "prompt", prompt: "Contact information has been collected or caller declined." }, destination_node_id: "save_customer_info_consultation" }],
+    },
+    // Function node for consultation path
+    {
+      id: "save_customer_info_consultation",
+      type: "function_call",
+      tool_id: "save_customer_info",
+      tool_type: "custom",
+      wait_for_result: true,
+      speak_during_execution: true,
+      speak_during_execution_prompt: "Let me save your information.",
+      edges: [
+        { id: "save_consultation_to_summary", transition_condition: { type: "prompt", prompt: "Function has completed execution." }, destination_node_id: "summary" },
+      ],
     },
     {
       id: "nurture",
       type: "conversation",
-      instruction: { type: "prompt", text: `This caller is early in their journey. Be helpful. Offer to send market updates. Collect info if they agree. If they provide any contact info, immediately call the save_customer_info function with all collected data including caller_name, email, and any other information gathered during the conversation. Use the agent_id and call_id from the current call context.` },
+      instruction: { type: "prompt", text: `This caller is early in their journey. Be helpful. Offer to send market updates. Collect their name and email if they agree.` },
       extract_dynamic_variable: [
         { name: "caller_name", description: "Caller's full name", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "nurture_to_summary", transition_condition: { type: "prompt", prompt: "Caller has provided info or declined." }, destination_node_id: "summary" }],
+      edges: [
+        { id: "nurture_to_save", transition_condition: { type: "prompt", prompt: "Caller has provided contact info." }, destination_node_id: "save_customer_info_nurture" },
+        { id: "nurture_to_summary", transition_condition: { type: "prompt", prompt: "Caller declined to provide info." }, destination_node_id: "summary" },
+      ],
+    },
+    // Function node for nurture path
+    {
+      id: "save_customer_info_nurture",
+      type: "function_call",
+      tool_id: "save_customer_info",
+      tool_type: "custom",
+      wait_for_result: true,
+      speak_during_execution: true,
+      speak_during_execution_prompt: "Saving your information so we can send you updates.",
+      edges: [
+        { id: "save_nurture_to_summary", transition_condition: { type: "prompt", prompt: "Function has completed execution." }, destination_node_id: "summary" },
+      ],
     },
     {
       id: "graceful_exit",
@@ -297,12 +339,7 @@ Deno.serve(async (req) => {
       start_node_id: "greeting",
       start_speaker: "agent",
       model_choice: { type: "cascading", model: "gpt-4.1" },
-      global_prompt: `You are Alex, a friendly and professional AI assistant for ${config.company_name}, helping ${config.agent_name}'s real estate business. You pre-qualify buyer leads. Be conversational, warm, and efficient. Never be pushy. Service areas: ${config.service_areas.join(", ")}.
-
-IMPORTANT: You have access to a tool called "save_customer_info". After collecting the caller's contact information (name, phone, email), you MUST call this tool immediately to save all collected data to the database. When calling the tool:
-- For agent_id, use the value of {{retell_agent_id}}
-- For call_id, use the value of {{call_id}}
-- Include all other data you've collected during the conversation (timeline, budget, financing status, etc.)`,
+      global_prompt: `You are Alex, a friendly and professional AI assistant for ${config.company_name}, helping ${config.agent_name}'s real estate business. You pre-qualify buyer leads. Be conversational, warm, and efficient. Never be pushy. Service areas: ${config.service_areas.join(", ")}.`,
       default_dynamic_variables: {
         retell_agent_id: "PLACEHOLDER_WILL_BE_UPDATED",
       },
