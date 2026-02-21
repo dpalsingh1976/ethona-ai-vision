@@ -152,14 +152,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
         { name: "phone", description: "Caller's phone number", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "contact_to_save", transition_condition: { type: "prompt", prompt: "Contact information has been collected." }, destination_node_id: "save_customer_data" }],
-    },
-    {
-      id: "save_customer_data",
-      type: "function_call",
-      tool_id: "save_customer_info",
-      tool_call_params_prompt: "Pass all collected customer data including caller_name, phone, email, timeline, budget_min, budget_max, financing_status, pre_approved, preferred_locations, bedrooms, bathrooms, must_haves, motivation_reason, and has_agent. Also include the agent_id and call_id from the current call context.",
-      edges: [{ id: "save_to_summary", destination_node_id: "summary" }],
+      edges: [{ id: "contact_to_summary", transition_condition: { type: "prompt", prompt: "Contact information has been collected." }, destination_node_id: "summary" }],
     },
     {
       id: "consultation",
@@ -170,7 +163,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
         { name: "phone", description: "Caller's phone number", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "consultation_to_save", transition_condition: { type: "prompt", prompt: "Contact information has been collected or caller declined." }, destination_node_id: "save_customer_data" }],
+      edges: [{ id: "consultation_to_summary", transition_condition: { type: "prompt", prompt: "Contact information has been collected or caller declined." }, destination_node_id: "summary" }],
     },
     {
       id: "nurture",
@@ -180,7 +173,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
         { name: "caller_name", description: "Caller's full name", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "nurture_to_save", transition_condition: { type: "prompt", prompt: "Caller has provided info or declined." }, destination_node_id: "save_customer_data" }],
+      edges: [{ id: "nurture_to_summary", transition_condition: { type: "prompt", prompt: "Caller has provided info or declined." }, destination_node_id: "summary" }],
     },
     {
       id: "graceful_exit",
