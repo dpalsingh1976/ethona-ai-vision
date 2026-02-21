@@ -11,10 +11,10 @@ function classifyLead(data: Record<string, unknown>): string {
   if (hasAgent) return "DISQUALIFIED";
 
   const timeline = String(data.timeline || "").toLowerCase();
-  const isHotTimeline = timeline.includes("0-3") || timeline.includes("1-3") || timeline.includes("next") || timeline.includes("couple") || timeline.includes("soon") || timeline.includes("immediately");
+  const isHotTimeline = timeline.includes("0-3") || timeline.includes("1-3") || timeline.includes("next") || timeline.includes("couple") || timeline.includes("soon") || timeline.includes("immediately") || timeline.includes("month") || timeline.includes("1 month") || timeline.includes("2 month") || timeline.includes("3 month");
   const isWarmTimeline = timeline.includes("3-6") || timeline.includes("six");
-  const preApproved = data.pre_approved === true || data.pre_approved === "true" || String(data.financing_status || "").toLowerCase().includes("pre-approved") || String(data.financing_status || "").toLowerCase().includes("cash");
-  const hasBudget = !!data.budget_max || !!data.budget_min;
+  const preApproved = data.pre_approved === true || data.pre_approved === "true" || String(data.financing_status || "").toLowerCase().includes("pre-approved") || String(data.financing_status || "").toLowerCase().includes("preapproved") || String(data.financing_status || "").toLowerCase().includes("cash");
+  const hasBudget = !!data.budget_max || !!data.budget_min || !!data.budget;
 
   if (isHotTimeline && preApproved && hasBudget) return "HOT";
   if (isWarmTimeline || (isHotTimeline && (!preApproved || !hasBudget))) return "WARM";
@@ -49,13 +49,31 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const body = await req.json();
-    const { agent_id, call_id } = body;
+    const rawBody = await req.json();
 
-    console.log("save-customer-info called with:", JSON.stringify({ agent_id, call_id, caller_name: body.caller_name }));
+    // Retell sends function call payloads wrapped in a "call" object
+    // Extract the actual data from the Retell payload format
+    const callData = rawBody.call || rawBody;
+    const args = rawBody.args || {};
+    const dynamicVars = callData.collected_dynamic_variables || {};
+
+    // Merge: prefer args (function parameters) > dynamic variables > call-level fields
+    const merged = { ...dynamicVars, ...args };
+
+    const agent_id = merged.agent_id || callData.agent_id || rawBody.agent_id;
+    const call_id = merged.call_id || callData.call_id || rawBody.call_id;
+
+    console.log("save-customer-info called with:", JSON.stringify({
+      has_call_wrapper: !!rawBody.call,
+      agent_id,
+      call_id,
+      args_keys: Object.keys(args),
+      dynamic_var_keys: Object.keys(dynamicVars),
+      merged_keys: Object.keys(merged),
+    }));
 
     if (!agent_id) {
-      console.error("Missing agent_id in request body:", JSON.stringify(body));
+      console.error("Missing agent_id. Raw body keys:", Object.keys(rawBody), "Call keys:", Object.keys(callData));
       return new Response(JSON.stringify({ error: "agent_id is required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -75,51 +93,77 @@ Deno.serve(async (req) => {
       .single();
 
     if (!agent) {
+      console.error("Agent not found for retell_agent_id:", agent_id);
       return new Response(JSON.stringify({ error: "Agent not found" }), {
         status: 404,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Classify lead
-    const score = classifyLead(body);
-    const status = mapLeadStatus(score);
-
-    const budgetMin = body.budget_min ? Number(body.budget_min) : null;
-    const budgetMax = body.budget_max ? Number(body.budget_max) : null;
-    const preApproved = body.pre_approved === true || body.pre_approved === "true";
-    const desiredAreas = body.preferred_locations
-      ? (Array.isArray(body.preferred_locations) ? body.preferred_locations : [body.preferred_locations])
+    // Extract customer data from merged sources, also try parsing from transcript if dynamic vars are empty
+    const callerName = sanitize(merged.caller_name || merged.name, 200);
+    const phone = sanitize(merged.phone || merged.caller_phone, 30);
+    const email = sanitize(merged.email, 255);
+    const timeline = sanitize(merged.timeline, 100);
+    const budgetStr = merged.budget || merged.budget_max;
+    const budgetMin = merged.budget_min ? Number(merged.budget_min) : null;
+    const budgetMax = budgetStr ? Number(String(budgetStr).replace(/[^0-9.]/g, '')) : null;
+    const financingStatus = sanitize(merged.financing_status || merged.pre_approval_status, 100);
+    const preApproved = merged.pre_approved === true || merged.pre_approved === "true" || 
+      String(financingStatus || "").toLowerCase().includes("pre-approved") ||
+      String(financingStatus || "").toLowerCase().includes("preapproved");
+    const desiredAreas = merged.preferred_locations
+      ? (Array.isArray(merged.preferred_locations) ? merged.preferred_locations : [merged.preferred_locations])
       : null;
+    const hasAgent = merged.has_agent === true || merged.has_agent === "true" || merged.has_agent === "yes";
+
+    // Classify lead
+    const classifyData = {
+      has_agent: hasAgent,
+      timeline,
+      pre_approved: preApproved,
+      financing_status: financingStatus,
+      budget_min: budgetMin,
+      budget_max: budgetMax,
+      budget: budgetStr,
+    };
+    const score = classifyLead(classifyData);
+    const status = mapLeadStatus(score);
 
     const leadData = {
       org_id: agent.org_id,
       agent_id: agent.id,
-      name: sanitize(body.caller_name, 200),
-      caller_phone: sanitize(body.phone, 30),
-      email: sanitize(body.email, 255),
-      timeline: sanitize(body.timeline, 100),
+      name: callerName,
+      caller_phone: phone,
+      email,
+      timeline,
       budget_min: budgetMin,
       budget_max: budgetMax,
-      financing_status: sanitize(body.financing_status, 100),
+      financing_status: financingStatus,
       pre_approved: preApproved,
       desired_areas: desiredAreas,
       must_haves: {
-        bedrooms: body.bedrooms || null,
-        bathrooms: body.bathrooms || null,
-        features: body.must_haves || null,
+        bedrooms: merged.bedrooms || null,
+        bathrooms: merged.bathrooms || null,
+        features: merged.must_haves || null,
       },
-      motivation_reason: sanitize(body.motivation_reason, 500),
+      motivation_reason: sanitize(merged.motivation_reason, 500),
       score,
       status,
     };
 
+    console.log("Lead data to save:", JSON.stringify(leadData));
+
     // Check if a call record already exists for this call_id
-    const { data: existingCall } = await supabase
-      .from("calls")
-      .select("id, lead_id")
-      .eq("retell_call_id", call_id)
-      .maybeSingle();
+    let existingCall = null;
+    if (call_id) {
+      const { data } = await supabase
+        .from("calls")
+        .select("id, lead_id")
+        .eq("retell_call_id", call_id)
+        .maybeSingle();
+      existingCall = data;
+    }
 
     let leadId: string | null = null;
 
@@ -139,7 +183,7 @@ Deno.serve(async (req) => {
         .single();
       leadId = lead?.id || null;
 
-      if (!existingCall) {
+      if (!existingCall && call_id) {
         // Create call stub
         await supabase.from("calls").insert({
           org_id: agent.org_id,
@@ -147,9 +191,9 @@ Deno.serve(async (req) => {
           lead_id: leadId,
           retell_call_id: call_id,
           outcome: score,
-          extracted_data: body,
+          extracted_data: merged,
         });
-      } else {
+      } else if (existingCall) {
         // Link lead to existing call
         await supabase.from("calls").update({ lead_id: leadId }).eq("id", existingCall.id);
       }
@@ -157,7 +201,13 @@ Deno.serve(async (req) => {
 
     console.log("Saved customer info:", { call_id, leadId, score, status });
 
-    return new Response(JSON.stringify({ success: true, lead_id: leadId, score, status }), {
+    // Return result that Retell can use in subsequent nodes
+    return new Response(JSON.stringify({ 
+      result: `Lead saved successfully. Score: ${score}, Status: ${status}`,
+      lead_id: leadId, 
+      score, 
+      status 
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
