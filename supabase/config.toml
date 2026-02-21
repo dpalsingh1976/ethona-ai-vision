@@ -2,3 +2,12 @@ project_id = "qkjufptrgneockakeoth"
 
 [functions.send-contact-email]
 verify_jwt = false
+
+[functions.create-retell-agent]
+verify_jwt = false
+
+[functions.fetch-retell-calls]
+verify_jwt = false
+
+[functions.retell-webhook]
+verify_jwt = false

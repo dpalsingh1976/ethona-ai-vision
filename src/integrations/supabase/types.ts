@@ -14,6 +14,235 @@ export type Database = {
   }
   public: {
     Tables: {
+      agents: {
+        Row: {
+          auto_schedule: boolean
+          calendly_link: string | null
+          category: string
+          company_name: string | null
+          created_at: string
+          draft_workflow: Json | null
+          forwarding_number: string | null
+          greeting_style: string | null
+          id: string
+          last_published_at: string | null
+          name: string
+          org_id: string
+          phone_number: string | null
+          published_workflow: Json | null
+          retell_agent_id: string | null
+          retell_flow_id: string | null
+          service_areas: string[] | null
+          status: Database["public"]["Enums"]["agent_status"]
+          updated_at: string
+          version: number | null
+          voice_persona: string | null
+        }
+        Insert: {
+          auto_schedule?: boolean
+          calendly_link?: string | null
+          category?: string
+          company_name?: string | null
+          created_at?: string
+          draft_workflow?: Json | null
+          forwarding_number?: string | null
+          greeting_style?: string | null
+          id?: string
+          last_published_at?: string | null
+          name: string
+          org_id: string
+          phone_number?: string | null
+          published_workflow?: Json | null
+          retell_agent_id?: string | null
+          retell_flow_id?: string | null
+          service_areas?: string[] | null
+          status?: Database["public"]["Enums"]["agent_status"]
+          updated_at?: string
+          version?: number | null
+          voice_persona?: string | null
+        }
+        Update: {
+          auto_schedule?: boolean
+          calendly_link?: string | null
+          category?: string
+          company_name?: string | null
+          created_at?: string
+          draft_workflow?: Json | null
+          forwarding_number?: string | null
+          greeting_style?: string | null
+          id?: string
+          last_published_at?: string | null
+          name?: string
+          org_id?: string
+          phone_number?: string | null
+          published_workflow?: Json | null
+          retell_agent_id?: string | null
+          retell_flow_id?: string | null
+          service_areas?: string[] | null
+          status?: Database["public"]["Enums"]["agent_status"]
+          updated_at?: string
+          version?: number | null
+          voice_persona?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agents_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      appointments: {
+        Row: {
+          agent_id: string | null
+          calendar_provider: string | null
+          created_at: string
+          end_time: string | null
+          external_event_id: string | null
+          id: string
+          lead_id: string | null
+          location: string | null
+          notes: string | null
+          org_id: string
+          outcome: string | null
+          property_address: string | null
+          start_time: string
+          status: Database["public"]["Enums"]["appointment_status"]
+          updated_at: string
+        }
+        Insert: {
+          agent_id?: string | null
+          calendar_provider?: string | null
+          created_at?: string
+          end_time?: string | null
+          external_event_id?: string | null
+          id?: string
+          lead_id?: string | null
+          location?: string | null
+          notes?: string | null
+          org_id: string
+          outcome?: string | null
+          property_address?: string | null
+          start_time: string
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string | null
+          calendar_provider?: string | null
+          created_at?: string
+          end_time?: string | null
+          external_event_id?: string | null
+          id?: string
+          lead_id?: string | null
+          location?: string | null
+          notes?: string | null
+          org_id?: string
+          outcome?: string | null
+          property_address?: string | null
+          start_time?: string
+          status?: Database["public"]["Enums"]["appointment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calls: {
+        Row: {
+          agent_id: string | null
+          created_at: string
+          duration_seconds: number | null
+          ended_at: string | null
+          extracted_data: Json | null
+          id: string
+          lead_id: string | null
+          org_id: string
+          outcome: string | null
+          recording_url: string | null
+          retell_call_id: string | null
+          started_at: string | null
+          transcript: string | null
+          transcript_summary: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          extracted_data?: Json | null
+          id?: string
+          lead_id?: string | null
+          org_id: string
+          outcome?: string | null
+          recording_url?: string | null
+          retell_call_id?: string | null
+          started_at?: string | null
+          transcript?: string | null
+          transcript_summary?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          extracted_data?: Json | null
+          id?: string
+          lead_id?: string | null
+          org_id?: string
+          outcome?: string | null
+          recording_url?: string | null
+          retell_call_id?: string | null
+          started_at?: string | null
+          transcript?: string | null
+          transcript_summary?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calls_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calls_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calls_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_submissions: {
         Row: {
           created_at: string
@@ -83,15 +312,355 @@ export type Database = {
         }
         Relationships: []
       }
+      integrations: {
+        Row: {
+          config: Json | null
+          created_at: string
+          id: string
+          is_connected: boolean | null
+          org_id: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string
+          id?: string
+          is_connected?: boolean | null
+          org_id: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string
+          id?: string
+          is_connected?: boolean | null
+          org_id?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          agent_id: string | null
+          budget_max: number | null
+          budget_min: number | null
+          caller_phone: string | null
+          created_at: string
+          desired_areas: string[] | null
+          down_payment_estimate: number | null
+          email: string | null
+          financing_status: string | null
+          id: string
+          motivation_reason: string | null
+          motivation_score: number | null
+          must_haves: Json | null
+          name: string | null
+          notes: string | null
+          org_id: string
+          pre_approved: boolean | null
+          property_type: string | null
+          score: string | null
+          status: Database["public"]["Enums"]["lead_status"]
+          tags: string[] | null
+          timeline: string | null
+          updated_at: string
+        }
+        Insert: {
+          agent_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          caller_phone?: string | null
+          created_at?: string
+          desired_areas?: string[] | null
+          down_payment_estimate?: number | null
+          email?: string | null
+          financing_status?: string | null
+          id?: string
+          motivation_reason?: string | null
+          motivation_score?: number | null
+          must_haves?: Json | null
+          name?: string | null
+          notes?: string | null
+          org_id: string
+          pre_approved?: boolean | null
+          property_type?: string | null
+          score?: string | null
+          status?: Database["public"]["Enums"]["lead_status"]
+          tags?: string[] | null
+          timeline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          caller_phone?: string | null
+          created_at?: string
+          desired_areas?: string[] | null
+          down_payment_estimate?: number | null
+          email?: string | null
+          financing_status?: string | null
+          id?: string
+          motivation_reason?: string | null
+          motivation_score?: number | null
+          must_haves?: Json | null
+          name?: string | null
+          notes?: string | null
+          org_id?: string
+          pre_approved?: boolean | null
+          property_type?: string | null
+          score?: string | null
+          status?: Database["public"]["Enums"]["lead_status"]
+          tags?: string[] | null
+          timeline?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_members: {
+        Row: {
+          created_at: string
+          id: string
+          org_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          org_id: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          org_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_members_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          brand_colors: Json | null
+          created_at: string
+          id: string
+          industry: string
+          logo_url: string | null
+          name: string
+          onboarding_completed: boolean | null
+          service_area: string | null
+          subscription_status: string | null
+          subscription_tier: string | null
+          team_size: number | null
+          updated_at: string
+        }
+        Insert: {
+          brand_colors?: Json | null
+          created_at?: string
+          id?: string
+          industry?: string
+          logo_url?: string | null
+          name: string
+          onboarding_completed?: boolean | null
+          service_area?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          team_size?: number | null
+          updated_at?: string
+        }
+        Update: {
+          brand_colors?: Json | null
+          created_at?: string
+          id?: string
+          industry?: string
+          logo_url?: string | null
+          name?: string
+          onboarding_completed?: boolean | null
+          service_area?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          team_size?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      qualification_rules: {
+        Row: {
+          created_at: string
+          id: string
+          min_budget: number | null
+          min_motivation_score: number | null
+          org_id: string
+          ready_timeline: string | null
+          require_pre_approval: boolean | null
+          send_to_human_rules: Json | null
+          updated_at: string
+          warm_timeline: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          min_budget?: number | null
+          min_motivation_score?: number | null
+          org_id: string
+          ready_timeline?: string | null
+          require_pre_approval?: boolean | null
+          send_to_human_rules?: Json | null
+          updated_at?: string
+          warm_timeline?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          min_budget?: number | null
+          min_motivation_score?: number | null
+          org_id?: string
+          ready_timeline?: string | null
+          require_pre_approval?: boolean | null
+          send_to_human_rules?: Json | null
+          updated_at?: string
+          warm_timeline?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qualification_rules_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      weekly_reports: {
+        Row: {
+          created_at: string
+          id: string
+          metrics: Json
+          org_id: string
+          sent_at: string | null
+          week_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metrics?: Json
+          org_id: string
+          sent_at?: string | null
+          week_start: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metrics?: Json
+          org_id?: string
+          sent_at?: string | null
+          week_start?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weekly_reports_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_org_ids: { Args: { _user_id: string }; Returns: string[] }
+      has_org_role: {
+        Args: {
+          _org_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_org_admin: {
+        Args: { _org_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_org_member: {
+        Args: { _org_id: string; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      agent_status: "draft" | "published" | "paused" | "archived"
+      app_role: "owner" | "admin" | "agent" | "viewer"
+      appointment_status:
+        | "scheduled"
+        | "confirmed"
+        | "completed"
+        | "no_show"
+        | "cancelled"
+        | "rescheduled"
+      lead_status:
+        | "new"
+        | "qualified"
+        | "warm"
+        | "nurture"
+        | "ready"
+        | "disqualified"
+        | "sent_to_agent"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -218,6 +787,26 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      agent_status: ["draft", "published", "paused", "archived"],
+      app_role: ["owner", "admin", "agent", "viewer"],
+      appointment_status: [
+        "scheduled",
+        "confirmed",
+        "completed",
+        "no_show",
+        "cancelled",
+        "rescheduled",
+      ],
+      lead_status: [
+        "new",
+        "qualified",
+        "warm",
+        "nurture",
+        "ready",
+        "disqualified",
+        "sent_to_agent",
+      ],
+    },
   },
 } as const
