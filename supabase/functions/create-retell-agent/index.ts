@@ -146,7 +146,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
     {
       id: "contact_capture",
       type: "conversation",
-      instruction: { type: "prompt", text: `Collect the caller's contact information: full name, phone, and email.` },
+      instruction: { type: "prompt", text: `Collect the caller's contact information: full name, phone, and email. Once you have their contact info, immediately call the save_customer_info function with all the data you've collected during the conversation including caller_name, phone, email, timeline, budget_min, budget_max, financing_status, pre_approved, preferred_locations, bedrooms, bathrooms, must_haves, motivation_reason, and has_agent. Use the agent_id and call_id from the current call context.` },
       extract_dynamic_variable: [
         { name: "caller_name", description: "Caller's full name", type: "string" },
         { name: "phone", description: "Caller's phone number", type: "string" },
@@ -157,7 +157,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
     {
       id: "consultation",
       type: "conversation",
-      instruction: { type: "prompt", text: `This is a warm lead. Offer a consultation call with ${agent_name}. Collect name, phone, and email.` },
+      instruction: { type: "prompt", text: `This is a warm lead. Offer a consultation call with ${agent_name}. Collect name, phone, and email. Once you have their contact info, immediately call the save_customer_info function with all collected data including caller_name, phone, email, timeline, budget_min, budget_max, financing_status, pre_approved, preferred_locations, motivation_reason, and has_agent. Use the agent_id and call_id from the current call context.` },
       extract_dynamic_variable: [
         { name: "caller_name", description: "Caller's full name", type: "string" },
         { name: "phone", description: "Caller's phone number", type: "string" },
@@ -168,7 +168,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
     {
       id: "nurture",
       type: "conversation",
-      instruction: { type: "prompt", text: `This caller is early in their journey. Be helpful. Offer to send market updates. Collect info if they agree.` },
+      instruction: { type: "prompt", text: `This caller is early in their journey. Be helpful. Offer to send market updates. Collect info if they agree. If they provide any contact info, immediately call the save_customer_info function with all collected data including caller_name, email, and any other information gathered during the conversation. Use the agent_id and call_id from the current call context.` },
       extract_dynamic_variable: [
         { name: "caller_name", description: "Caller's full name", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
