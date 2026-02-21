@@ -257,16 +257,18 @@ Deno.serve(async (req) => {
     const tools = [
       {
         type: "custom",
-        tool_id: "save_customer_info",
         name: "save_customer_info",
-        description: "Save collected customer information (name, phone, email, budget, timeline, etc.) to the database in real-time during the conversation.",
+        description: "Save collected customer information to the database. Call this function after collecting the caller's contact information. Always include the agent_id (use the dynamic variable {{retell_agent_id}}) and call_id (use the dynamic variable {{call_id}}).",
         url: saveCustomerInfoUrl,
         method: "POST",
+        speak_during_execution: true,
+        speak_after_execution: true,
+        execution_message_description: "Saving your information to our system",
         parameters: {
           type: "object",
           properties: {
-            agent_id: { type: "string", description: "The Retell agent ID for this call" },
-            call_id: { type: "string", description: "The Retell call ID for this call" },
+            agent_id: { type: "string", description: "The Retell agent ID. Use the value of the dynamic variable {{retell_agent_id}}" },
+            call_id: { type: "string", description: "The current call ID. Use the value of the dynamic variable {{call_id}}" },
             caller_name: { type: "string", description: "Caller's full name" },
             phone: { type: "string", description: "Caller's phone number" },
             email: { type: "string", description: "Caller's email address" },
@@ -282,7 +284,7 @@ Deno.serve(async (req) => {
             motivation_reason: { type: "string", description: "Why the caller is looking to buy" },
             has_agent: { type: "boolean", description: "Whether caller already has a real estate agent" },
           },
-          required: ["agent_id", "call_id"],
+          required: ["caller_name"],
         },
       },
     ];
@@ -294,7 +296,15 @@ Deno.serve(async (req) => {
       start_node_id: "greeting",
       start_speaker: "agent",
       model_choice: { type: "cascading", model: "gpt-4.1" },
-      global_prompt: `You are Alex, a friendly and professional AI assistant for ${config.company_name}, helping ${config.agent_name}'s real estate business. You pre-qualify buyer leads. Be conversational, warm, and efficient. Never be pushy. Service areas: ${config.service_areas.join(", ")}.`,
+      global_prompt: `You are Alex, a friendly and professional AI assistant for ${config.company_name}, helping ${config.agent_name}'s real estate business. You pre-qualify buyer leads. Be conversational, warm, and efficient. Never be pushy. Service areas: ${config.service_areas.join(", ")}.
+
+IMPORTANT: You have access to a tool called "save_customer_info". After collecting the caller's contact information (name, phone, email), you MUST call this tool immediately to save all collected data to the database. When calling the tool:
+- For agent_id, use the value of {{retell_agent_id}}
+- For call_id, use the value of {{call_id}}
+- Include all other data you've collected during the conversation (timeline, budget, financing status, etc.)`,
+      default_dynamic_variables: {
+        retell_agent_id: "PLACEHOLDER_WILL_BE_UPDATED",
+      },
     };
 
     console.log("Creating conversation flow in Retell...");
@@ -350,6 +360,32 @@ Deno.serve(async (req) => {
 
     const agentData = await agentRes.json();
     const retellAgentId = agentData.agent_id;
+
+    // Update the conversation flow with the actual retell_agent_id as a dynamic variable
+    console.log("Updating flow with retell_agent_id dynamic variable...");
+    const updateFlowRes = await fetch(`https://api.retellai.com/update-conversation-flow/${conversationFlowId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${RETELL_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        default_dynamic_variables: {
+          retell_agent_id: retellAgentId,
+        },
+      }),
+    });
+
+    if (!updateFlowRes.ok) {
+      const errBody = await updateFlowRes.text();
+      console.error("Failed to update flow with agent_id:", errBody);
+      // Non-fatal: continue even if this fails
+    } else {
+      console.log("Flow updated with retell_agent_id:", retellAgentId);
+    }
+
+    // Update flowPayload for DB storage with actual agent_id
+    flowPayload.default_dynamic_variables = { retell_agent_id: retellAgentId };
 
     const { data: agent, error: insertError } = await supabase
       .from("agents")
