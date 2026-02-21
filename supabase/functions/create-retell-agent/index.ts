@@ -257,6 +257,7 @@ Deno.serve(async (req) => {
     const tools = [
       {
         type: "custom",
+        tool_id: "save_customer_info",
         name: "save_customer_info",
         description: "Save collected customer information to the database. Call this function after collecting the caller's contact information. Always include the agent_id (use the dynamic variable {{retell_agent_id}}) and call_id (use the dynamic variable {{call_id}}).",
         url: saveCustomerInfoUrl,
