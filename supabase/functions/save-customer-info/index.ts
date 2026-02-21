@@ -52,8 +52,11 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { agent_id, call_id } = body;
 
-    if (!agent_id || !call_id) {
-      return new Response(JSON.stringify({ error: "agent_id and call_id are required" }), {
+    console.log("save-customer-info called with:", JSON.stringify({ agent_id, call_id, caller_name: body.caller_name }));
+
+    if (!agent_id) {
+      console.error("Missing agent_id in request body:", JSON.stringify(body));
+      return new Response(JSON.stringify({ error: "agent_id is required" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
