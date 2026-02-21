@@ -157,7 +157,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
     // Function node: automatically calls save_customer_info API when entered
     {
       id: "save_customer_info_node",
-      type: "function_call",
+      type: "function",
       tool_id: "save_customer_info",
       tool_type: "custom",
       wait_for_result: true,
@@ -181,7 +181,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
     // Function node for consultation path
     {
       id: "save_customer_info_consultation",
-      type: "function_call",
+      type: "function",
       tool_id: "save_customer_info",
       tool_type: "custom",
       wait_for_result: true,
@@ -207,7 +207,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
     // Function node for nurture path
     {
       id: "save_customer_info_nurture",
-      type: "function_call",
+      type: "function",
       tool_id: "save_customer_info",
       tool_type: "custom",
       wait_for_result: true,
