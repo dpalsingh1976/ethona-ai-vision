@@ -124,12 +124,12 @@ function buildConversationFlowNodes(config: AgentConfig) {
     {
       id: "lead_classify",
       type: "conversation",
-      instruction: { type: "prompt", text: "Based on everything the caller has shared, classify them as a lead. Do not ask any more questions." },
+      instruction: { type: "prompt", text: `You have finished asking all qualification questions. Now you MUST immediately transition to the next step based on the caller's answers. Do NOT say goodbye, do NOT wrap up the call, do NOT tell the caller you will pass their info along. Simply say "Great, let me check what options we have for you" and then transition. Evaluate the caller based on: timeline, pre-approval/financing status, budget, and whether they have another agent.` },
       edges: [
-        { id: "hot_lead", transition_condition: { type: "prompt", prompt: "The caller meets ALL criteria: timeline within 3 months, pre-approved or cash, budget provided, no other agent." }, destination_node_id: "schedule" },
-        { id: "disqualified_lead", transition_condition: { type: "prompt", prompt: "The caller already has another real estate agent." }, destination_node_id: "graceful_exit" },
-        { id: "warm_lead", transition_condition: { type: "prompt", prompt: "Timeline 3-6 months, or missing one qualification criteria but otherwise interested." }, destination_node_id: "consultation" },
-        { id: "default_nurture", transition_condition: { type: "prompt", prompt: "Does not meet hot or warm criteria, or timeline beyond 6 months." }, destination_node_id: "nurture" },
+        { id: "disqualified_lead", transition_condition: { type: "prompt", prompt: "The caller said they already have or are working with another real estate agent." }, destination_node_id: "graceful_exit" },
+        { id: "hot_lead", transition_condition: { type: "prompt", prompt: "The caller's timeline is within 3 months AND they are pre-approved or paying cash AND they shared a budget AND they do NOT have another agent." }, destination_node_id: "schedule" },
+        { id: "warm_lead", transition_condition: { type: "prompt", prompt: "The caller does not have another agent, but their timeline is 3-6 months OR they are missing pre-approval OR they did not share a budget." }, destination_node_id: "consultation" },
+        { id: "default_nurture", transition_condition: { type: "prompt", prompt: "The caller does not have another agent and their timeline is beyond 6 months, or they are very early in their search." }, destination_node_id: "nurture" },
       ],
     },
     {
