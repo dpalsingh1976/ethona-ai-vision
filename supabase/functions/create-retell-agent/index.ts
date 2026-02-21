@@ -152,7 +152,14 @@ function buildConversationFlowNodes(config: AgentConfig) {
         { name: "phone", description: "Caller's phone number", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "contact_to_summary", transition_condition: { type: "prompt", prompt: "Contact information has been collected." }, destination_node_id: "summary" }],
+      edges: [{ id: "contact_to_save", transition_condition: { type: "prompt", prompt: "Contact information has been collected." }, destination_node_id: "save_customer_data" }],
+    },
+    {
+      id: "save_customer_data",
+      type: "function_call",
+      tool_id: "save_customer_info",
+      tool_call_params_prompt: "Pass all collected customer data including caller_name, phone, email, timeline, budget_min, budget_max, financing_status, pre_approved, preferred_locations, bedrooms, bathrooms, must_haves, motivation_reason, and has_agent. Also include the agent_id and call_id from the current call context.",
+      edges: [{ id: "save_to_summary", destination_node_id: "summary" }],
     },
     {
       id: "consultation",
@@ -163,7 +170,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
         { name: "phone", description: "Caller's phone number", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "consultation_to_summary", transition_condition: { type: "prompt", prompt: "Contact information has been collected or caller declined." }, destination_node_id: "summary" }],
+      edges: [{ id: "consultation_to_save", transition_condition: { type: "prompt", prompt: "Contact information has been collected or caller declined." }, destination_node_id: "save_customer_data" }],
     },
     {
       id: "nurture",
@@ -173,7 +180,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
         { name: "caller_name", description: "Caller's full name", type: "string" },
         { name: "email", description: "Caller's email address", type: "string" },
       ],
-      edges: [{ id: "nurture_to_summary", transition_condition: { type: "prompt", prompt: "Caller has provided info or declined." }, destination_node_id: "summary" }],
+      edges: [{ id: "nurture_to_save", transition_condition: { type: "prompt", prompt: "Caller has provided info or declined." }, destination_node_id: "save_customer_data" }],
     },
     {
       id: "graceful_exit",
@@ -252,10 +259,44 @@ Deno.serve(async (req) => {
     const nodes = buildConversationFlowNodes(config);
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const webhookUrl = `${supabaseUrl}/functions/v1/retell-webhook`;
+    const saveCustomerInfoUrl = `${supabaseUrl}/functions/v1/save-customer-info`;
+
+    const tools = [
+      {
+        type: "custom",
+        name: "save_customer_info",
+        description: "Save collected customer information (name, phone, email, budget, timeline, etc.) to the database in real-time during the conversation.",
+        url: saveCustomerInfoUrl,
+        method: "POST",
+        parameters: {
+          type: "object",
+          properties: {
+            agent_id: { type: "string", description: "The Retell agent ID for this call" },
+            call_id: { type: "string", description: "The Retell call ID for this call" },
+            caller_name: { type: "string", description: "Caller's full name" },
+            phone: { type: "string", description: "Caller's phone number" },
+            email: { type: "string", description: "Caller's email address" },
+            timeline: { type: "string", description: "Buyer timeline (e.g. 0-3 months, 3-6 months)" },
+            budget_min: { type: "number", description: "Minimum budget amount" },
+            budget_max: { type: "number", description: "Maximum budget amount" },
+            financing_status: { type: "string", description: "Financing status (pre-approved, cash, not yet)" },
+            pre_approved: { type: "boolean", description: "Whether caller is pre-approved for mortgage" },
+            preferred_locations: { type: "string", description: "Preferred areas or neighborhoods" },
+            bedrooms: { type: "string", description: "Number of bedrooms desired" },
+            bathrooms: { type: "string", description: "Number of bathrooms desired" },
+            must_haves: { type: "string", description: "Must-have property features" },
+            motivation_reason: { type: "string", description: "Why the caller is looking to buy" },
+            has_agent: { type: "boolean", description: "Whether caller already has a real estate agent" },
+          },
+          required: ["agent_id", "call_id"],
+        },
+      },
+    ];
 
     const flowPayload = {
       name: `${config.company_name} - ${config.agent_name} Buyer Qualification`,
       nodes,
+      tools,
       start_node_id: "greeting",
       start_speaker: "agent",
       model_choice: { type: "cascading", model: "gpt-4.1" },
