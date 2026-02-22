@@ -1,4 +1,4 @@
-import { Bot, MoreVertical, Trash2, Eye } from "lucide-react";
+import { Bot, MoreVertical, Trash2, Eye, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,10 +23,11 @@ const STATUS_VARIANTS: Record<string, "default" | "secondary" | "outline"> = {
 interface AgentCardProps {
   agent: Agent;
   onTest: (agent: Agent) => void;
+  onTestCall: (agent: Agent) => void;
   onDelete: (agentId: string) => void;
 }
 
-export function AgentCard({ agent, onTest, onDelete }: AgentCardProps) {
+export function AgentCard({ agent, onTest, onTestCall, onDelete }: AgentCardProps) {
   return (
     <Card className="group hover:shadow-md transition-shadow">
       <CardContent className="p-5">
@@ -51,6 +52,10 @@ export function AgentCard({ agent, onTest, onDelete }: AgentCardProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onTestCall(agent)}>
+                  <Phone className="mr-2 h-4 w-4" />
+                  Test Call
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onTest(agent)}>
                   <Eye className="mr-2 h-4 w-4" />
                   View Flow

@@ -6,6 +6,7 @@ import { useAgents, useDeleteAgent, type Agent } from "@/hooks/useAgents";
 import { CreateAgentDialog } from "@/components/ai-agent/CreateAgentDialog";
 import { AgentCard } from "@/components/ai-agent/AgentCard";
 import { AgentTestPanel } from "@/components/ai-agent/AgentTestPanel";
+import { AgentTestCall } from "@/components/ai-agent/AgentTestCall";
 import { useAuth } from "@/hooks/useAuthContext";
 import { toast } from "@/hooks/use-toast";
 
@@ -13,6 +14,7 @@ export default function Agents() {
   const { orgId } = useAuth();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [testAgent, setTestAgent] = useState<Agent | null>(null);
+  const [testCallAgent, setTestCallAgent] = useState<Agent | null>(null);
   const { data: agents = [], isLoading } = useAgents(orgId || undefined);
   const deleteAgent = useDeleteAgent();
 
@@ -48,12 +50,13 @@ export default function Agents() {
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {agents.map((agent) => <AgentCard key={agent.id} agent={agent} onTest={setTestAgent} onDelete={handleDelete} />)}
+          {agents.map((agent) => <AgentCard key={agent.id} agent={agent} onTest={setTestAgent} onTestCall={setTestCallAgent} onDelete={handleDelete} />)}
         </div>
       )}
 
       <CreateAgentDialog open={dialogOpen} onOpenChange={setDialogOpen} orgId={orgId || ""} />
       {testAgent && <AgentTestPanel agent={testAgent} onClose={() => setTestAgent(null)} />}
+      {testCallAgent && <AgentTestCall agent={testCallAgent} onClose={() => setTestCallAgent(null)} />}
     </div>
   );
 }
