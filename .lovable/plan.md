@@ -1,66 +1,74 @@
 
 
-## Create "Save Customer Info" API for Retell AI Custom Functions
+## Add "Test Call" Feature for Agents
 
-### What This Does
-
-Creates a new backend function that Retell AI can call **mid-conversation** (via a Custom Function node in the flow) to save collected customer data to the database in real-time -- rather than waiting until the call ends.
-
-This means lead data gets persisted as soon as the agent gathers it, so even if a call drops, the information is already saved.
+Allow users to test their AI voice agent directly from the dashboard using their browser microphone, instead of going to the Retell AI platform.
 
 ### How It Works
 
 ```text
-Retell AI Flow (e.g. after "contact_capture" node)
+User clicks "Test Call" on Agent Card
         |
         v
-Custom Function call --> POST /functions/v1/save-customer-info
+Frontend calls edge function: create-web-call
         |
         v
-Edge function receives extracted variables
+Edge function calls Retell API: POST /v2/create-web-call
+  (with agent's retell_agent_id + RETELL_API_KEY)
         |
         v
-Looks up agent by retell_agent_id
+Returns access_token to frontend
         |
         v
-Creates or updates lead in database
+Frontend uses retell-client-js-sdk to start a live voice call
         |
         v
-Returns lead_id + status back to Retell
+User speaks with their AI agent in the browser
 ```
 
-### Implementation Details
+### Changes
 
-**1. New Edge Function: `supabase/functions/save-customer-info/index.ts`**
+**1. New Edge Function: `supabase/functions/create-web-call/index.ts`**
 
-- Public endpoint (no JWT -- called by Retell AI servers)
-- Accepts POST with JSON body containing:
-  - `agent_id` (Retell agent ID to identify the org)
-  - `call_id` (Retell call ID for linking)
-  - Customer fields: `caller_name`, `phone`, `email`, `timeline`, `budget_min`, `budget_max`, `financing_status`, `pre_approved`, `preferred_locations`, `bedrooms`, `bathrooms`, `must_haves`, `motivation_reason`, `has_agent`
-- Looks up the internal agent + org by `retell_agent_id`
-- Runs lead classification (HOT/WARM/COLD/DISQUALIFIED) using the same logic as the webhook
-- Upserts a lead record (creates new or updates existing if same call_id already has a lead)
-- Creates a call record stub if one doesn't exist yet for this `call_id`
-- Returns `{ success: true, lead_id, score, status }` so Retell can use the result in subsequent flow nodes
+- Authenticated endpoint (validates user JWT + org membership)
+- Accepts `{ agent_id }` (internal DB agent ID)
+- Looks up the agent's `retell_agent_id` from the database
+- Calls Retell API `POST https://api.retellai.com/v2/create-web-call` with the Retell agent ID
+- Returns `{ access_token, call_id }` to the frontend
 
 **2. Update `supabase/config.toml`**
 
-- Add `[functions.save-customer-info]` with `verify_jwt = false` (external Retell call)
+- Add `[functions.create-web-call]` with `verify_jwt = false` (JWT validated in code)
 
-### Retell AI Setup (Manual Step)
+**3. Install `retell-client-js-sdk` npm package**
 
-After deployment, you'll configure a **Custom Function** node in your Retell conversation flow with:
+- Provides `RetellWebClient` class for browser-based voice calls
 
-- **URL:** `https://qkjufptrgneockakeoth.supabase.co/functions/v1/save-customer-info`
-- **Method:** POST
-- **Parameters:** Map the extracted dynamic variables (caller_name, phone, email, etc.) from earlier flow nodes
-- Place this node after `contact_capture` (or wherever data collection completes) and before the `summary` node
+**4. New Component: `src/components/ai-agent/AgentTestCall.tsx`**
 
-### Security Considerations
+- Slide-over panel (similar to existing `AgentTestPanel`)
+- "Start Call" button that:
+  - Requests microphone permission
+  - Calls the `create-web-call` edge function
+  - Starts the call via `RetellWebClient.startCall({ accessToken })`
+- Shows call status (connecting, active, ended)
+- Displays a live audio indicator / timer
+- "End Call" button to stop the call
+- Listens to SDK events: `call_started`, `call_ended`, `agent_start_talking`, `agent_stop_talking`, `error`
 
-- The endpoint validates that the `agent_id` maps to a real agent in the database
-- Input validation with length limits on all string fields
-- No sensitive data exposure in responses
-- Uses service role key internally (same pattern as retell-webhook)
+**5. Update `AgentCard.tsx`**
 
+- Add a "Test Call" option in the dropdown menu (alongside existing "View Flow" and "Delete")
+- Uses a phone/mic icon
+
+**6. Update `src/pages/ai-agent/Agents.tsx`**
+
+- Add state for the test-call agent (separate from the flow-view agent)
+- Render the `AgentTestCall` component when active
+
+### Technical Details
+
+- The Retell Web SDK handles WebRTC audio streaming automatically
+- Microphone permission is requested by the browser when the call starts
+- The edge function ensures only org members can test their own agents
+- No additional secrets needed -- uses existing `RETELL_API_KEY`
