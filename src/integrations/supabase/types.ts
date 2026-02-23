@@ -267,6 +267,57 @@ export type Database = {
         }
         Relationships: []
       }
+      grocery_products: {
+        Row: {
+          brand: string
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          in_stock: boolean | null
+          mrp: number | null
+          name: string
+          price: number
+          search_document: unknown
+          subcategory: string | null
+          tags: string[] | null
+          unit: string
+        }
+        Insert: {
+          brand: string
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean | null
+          mrp?: number | null
+          name: string
+          price: number
+          search_document?: unknown
+          subcategory?: string | null
+          tags?: string[] | null
+          unit?: string
+        }
+        Update: {
+          brand?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean | null
+          mrp?: number | null
+          name?: string
+          price?: number
+          search_document?: unknown
+          subcategory?: string | null
+          tags?: string[] | null
+          unit?: string
+        }
+        Relationships: []
+      }
       intake_submissions: {
         Row: {
           biggest_challenge: string | null

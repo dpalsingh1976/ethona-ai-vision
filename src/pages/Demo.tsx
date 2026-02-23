@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ExternalLink, Monitor, Sparkles, Building2, Bot, UtensilsCrossed } from "lucide-react";
+import { ExternalLink, Monitor, Sparkles, Building2, Bot, UtensilsCrossed, ShoppingBasket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -40,6 +40,17 @@ const realEstateDemos = [
     gradient: "from-sky-50 to-blue-50",
     iconBg: "bg-sky-100",
     iconColor: "text-sky-600",
+  },
+];
+
+const ecommerceDemos = [
+  {
+    name: "FreshBasket - AI Grocery Search",
+    description: "Indian grocery e-commerce demo with AI-powered hybrid search combining keyword matching and semantic query expansion.",
+    path: "/demo/e-grocery",
+    gradient: "from-green-50 to-emerald-50",
+    iconBg: "bg-green-100",
+    iconColor: "text-green-600",
   },
 ];
 
@@ -165,6 +176,52 @@ const Demo = () => {
                     View Demo
                     <ExternalLink className="w-4 h-4" />
                   </a>
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* E-Commerce Demos Section */}
+      <section className="py-16 bg-muted/20">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center gap-3 mb-8 max-w-5xl mx-auto">
+            <div className="p-3 rounded-xl bg-green-100 text-green-600">
+              <ShoppingBasket className="w-6 h-6" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">E-Commerce</h2>
+              <p className="text-muted-foreground">{ecommerceDemos.length} Demo</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {ecommerceDemos.map((demo, index) => (
+              <div
+                key={index}
+                className={`group relative bg-gradient-to-br ${demo.gradient} rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-green-100`}
+              >
+                <div className={`w-12 h-12 ${demo.iconBg} rounded-xl flex items-center justify-center mb-4`}>
+                  <ShoppingBasket className={`w-6 h-6 ${demo.iconColor}`} />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-2">
+                  {demo.name}
+                </h3>
+                <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                  {demo.description}
+                </p>
+                <Button
+                  asChild
+                  className="w-full bg-green-600 hover:bg-green-700 transition-colors"
+                >
+                  <Link
+                    to={demo.path}
+                    className="inline-flex items-center justify-center gap-2"
+                  >
+                    Try Demo
+                    <ShoppingBasket className="w-4 h-4" />
+                  </Link>
                 </Button>
               </div>
             ))}
