@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SearchBar } from "@/components/e-grocery/SearchBar";
 import { FilterChips } from "@/components/e-grocery/FilterChips";
@@ -20,10 +19,8 @@ const EGrocery = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-green-50/50 to-white">
-      <Navbar />
-
       {/* Hero header */}
-      <section className="pt-28 pb-6 bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 text-white">
+      <section className="pt-10 pb-6 bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 text-white">
         <div className="max-w-5xl mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
             <ShoppingBasket className="w-8 h-8" />
