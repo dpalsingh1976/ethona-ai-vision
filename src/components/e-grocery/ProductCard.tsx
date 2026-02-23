@@ -66,9 +66,9 @@ export function ProductCard({ product, showScores }: ProductCardProps) {
         )}
 
         <div className="mt-auto flex items-baseline gap-2">
-          <span className="text-lg font-bold text-green-700">₹{product.price}</span>
+          <span className="text-lg font-bold text-green-700">${product.price}</span>
           {product.mrp && product.mrp > product.price && (
-            <span className="text-sm text-gray-400 line-through">₹{product.mrp}</span>
+            <span className="text-sm text-gray-400 line-through">${product.mrp}</span>
           )}
         </div>
 
