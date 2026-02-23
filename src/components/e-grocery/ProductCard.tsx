@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Package } from "lucide-react";
 import type { GroceryProduct } from "@/hooks/useGrocerySearch";
 
@@ -20,15 +20,28 @@ const TAG_COLORS: Record<string, string> = {
 };
 
 export function ProductCard({ product, showScores }: ProductCardProps) {
+  const [imgError, setImgError] = useState(false);
   const discount = product.mrp && product.mrp > product.price
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
     : 0;
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden flex flex-col">
-      {/* Image placeholder */}
-      <div className="relative bg-gradient-to-br from-green-50 to-orange-50 h-36 flex items-center justify-center">
-        <Package className="w-12 h-12 text-green-300" />
+      {/* Product image */}
+      <div className="relative bg-white h-36 flex items-center justify-center p-2">
+        {product.image_url && !imgError ? (
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="w-full h-full object-contain"
+            onError={() => setImgError(true)}
+            loading="lazy"
+          />
+        ) : (
+          <div className="bg-gradient-to-br from-green-50 to-orange-50 w-full h-full rounded-lg flex items-center justify-center">
+            <Package className="w-12 h-12 text-green-300" />
+          </div>
+        )}
         {discount > 0 && (
           <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
             {discount}% OFF
