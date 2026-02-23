@@ -107,14 +107,40 @@ serve(async (req) => {
       console.error("AI expansion failed, continuing with keyword only:", e);
     }
 
-    // 3. Search with AI-expanded terms
+    // 3. Search with AI-expanded terms using ILIKE for better matching
     if (aiTerms.length > 0) {
-      const expandedQuery = aiTerms.join(" | ");
-      let q2 = supabase.from("grocery_products").select("*").eq("in_stock", true).textSearch("search_document", expandedQuery, { type: "websearch", config: "english" });
+      // Build an OR filter: match any AI term against name, brand, description, category, or tags
+      const orConditions = aiTerms.map(term => {
+        const t = term.replace(/'/g, "''"); // escape single quotes
+        return `name.ilike.%${t}%,brand.ilike.%${t}%,description.ilike.%${t}%,category.ilike.%${t}%,subcategory.ilike.%${t}%`;
+      }).join(",");
+
+      let q2 = supabase.from("grocery_products").select("*").eq("in_stock", true).or(orConditions);
       if (category) q2 = q2.eq("category", category);
       if (tags.length > 0) q2 = q2.overlaps("tags", tags);
-      const { data } = await q2.limit(30);
+      const { data, error: semErr } = await q2.limit(30);
+      if (semErr) {
+        console.error("Semantic search error:", semErr);
+      }
       semanticProducts = (data || []).map((p: any) => ({ ...p, sem_score: 1 }));
+
+      // Also try matching against tags array (ilike doesn't search arrays)
+      if (semanticProducts.length < 20) {
+        const tagTerms = aiTerms.filter(t => t.includes("-") || t.length < 20);
+        if (tagTerms.length > 0) {
+          const { data: tagData } = await supabase
+            .from("grocery_products")
+            .select("*")
+            .eq("in_stock", true)
+            .overlaps("tags", tagTerms)
+            .limit(20);
+          for (const p of (tagData || [])) {
+            if (!semanticProducts.find((sp: any) => sp.id === p.id)) {
+              semanticProducts.push({ ...p, sem_score: 0.8 });
+            }
+          }
+        }
+      }
     }
 
     // 4. Merge and score
