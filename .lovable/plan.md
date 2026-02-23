@@ -1,38 +1,28 @@
 
 
-## Add Product Images to Grocery Products
+## Populate Product Images in Database
 
-Update all 50 grocery products with real product image URLs and modify the `ProductCard` component to display actual images instead of the placeholder icon.
+All 50 grocery products currently have `image_url = null`, so every product shows the fallback placeholder icon. The `ProductCard` component's image rendering and error fallback logic are working correctly -- we just need data.
 
-### Approach
+### What We'll Do
 
-We'll use publicly available product images from popular Indian e-commerce CDNs (BigBasket, JioMart, Amazon India) or brand websites. These are publicly accessible image URLs that work well for demo purposes.
+Run a database update to set `image_url` for all 50 products using publicly accessible product image URLs from Indian grocery brands and e-commerce platforms.
 
-### Changes
+### Image Sources
 
-**1. Update `ProductCard.tsx`**
-
-Replace the static `Package` icon placeholder with an `<img>` tag that:
-- Shows the product image when `image_url` is available
-- Falls back to the `Package` icon placeholder when no image exists
-- Uses `object-contain` to properly display product images without cropping
-- Adds an `onError` handler to gracefully fall back to placeholder if an image fails to load
-
-**2. Update product image URLs in the database**
-
-Run a SQL update to set `image_url` for all 50 products using publicly available product image URLs from Indian grocery brands and retailers. Each URL will be a direct link to a product image.
+We'll use high-quality, publicly available product images from sources like:
+- **Brand official websites** (e.g., Amul, Tata, Britannia, ITC)
+- **Open product image APIs** (e.g., Open Food Facts)
+- **Retailer CDNs** (BigBasket, JioMart, Swiggy Instamart)
 
 ### Technical Details
 
-- No schema changes needed -- `image_url` column already exists
-- Images will be loaded directly from external URLs (no storage needed for demo)
-- The `ProductCard` will use a state-based fallback: try loading the image, show placeholder on error
-- Images will use `object-contain` with a white/light background to look clean regardless of source image format
+- Single SQL migration with `UPDATE` statements mapping each product name to its image URL
+- No schema changes needed
+- Images load lazily (`loading="lazy"` already set) for performance
+- Error fallback already implemented in `ProductCard` -- any broken URLs will gracefully show the placeholder
 
-### Files to Modify
+### Products to Update (all 50)
 
-| Action | File |
-|--------|------|
-| Modify | `src/components/e-grocery/ProductCard.tsx` -- add image rendering with fallback |
-| Data | SQL UPDATE statements to set `image_url` for all 50 products |
+Covering all categories: Atta and Flour, Dal and Pulses, Rice, Masala and Spices, Oil and Ghee, Snacks, Beverages, Pickles and Chutneys, Papad, Dairy, Instant Food, Dry Fruits, and Sweeteners.
 
