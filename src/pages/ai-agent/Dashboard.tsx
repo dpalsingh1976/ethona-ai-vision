@@ -42,27 +42,27 @@ function callStatusBadge(status: string) {
   switch (status?.toLowerCase()) {
     case "answered":
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs font-medium text-emerald-400 border border-emerald-500/25">
+        <Badge className="bg-[hsl(142,70%,45%)]/15 text-[hsl(142,70%,55%)] border-[hsl(142,70%,45%)]/25 gap-1">
           <PhoneCall className="h-3 w-3" /> Answered
-        </span>
+        </Badge>
       );
     case "voicemail":
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2.5 py-0.5 text-xs font-medium text-amber-400 border border-amber-500/25">
+        <Badge className="bg-[hsl(45,90%,51%)]/15 text-[hsl(45,90%,60%)] border-[hsl(45,90%,51%)]/25 gap-1">
           <PhoneOff className="h-3 w-3" /> Voicemail
-        </span>
+        </Badge>
       );
     case "no_answer":
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/15 px-2.5 py-0.5 text-xs font-medium text-destructive border border-destructive/25">
+        <Badge className="bg-destructive/15 text-destructive border-destructive/25 gap-1">
           <PhoneMissed className="h-3 w-3" /> No Answer
-        </span>
+        </Badge>
       );
     default:
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground border border-border">
+        <Badge variant="secondary" className="gap-1">
           Unknown
-        </span>
+        </Badge>
       );
   }
 }
@@ -71,21 +71,21 @@ function interestBadge(level: string) {
   switch (level?.toLowerCase()) {
     case "high":
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/15 px-2.5 py-0.5 text-xs font-semibold text-orange-400 border border-orange-500/25">
+        <Badge className="bg-[hsl(25,90%,55%)]/15 text-[hsl(25,90%,60%)] border-[hsl(25,90%,55%)]/25 gap-1">
           <Flame className="h-3 w-3" /> High
-        </span>
+        </Badge>
       );
     case "medium":
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/15 px-2.5 py-0.5 text-xs font-semibold text-yellow-400 border border-yellow-500/25">
+        <Badge className="bg-[hsl(48,96%,53%)]/15 text-[hsl(48,96%,58%)] border-[hsl(48,96%,53%)]/25 gap-1">
           <Thermometer className="h-3 w-3" /> Medium
-        </span>
+        </Badge>
       );
     case "low":
       return (
-        <span className="inline-flex items-center gap-1 rounded-full bg-sky-500/15 px-2.5 py-0.5 text-xs font-semibold text-sky-400 border border-sky-500/25">
+        <Badge className="bg-[hsl(200,90%,50%)]/15 text-[hsl(200,90%,60%)] border-[hsl(200,90%,50%)]/25 gap-1">
           <Snowflake className="h-3 w-3" /> Low
-        </span>
+        </Badge>
       );
     default:
       return <span className="text-muted-foreground text-xs">—</span>;
