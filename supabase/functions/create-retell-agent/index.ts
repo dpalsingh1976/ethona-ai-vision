@@ -283,7 +283,14 @@ function buildOutboundFlowNodes(config: AgentConfig) {
       extract_dynamic_variable: [
         { name: "call_status", description: "answered, voicemail, no_answer, or not_interested", type: "string" },
       ],
-      edges: [],
+      edges: [{ id: "wrap_to_end", transition_condition: { type: "prompt", prompt: "The goodbye and wrap-up message has been delivered." }, destination_node_id: "end_call" }],
+    },
+    {
+      id: "end_call",
+      type: "end",
+      speak_during_execution: true,
+      speak_during_execution_prompt: "Thank {{first_name}} for their time and say a warm goodbye.",
+      instruction: { type: "prompt", text: "Say a warm goodbye and end the call." },
     },
   ];
 }

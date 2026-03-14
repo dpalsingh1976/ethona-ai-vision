@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.outbound-post-call]
 verify_jwt = false
+
+[functions.fix-existing-outbound-flow]
+verify_jwt = false
