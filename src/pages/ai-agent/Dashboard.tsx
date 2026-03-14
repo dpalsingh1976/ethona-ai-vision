@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
 function scoreBadge(score: string | null) {
   switch (score) {
     case "HOT": return <Badge className="bg-destructive/20 text-destructive border-destructive/30">Hot</Badge>;
-    case "WARM": return <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30">Warm</Badge>;
+    case "WARM": return <Badge className="bg-[hsl(25,90%,55%)]/20 text-[hsl(25,90%,60%)] border-[hsl(25,90%,55%)]/30">Warm</Badge>;
     case "COLD": return <Badge className="bg-primary/20 text-primary border-primary/30">Cold</Badge>;
     default: return <Badge variant="secondary">{score || "—"}</Badge>;
   }
