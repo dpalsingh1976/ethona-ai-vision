@@ -237,6 +237,91 @@ function buildConversationFlowNodes(config: AgentConfig) {
   return nodes;
 }
 
+// ─── Outbound conversation flow ───────────────────────────────────────────────
+function buildOutboundFlowNodes(config: AgentConfig) {
+  const { company_name, agent_name, outbound_goal, forwarding_number } = config;
+  const goal = outbound_goal || "Follow up with leads and qualify their interest.";
+  const transferNote = forwarding_number
+    ? `If the lead is highly interested and ready to speak with an advisor now, you can transfer them by saying "Let me connect you with ${agent_name} right now." The transfer number is ${forwarding_number}.`
+    : "";
+
+  return [
+    {
+      id: "greeting",
+      type: "conversation",
+      instruction: {
+        type: "prompt",
+        text: `You are calling on behalf of ${company_name}. The lead's name is {{first_name}} {{last_name}}. Their original interest was: {{original_interest}}. Greet them warmly by first name, introduce yourself as an AI assistant for ${agent_name} at ${company_name}, and briefly explain why you're calling related to their interest. Ask if now is a good time to chat.`,
+      },
+      edges: [
+        { id: "greeting_to_qualify", transition_condition: { type: "prompt", prompt: "The lead said yes or is willing to talk." }, destination_node_id: "qualify" },
+        { id: "greeting_to_callback", transition_condition: { type: "prompt", prompt: "The lead said it's not a good time, they are busy, or asked to call back later." }, destination_node_id: "callback" },
+        { id: "greeting_to_notinterested", transition_condition: { type: "prompt", prompt: "The lead said they are not interested or asked to be removed." }, destination_node_id: "not_interested" },
+      ],
+    },
+    {
+      id: "qualify",
+      type: "conversation",
+      instruction: {
+        type: "prompt",
+        text: `${goal} Ask open-ended questions to understand their current situation, level of interest, and urgency. Be conversational and genuinely helpful. Do not be pushy. ${transferNote}`,
+      },
+      extract_dynamic_variable: [
+        { name: "interest_level", description: "High, medium, or low interest", type: "string" },
+        { name: "timeline", description: "How soon they want to act", type: "string" },
+        { name: "transfer_attempted", description: "Whether a live transfer was attempted", type: "boolean" },
+        { name: "next_action", description: "What the next step should be (callback, email, no_action)", type: "string" },
+        { name: "notes", description: "Key points from the conversation", type: "string" },
+      ],
+      edges: [
+        { id: "qualify_to_wrap", transition_condition: { type: "prompt", prompt: "The qualification conversation is complete or the lead wants to end the call." }, destination_node_id: "wrap_up" },
+      ],
+    },
+    {
+      id: "callback",
+      type: "conversation",
+      instruction: {
+        type: "prompt",
+        text: `The lead is busy right now. Politely ask when would be a better time to call back and thank them for their time. Keep it brief.`,
+      },
+      extract_dynamic_variable: [
+        { name: "next_action", description: "callback", type: "string" },
+        { name: "notes", description: "Preferred callback time if mentioned", type: "string" },
+      ],
+      edges: [
+        { id: "callback_to_wrap", transition_condition: { type: "prompt", prompt: "Callback time discussed or call ending." }, destination_node_id: "wrap_up" },
+      ],
+    },
+    {
+      id: "not_interested",
+      type: "conversation",
+      instruction: {
+        type: "prompt",
+        text: `The lead is not interested. Be gracious, professional, and wish them well. Let them know they can reach out to ${company_name} in the future if their situation changes.`,
+      },
+      extract_dynamic_variable: [
+        { name: "next_action", description: "no_action", type: "string" },
+        { name: "interest_level", description: "low", type: "string" },
+      ],
+      edges: [
+        { id: "notinterested_to_wrap", transition_condition: { type: "prompt", prompt: "Goodbye has been said." }, destination_node_id: "wrap_up" },
+      ],
+    },
+    {
+      id: "wrap_up",
+      type: "conversation",
+      instruction: {
+        type: "prompt",
+        text: `Wrap up the call naturally. Thank {{first_name}} for their time, briefly recap the next steps if any, and wish them a great day.`,
+      },
+      extract_dynamic_variable: [
+        { name: "call_status", description: "answered, voicemail, no_answer, or not_interested", type: "string" },
+      ],
+      edges: [],
+    },
+  ];
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
