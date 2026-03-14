@@ -19,6 +19,8 @@ interface AgentConfig {
   phone_number: string;
   forwarding_number: string;
   org_id: string;
+  category?: "inbound" | "outbound";
+  outbound_goal?: string;
 }
 
 const VOICE_MAP: Record<string, string> = {
