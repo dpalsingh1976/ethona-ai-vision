@@ -287,9 +287,10 @@ function buildOutboundFlowNodes(config: AgentConfig) {
     },
     {
       id: "end_call",
-      type: "end_call",
+      type: "end",
       speak_during_execution: true,
       speak_during_execution_prompt: "Thank {{first_name}} for their time and say a warm goodbye.",
+      instruction: { type: "prompt", text: "Say a warm goodbye and end the call." },
     },
   ];
 }
