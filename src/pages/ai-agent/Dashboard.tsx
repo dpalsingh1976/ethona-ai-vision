@@ -180,22 +180,22 @@ export default function Dashboard() {
       label: "Answered",
       value: outbound?.stats.answered ?? 0,
       icon: PhoneCall,
-      color: "text-emerald-400",
-      bg: "bg-emerald-500/10",
+      color: "text-[hsl(142,70%,55%)]",
+      bg: "bg-[hsl(142,70%,45%)]/10",
     },
     {
       label: "Interested",
       value: outbound?.stats.interested ?? 0,
       icon: Flame,
-      color: "text-orange-400",
-      bg: "bg-orange-500/10",
+      color: "text-[hsl(25,90%,60%)]",
+      bg: "bg-[hsl(25,90%,55%)]/10",
     },
     {
       label: "Pending Follow-up",
       value: outbound?.stats.pendingFollowUp ?? 0,
       icon: TrendingUp,
-      color: "text-sky-400",
-      bg: "bg-sky-500/10",
+      color: "text-[hsl(200,90%,60%)]",
+      bg: "bg-[hsl(200,90%,50%)]/10",
     },
   ];
 
