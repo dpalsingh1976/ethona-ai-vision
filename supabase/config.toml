@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.fix-existing-outbound-flow]
 verify_jwt = false
+
+[functions.fetch-outbound-call-results]
+verify_jwt = false

@@ -1,17 +1,25 @@
 import { useState } from "react";
-import { Phone, Users, CalendarDays, DollarSign, Clock } from "lucide-react";
+import {
+  Phone, Users, CalendarDays, DollarSign, Clock,
+  PhoneOutgoing, PhoneCall, PhoneMissed, PhoneOff,
+  TrendingUp, ChevronDown, ChevronUp, Flame, Thermometer, Snowflake,
+  MessageSquare,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuthContext";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { useOutboundCallResults, OutboundCallRecord } from "@/hooks/useOutboundCallResults";
 import { CallTranscriptDialog } from "@/components/ai-agent/CallTranscriptDialog";
+import { cn } from "@/lib/utils";
 
 function scoreBadge(score: string | null) {
   switch (score) {
     case "HOT": return <Badge className="bg-destructive/20 text-destructive border-destructive/30">Hot</Badge>;
-    case "WARM": return <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30">Warm</Badge>;
+    case "WARM": return <Badge className="bg-[hsl(25,90%,55%)]/20 text-[hsl(25,90%,60%)] border-[hsl(25,90%,55%)]/30">Warm</Badge>;
     case "COLD": return <Badge className="bg-primary/20 text-primary border-primary/30">Cold</Badge>;
     default: return <Badge variant="secondary">{score || "—"}</Badge>;
   }
@@ -30,9 +38,127 @@ function formatCurrency(val: number) {
   return `$${val}`;
 }
 
+function callStatusBadge(status: string) {
+  switch (status?.toLowerCase()) {
+    case "answered":
+      return (
+        <Badge className="bg-[hsl(142,70%,45%)]/15 text-[hsl(142,70%,55%)] border-[hsl(142,70%,45%)]/25 gap-1">
+          <PhoneCall className="h-3 w-3" /> Answered
+        </Badge>
+      );
+    case "voicemail":
+      return (
+        <Badge className="bg-[hsl(45,90%,51%)]/15 text-[hsl(45,90%,60%)] border-[hsl(45,90%,51%)]/25 gap-1">
+          <PhoneOff className="h-3 w-3" /> Voicemail
+        </Badge>
+      );
+    case "no_answer":
+      return (
+        <Badge className="bg-destructive/15 text-destructive border-destructive/25 gap-1">
+          <PhoneMissed className="h-3 w-3" /> No Answer
+        </Badge>
+      );
+    default:
+      return (
+        <Badge variant="secondary" className="gap-1">
+          Unknown
+        </Badge>
+      );
+  }
+}
+
+function interestBadge(level: string) {
+  switch (level?.toLowerCase()) {
+    case "high":
+      return (
+        <Badge className="bg-[hsl(25,90%,55%)]/15 text-[hsl(25,90%,60%)] border-[hsl(25,90%,55%)]/25 gap-1">
+          <Flame className="h-3 w-3" /> High
+        </Badge>
+      );
+    case "medium":
+      return (
+        <Badge className="bg-[hsl(48,96%,53%)]/15 text-[hsl(48,96%,58%)] border-[hsl(48,96%,53%)]/25 gap-1">
+          <Thermometer className="h-3 w-3" /> Medium
+        </Badge>
+      );
+    case "low":
+      return (
+        <Badge className="bg-[hsl(200,90%,50%)]/15 text-[hsl(200,90%,60%)] border-[hsl(200,90%,50%)]/25 gap-1">
+          <Snowflake className="h-3 w-3" /> Low
+        </Badge>
+      );
+    default:
+      return <span className="text-muted-foreground text-xs">—</span>;
+  }
+}
+
+function formatLastCalled(dateStr: string) {
+  if (!dateStr) return "—";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString([], { month: "short", day: "numeric" });
+}
+
+function ExpandableRow({ record }: { record: OutboundCallRecord }) {
+  const [open, setOpen] = useState(false);
+  const name = [record.first_name, record.last_name].filter(Boolean).join(" ") || "Unknown";
+
+  return (
+    <>
+      <TableRow
+        className="cursor-pointer hover:bg-accent/40 transition-colors"
+        onClick={() => setOpen((o) => !o)}
+      >
+        <TableCell className="font-medium">
+          <div className="flex items-center gap-2">
+            <span>{name}</span>
+            {open ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />}
+          </div>
+          <div className="text-xs text-muted-foreground mt-0.5">{record.to_phone_number}</div>
+        </TableCell>
+        <TableCell>{callStatusBadge(record.call_status)}</TableCell>
+        <TableCell>{interestBadge(record.interest_level)}</TableCell>
+        <TableCell className="max-w-[200px]">
+          <span className="text-sm text-foreground/80 line-clamp-1">{record.next_action || "—"}</span>
+        </TableCell>
+        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">{formatLastCalled(record.last_called)}</TableCell>
+      </TableRow>
+      {open && (record.notes || record.timeline || record.original_interest) && (
+        <TableRow className="bg-muted/30 hover:bg-muted/40">
+          <TableCell colSpan={5} className="py-3 px-4">
+            <div className="grid gap-2 sm:grid-cols-3 text-sm">
+              {record.original_interest && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-0.5">Interest</p>
+                  <p className="text-foreground/80">{record.original_interest}</p>
+                </div>
+              )}
+              {record.timeline && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-0.5">Timeline</p>
+                  <p className="text-foreground/80">{record.timeline}</p>
+                </div>
+              )}
+              {record.notes && (
+                <div className={cn(!record.original_interest && !record.timeline ? "sm:col-span-3" : "")}>
+                  <p className="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1">
+                    <MessageSquare className="h-3 w-3" /> AI Notes
+                  </p>
+                  <p className="text-foreground/80 leading-relaxed">{record.notes}</p>
+                </div>
+              )}
+            </div>
+          </TableCell>
+        </TableRow>
+      )}
+    </>
+  );
+}
+
 export default function Dashboard() {
   const { orgId } = useAuth();
   const { data: stats, isLoading } = useDashboardStats(orgId ?? undefined);
+  const { data: outbound, isLoading: outboundLoading } = useOutboundCallResults();
   const [selectedCall, setSelectedCall] = useState<any>(null);
 
   const statCards = [
@@ -42,6 +168,37 @@ export default function Dashboard() {
     { label: "Revenue Pipeline", value: formatCurrency(stats?.potentialRevenue ?? 0), icon: DollarSign, change: stats?.leadsChange ?? "+0%" },
   ];
 
+  const outboundStatCards = [
+    {
+      label: "Total Outbound",
+      value: outbound?.stats.totalCalled ?? 0,
+      icon: PhoneOutgoing,
+      color: "text-primary",
+      bg: "bg-primary/10",
+    },
+    {
+      label: "Answered",
+      value: outbound?.stats.answered ?? 0,
+      icon: PhoneCall,
+      color: "text-[hsl(142,70%,55%)]",
+      bg: "bg-[hsl(142,70%,45%)]/10",
+    },
+    {
+      label: "Interested",
+      value: outbound?.stats.interested ?? 0,
+      icon: Flame,
+      color: "text-[hsl(25,90%,60%)]",
+      bg: "bg-[hsl(25,90%,55%)]/10",
+    },
+    {
+      label: "Pending Follow-up",
+      value: outbound?.stats.pendingFollowUp ?? 0,
+      icon: TrendingUp,
+      color: "text-[hsl(200,90%,60%)]",
+      bg: "bg-[hsl(200,90%,50%)]/10",
+    },
+  ];
+
   return (
     <div className="space-y-8 animate-fade-in">
       <div>
@@ -49,6 +206,7 @@ export default function Dashboard() {
         <p className="mt-1 text-muted-foreground">Your AI voice agents at a glance.</p>
       </div>
 
+      {/* Inbound summary cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (
           <Card key={stat.label}>
@@ -85,7 +243,7 @@ export default function Dashboard() {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg"><Phone className="h-5 w-5 text-primary" />Recent Calls</CardTitle>
+            <CardTitle className="flex items-center gap-2 text-lg"><Phone className="h-5 w-5 text-primary" />Recent Inbound Calls</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -110,6 +268,83 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      {/* ── Outbound Activity ───────────────────────────────────────────── */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <PhoneOutgoing className="h-5 w-5 text-primary" />
+          <h2 className="font-display text-xl font-semibold tracking-tight">Outbound Activity</h2>
+          <span className="ml-1 rounded-full bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">Live · Airtable</span>
+        </div>
+
+        {/* Outbound summary mini-cards */}
+        <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+          {outboundStatCards.map((s) => (
+            <div key={s.label} className="rounded-lg border bg-card p-4 flex items-center gap-3 shadow-sm">
+              <div className={cn("rounded-md p-2", s.bg)}>
+                <s.icon className={cn("h-4 w-4", s.color)} />
+              </div>
+              <div>
+                {outboundLoading ? (
+                  <Skeleton className="h-6 w-10 mb-1" />
+                ) : (
+                  <p className="font-display text-2xl font-bold leading-none">{s.value}</p>
+                )}
+                <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Outbound call log table */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-medium flex items-center justify-between">
+              <span>Recent Outbound Calls</span>
+              {outbound?.records?.length ? (
+                <span className="text-xs font-normal text-muted-foreground">{outbound.records.length} record{outbound.records.length !== 1 ? "s" : ""} · click row to expand</span>
+              ) : null}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0 pb-2">
+            {outboundLoading ? (
+              <div className="space-y-2 px-6 pb-4">
+                {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-11 w-full" />)}
+              </div>
+            ) : outbound?.records?.length ? (
+              <div className="overflow-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Lead</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Interest</TableHead>
+                      <TableHead>Next Action</TableHead>
+                      <TableHead className="whitespace-nowrap">Last Called</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {outbound.records.map((record) => (
+                      <ExpandableRow key={record.id} record={record} />
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 px-6 text-center gap-3">
+                <div className="rounded-full bg-muted p-3">
+                  <PhoneOutgoing className="h-6 w-6 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="font-medium text-sm">No outbound calls yet</p>
+                  <p className="text-xs text-muted-foreground mt-1">Once you launch outbound calls, results will appear here automatically.</p>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent Leads */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg"><Users className="h-5 w-5 text-primary" />Recent Leads</CardTitle>
