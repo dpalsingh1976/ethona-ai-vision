@@ -134,9 +134,6 @@ Deno.serve(async (req) => {
         last_called: todayDate(),
       };
 
-      if (call.recording_url) {
-        updates.recording = call.recording_url;
-      }
 
       if (event === "call_analyzed") {
         if (customData.interest_level !== undefined)
