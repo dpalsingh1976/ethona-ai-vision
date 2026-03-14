@@ -298,6 +298,7 @@ Deno.serve(async (req) => {
     const webhookUrl = `${supabaseUrl}/functions/v1/retell-webhook`;
     const saveCustomerInfoUrl = `${supabaseUrl}/functions/v1/save-customer-info`;
 
+
     const tools = [
       {
         type: "custom",
