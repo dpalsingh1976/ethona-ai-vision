@@ -1,89 +1,69 @@
 
+## Plan: Outbound Call Dashboard Section
 
-## Generate Unique AI Images for All 50 Grocery Products
+### What we're building
 
-### Overview
-Generate an individual, unique AI image for each of the 50 products in the database and store them locally in the `public/grocery/` directory, then update the database URLs to point to the new files.
+A dedicated **"Outbound Calls"** section on the Dashboard that pulls live data from Airtable — showing recently called leads with their post-call status, interest level, notes, and next action. This replaces the current generic "Recent Calls" table which only shows Supabase data with limited info.
 
-### Approach
-Use the AI image generation model (`google/gemini-2.5-flash-image`) to create a realistic product photo for each item. Each image will be prompted with the product name, brand, and category to ensure uniqueness.
+### Data available from Airtable (via `outbound-post-call`)
 
-### Steps
+After each call, Airtable records get updated with:
+- `call_status` — answered / voicemail / no_answer / unknown
+- `last_called` — date of last call
+- `interest_level` — from AI analysis
+- `timeline` — customer timeline
+- `has_existing_coverage`, `working_with_advisor`
+- `next_action` — AI-recommended follow-up
+- `notes` — call summary
 
-**Step 1: Generate images in batches**
-Generate all 50 product images using prompts like:
-> "A realistic product photo of [Brand] [Product Name] package on a clean white background, Indian grocery product, professional product photography"
+The `fetch-airtable-leads` function already returns: `first_name`, `last_name`, `to_phone_number`, `lead_source`, `original_interest`, `advisor_name`, `status`.
 
-Save each image to `public/grocery/` with a slug-based filename (e.g., `aashirvaad-whole-wheat-atta.jpg`).
+### Plan
 
-Images will be generated in parallel batches of ~5-6 at a time to stay efficient.
+**1. New edge function: `fetch-outbound-call-results`**
 
-**Step 2: Update database URLs**
-Run a single SQL UPDATE mapping each product name to its new unique image path (e.g., `/grocery/aashirvaad-whole-wheat-atta.jpg`).
+A new lightweight edge function that fetches Airtable records that have been called (i.e. `last_called` is not empty), sorted by `last_called` descending, returning the post-call enrichment fields. This keeps the dashboard query fast and focused.
 
-### All 50 Products
+Fields fetched: `first_name`, `last_name`, `to_phone_number`, `call_status`, `last_called`, `interest_level`, `timeline`, `next_action`, `notes`, `lead_source`, `original_interest`
 
-| # | Product | Brand | File |
-|---|---------|-------|------|
-| 1 | Aashirvaad Whole Wheat Atta | Aashirvaad | aashirvaad-whole-wheat-atta.jpg |
-| 2 | Besan (Gram Flour) | Rajdhani | besan-gram-flour.jpg |
-| 3 | Maida (Refined Flour) | Aashirvaad | maida-refined-flour.jpg |
-| 4 | Pillsbury Chakki Fresh Atta | Pillsbury | pillsbury-chakki-fresh-atta.jpg |
-| 5 | Sooji (Semolina) | Aashirvaad | sooji-semolina.jpg |
-| 6 | Bru Instant Coffee | Bru | bru-instant-coffee.jpg |
-| 7 | Nescafe Classic Coffee | Nescafe | nescafe-classic-coffee.jpg |
-| 8 | Red Label Tea | Brooke Bond | red-label-tea.jpg |
-| 9 | Tata Tea Premium | Tata | tata-tea-premium.jpg |
-| 10 | Chana Dal | Tata Sampann | chana-dal.jpg |
-| 11 | Kabuli Chana (Chickpeas) | Tata Sampann | kabuli-chana.jpg |
-| 12 | Masoor Dal | Tata Sampann | masoor-dal.jpg |
-| 13 | Moong Dal | Tata Sampann | moong-dal.jpg |
-| 14 | Rajma (Kidney Beans) | Tata Sampann | rajma-kidney-beans.jpg |
-| 15 | Toor Dal (Arhar) | India Gate | toor-dal.jpg |
-| 16 | Dry Fruits Mix | Nutraj | dry-fruits-mix.jpg |
-| 17 | Jaggery (Gur) | Miltop | jaggery-gur.jpg |
-| 18 | Sabudana (Tapioca Pearls) | Swad | sabudana-tapioca.jpg |
-| 19 | Sugar (Sulphurless) | Trust | sugar-sulphurless.jpg |
-| 20 | Catch Turmeric Powder | Catch | catch-turmeric-powder.jpg |
-| 21 | Everest Garam Masala | Everest | everest-garam-masala.jpg |
-| 22 | MDH Chana Masala | MDH | mdh-chana-masala.jpg |
-| 23 | MDH Deggi Mirch | MDH | mdh-deggi-mirch.jpg |
-| 24 | Sendha Namak (Rock Salt) | Tata | sendha-namak.jpg |
-| 25 | Tata Salt | Tata | tata-salt.jpg |
-| 26 | Whole Coriander Seeds | Catch | whole-coriander-seeds.jpg |
-| 27 | Whole Cumin Seeds (Jeera) | Catch | whole-cumin-seeds.jpg |
-| 28 | Amul Pure Ghee | Amul | amul-pure-ghee.jpg |
-| 29 | Coconut Oil | Parachute | coconut-oil.jpg |
-| 30 | Fortune Sunflower Oil | Fortune | fortune-sunflower-oil.jpg |
-| 31 | Mustard Oil (Kachi Ghani) | Fortune | mustard-oil.jpg |
-| 32 | Saffola Gold Refined Oil | Saffola | saffola-gold-oil.jpg |
-| 33 | Lijjat Papad - Moong | Lijjat | lijjat-papad-moong.jpg |
-| 34 | Lijjat Papad - Urad | Lijjat | lijjat-papad-urad.jpg |
-| 35 | Mother's Recipe Mango Pickle | Mother's Recipe | mango-pickle.jpg |
-| 36 | Pravin Mixed Pickle | Pravin | pravin-mixed-pickle.jpg |
-| 37 | MTR Ready to Eat Poha | MTR | mtr-poha.jpg |
-| 38 | MTR Ready to Eat Upma | MTR | mtr-upma.jpg |
-| 39 | Saffola Oats | Saffola | saffola-oats.jpg |
-| 40 | Daawat Rozana Gold Basmati | Daawat | daawat-basmati.jpg |
-| 41 | India Gate Basmati Rice | India Gate | india-gate-rice.jpg |
-| 42 | Bikaji Bikaneri Bhujia | Bikaji | bikaji-bhujia.jpg |
-| 43 | Britannia Good Day Cookies | Britannia | britannia-good-day.jpg |
-| 44 | Haldiram Aloo Bhujia | Haldiram | haldiram-aloo-bhujia.jpg |
-| 45 | Haldiram Bhujia | Haldiram | haldiram-bhujia.jpg |
-| 46 | Maggi 2-Minute Noodles | Maggi | maggi-noodles.jpg |
-| 47 | Murmura (Puffed Rice) | Local | murmura-puffed-rice.jpg |
-| 48 | Parle-G Biscuits | Parle | parle-g-biscuits.jpg |
-| 49 | Roasted Chana | Jabsons | roasted-chana.jpg |
-| 50 | Roasted Makhana (Fox Nuts) | Farmley | roasted-makhana.jpg |
+Filter: `NOT({last_called}='')` — only leads that have actually been called.
 
-### Technical Details
+**2. New hook: `useOutboundCallResults`**
 
-| Item | Detail |
-|------|--------|
-| AI model | google/gemini-2.5-flash-image |
-| Image count | 50 unique images |
-| Storage | `public/grocery/` directory (local assets) |
-| Database | Single UPDATE query mapping product names to new paths |
-| Code changes | None needed -- ProductCard already renders images correctly |
-| Estimated batches | ~10 batches of 5 images each |
+Simple React Query hook calling the new edge function, with 60s refresh interval.
 
+**3. Dashboard updates — new "Outbound Activity" section**
+
+Add a new section below the existing cards with two parts:
+
+**Outbound Summary mini-cards row** (4 pills):
+- Total Outbound Called
+- Answered
+- Interested (interest_level = "high" or "medium")  
+- Pending Follow-up (next_action is set)
+
+**Outbound Call Log table** (last 10 called leads):
+
+| Lead Name | Phone | Status | Interest | Next Action | Last Called |
+|---|---|---|---|---|---|
+| Jane Smith | +1... | answered | high | Schedule callback | Mar 14 |
+
+- Status badge: green=answered, yellow=voicemail, red=no_answer, gray=unknown
+- Interest badge: 🔥 high, 🌡 medium, ❄ low
+- Notes shown as tooltip or expandable row
+- Empty state if no outbound calls yet
+
+### Files to create/edit
+
+- **New**: `supabase/functions/fetch-outbound-call-results/index.ts`
+- **New**: `src/hooks/useOutboundCallResults.ts`
+- **Edit**: `src/pages/ai-agent/Dashboard.tsx` — add Outbound Activity section
+- **Edit**: `supabase/config.toml` — register new function
+
+### Design approach
+
+- Consistent with existing Dashboard card/table patterns
+- Outbound section clearly labeled with a `PhoneOutgoing` icon
+- Color-coded status badges (no new dependencies)
+- Responsive: full table on desktop, condensed on mobile
+- Skeleton loading states matching existing patterns
