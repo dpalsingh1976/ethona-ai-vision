@@ -338,6 +338,20 @@ Deno.serve(async (req) => {
         extracted_data: {
           ...customData,
           call_status: callStatus,
+          // Always store lead identity from call metadata / dynamic variables
+          to_phone_number:
+            call.to_number ||
+            customData.to_phone_number ||
+            call.retell_llm_dynamic_variables?.to_phone_number ||
+            "",
+          first_name:
+            customData.first_name ||
+            call.retell_llm_dynamic_variables?.first_name ||
+            "",
+          last_name:
+            customData.last_name ||
+            call.retell_llm_dynamic_variables?.last_name ||
+            "",
         },
       };
 
