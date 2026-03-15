@@ -286,7 +286,9 @@ Keep the greeting brief, warm, and human. Do not ask any discovery questions her
       type: "conversation",
       instruction: {
         type: "prompt",
-        text: `You are in a warm, consultative discovery conversation with {{first_name}}. Your goal is to understand their financial situation, life stage, and likely needs — without asking their age directly.
+        text: `CONTEXT: You are on an outbound call — YOU called {{first_name}}. Do not ask why they reached out or what brought them to you. You initiated this call on behalf of {{advisor_name}}.
+
+You are in a warm, consultative discovery conversation with {{first_name}}. Your goal is to understand their financial situation, life stage, and likely needs — without asking their age directly.
 
 OPENING THE DISCOVERY:
 - If {{original_interest}} is non-empty, open with a tailored question based on that interest (e.g. if interest is retirement-related, start with "Are you still working full-time, or are you getting closer to retirement?").
