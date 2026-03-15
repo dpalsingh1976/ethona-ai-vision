@@ -60,8 +60,8 @@ function callStatusBadge(status: string) {
       );
     default:
       return (
-        <Badge variant="secondary" className="gap-1">
-          Unknown
+        <Badge variant="secondary" className="gap-1 text-muted-foreground">
+          Pending
         </Badge>
       );
   }
