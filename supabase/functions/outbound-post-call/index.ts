@@ -158,7 +158,17 @@ Deno.serve(async (req) => {
     // ── Determine call_status fallback ────────────────────────────────────
     let callStatus: string = strOrUndef(customData.call_status) ?? "";
     if (!callStatus) {
-      if (call.in_voicemail) {
+      const transcriptLower = (call.transcript || "").toLowerCase();
+      const summaryLower = (call.transcript_summary || "").toLowerCase();
+      const isVoicemail =
+        call.in_voicemail ||
+        summaryLower.includes("voicemail") ||
+        summaryLower.includes("left a message") ||
+        summaryLower.includes("reached voicemail") ||
+        transcriptLower.includes("left a message") ||
+        transcriptLower.includes("reached voicemail");
+
+      if (isVoicemail) {
         callStatus = "Voicemail Left";
       } else if (call.disconnection_reason === "dial_no_answer") {
         callStatus = "No Answer";
