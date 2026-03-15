@@ -1,89 +1,78 @@
 
+## Current Data Architecture
 
-## Generate Unique AI Images for All 50 Grocery Products
+**Two stores exist today:**
 
-### Overview
-Generate an individual, unique AI image for each of the 50 products in the database and store them locally in the `public/grocery/` directory, then update the database URLs to point to the new files.
+1. **Airtable** (`LEAD_INSURANCE_TABLE`) — one row per lead/phone number. Every call to the same person overwrites the same record. No call history at all.
 
-### Approach
-Use the AI image generation model (`google/gemini-2.5-flash-image`) to create a realistic product photo for each item. Each image will be prompted with the product name, brand, and category to ensure uniqueness.
+2. **Supabase `calls` table** — already stores one row per call (`retell_call_id` is the unique key). Each call to the same person creates a new row here. This is already the correct structure for per-call auditing.
 
-### Steps
+So the answer is: **you do NOT need to change the database table structure**. The `calls` table already supports multi-call history correctly. The problem is purely in the dashboard — it reads from Airtable (one row per lead, latest state only) instead of the `calls` table (every call, with full history).
 
-**Step 1: Generate images in batches**
-Generate all 50 product images using prompts like:
-> "A realistic product photo of [Brand] [Product Name] package on a clean white background, Indian grocery product, professional product photography"
+---
 
-Save each image to `public/grocery/` with a slug-based filename (e.g., `aashirvaad-whole-wheat-atta.jpg`).
+## Root Cause of "Interested" on Voicemail
 
-Images will be generated in parallel batches of ~5-6 at a time to stay efficient.
+The dashboard's Outbound Activity section calls `fetch-outbound-call-results` → reads from Airtable → returns one row per lead with the overwritten `call_status` + stale `interest_level`. There is no per-call history in Airtable.
 
-**Step 2: Update database URLs**
-Run a single SQL UPDATE mapping each product name to its new unique image path (e.g., `/grocery/aashirvaad-whole-wheat-atta.jpg`).
+The `calls` table in Supabase already has every call with:
+- `outcome` = the call_status per call ("Voicemail Left", "Connected - Interested", etc.)
+- `extracted_data` = all signal fields (interest_level, notes, next_action, etc.)
+- `started_at` / `ended_at` / `duration_seconds`
+- `retell_call_id` — unique per call
 
-### All 50 Products
+---
 
-| # | Product | Brand | File |
-|---|---------|-------|------|
-| 1 | Aashirvaad Whole Wheat Atta | Aashirvaad | aashirvaad-whole-wheat-atta.jpg |
-| 2 | Besan (Gram Flour) | Rajdhani | besan-gram-flour.jpg |
-| 3 | Maida (Refined Flour) | Aashirvaad | maida-refined-flour.jpg |
-| 4 | Pillsbury Chakki Fresh Atta | Pillsbury | pillsbury-chakki-fresh-atta.jpg |
-| 5 | Sooji (Semolina) | Aashirvaad | sooji-semolina.jpg |
-| 6 | Bru Instant Coffee | Bru | bru-instant-coffee.jpg |
-| 7 | Nescafe Classic Coffee | Nescafe | nescafe-classic-coffee.jpg |
-| 8 | Red Label Tea | Brooke Bond | red-label-tea.jpg |
-| 9 | Tata Tea Premium | Tata | tata-tea-premium.jpg |
-| 10 | Chana Dal | Tata Sampann | chana-dal.jpg |
-| 11 | Kabuli Chana (Chickpeas) | Tata Sampann | kabuli-chana.jpg |
-| 12 | Masoor Dal | Tata Sampann | masoor-dal.jpg |
-| 13 | Moong Dal | Tata Sampann | moong-dal.jpg |
-| 14 | Rajma (Kidney Beans) | Tata Sampann | rajma-kidney-beans.jpg |
-| 15 | Toor Dal (Arhar) | India Gate | toor-dal.jpg |
-| 16 | Dry Fruits Mix | Nutraj | dry-fruits-mix.jpg |
-| 17 | Jaggery (Gur) | Miltop | jaggery-gur.jpg |
-| 18 | Sabudana (Tapioca Pearls) | Swad | sabudana-tapioca.jpg |
-| 19 | Sugar (Sulphurless) | Trust | sugar-sulphurless.jpg |
-| 20 | Catch Turmeric Powder | Catch | catch-turmeric-powder.jpg |
-| 21 | Everest Garam Masala | Everest | everest-garam-masala.jpg |
-| 22 | MDH Chana Masala | MDH | mdh-chana-masala.jpg |
-| 23 | MDH Deggi Mirch | MDH | mdh-deggi-mirch.jpg |
-| 24 | Sendha Namak (Rock Salt) | Tata | sendha-namak.jpg |
-| 25 | Tata Salt | Tata | tata-salt.jpg |
-| 26 | Whole Coriander Seeds | Catch | whole-coriander-seeds.jpg |
-| 27 | Whole Cumin Seeds (Jeera) | Catch | whole-cumin-seeds.jpg |
-| 28 | Amul Pure Ghee | Amul | amul-pure-ghee.jpg |
-| 29 | Coconut Oil | Parachute | coconut-oil.jpg |
-| 30 | Fortune Sunflower Oil | Fortune | fortune-sunflower-oil.jpg |
-| 31 | Mustard Oil (Kachi Ghani) | Fortune | mustard-oil.jpg |
-| 32 | Saffola Gold Refined Oil | Saffola | saffola-gold-oil.jpg |
-| 33 | Lijjat Papad - Moong | Lijjat | lijjat-papad-moong.jpg |
-| 34 | Lijjat Papad - Urad | Lijjat | lijjat-papad-urad.jpg |
-| 35 | Mother's Recipe Mango Pickle | Mother's Recipe | mango-pickle.jpg |
-| 36 | Pravin Mixed Pickle | Pravin | pravin-mixed-pickle.jpg |
-| 37 | MTR Ready to Eat Poha | MTR | mtr-poha.jpg |
-| 38 | MTR Ready to Eat Upma | MTR | mtr-upma.jpg |
-| 39 | Saffola Oats | Saffola | saffola-oats.jpg |
-| 40 | Daawat Rozana Gold Basmati | Daawat | daawat-basmati.jpg |
-| 41 | India Gate Basmati Rice | India Gate | india-gate-rice.jpg |
-| 42 | Bikaji Bikaneri Bhujia | Bikaji | bikaji-bhujia.jpg |
-| 43 | Britannia Good Day Cookies | Britannia | britannia-good-day.jpg |
-| 44 | Haldiram Aloo Bhujia | Haldiram | haldiram-aloo-bhujia.jpg |
-| 45 | Haldiram Bhujia | Haldiram | haldiram-bhujia.jpg |
-| 46 | Maggi 2-Minute Noodles | Maggi | maggi-noodles.jpg |
-| 47 | Murmura (Puffed Rice) | Local | murmura-puffed-rice.jpg |
-| 48 | Parle-G Biscuits | Parle | parle-g-biscuits.jpg |
-| 49 | Roasted Chana | Jabsons | roasted-chana.jpg |
-| 50 | Roasted Makhana (Fox Nuts) | Farmley | roasted-makhana.jpg |
+## Plan: Switch Dashboard to Read from `calls` Table (Supabase)
 
-### Technical Details
+Instead of fetching from Airtable, read the `calls` table directly. This gives per-call accuracy with full call history per person.
 
-| Item | Detail |
-|------|--------|
-| AI model | google/gemini-2.5-flash-image |
-| Image count | 50 unique images |
-| Storage | `public/grocery/` directory (local assets) |
-| Database | Single UPDATE query mapping product names to new paths |
-| Code changes | None needed -- ProductCard already renders images correctly |
-| Estimated batches | ~10 batches of 5 images each |
+### 1. New edge function: `fetch-outbound-calls`
 
+Replace `fetch-outbound-call-results` with a new function that queries the `calls` table, ordered by `started_at DESC`, including the `extracted_data` JSONB field.
+
+```text
+SELECT
+  id, retell_call_id, outcome, started_at, ended_at, duration_seconds,
+  transcript_summary, extracted_data
+FROM calls
+ORDER BY started_at DESC
+LIMIT 50
+```
+
+The `extracted_data` already contains: `call_status`, `first_name`, `last_name`, `to_phone_number`, `interest_level`, `next_action`, `notes`, `timeline`, etc. — all populated by `outbound-post-call`.
+
+### 2. Update `useOutboundCallResults` hook
+
+Change the hook to call the new edge function. Map columns from the `calls` table + `extracted_data` into `OutboundCallRecord`. Per-call data means voicemail calls will never show stale `interest_level` from a previous call.
+
+### 3. Update stats logic
+
+Stats become accurate per-call (not per-lead):
+- `totalCalled` = total rows
+- `answered` = rows where `outcome` includes "connected" or "answered"
+- `interested` = rows where `outcome` includes "connected" AND `extracted_data.interest_level` is "high"/"medium"
+- `pendingFollowUp` = rows where `extracted_data.next_action` is non-empty
+
+### 4. Dashboard table: add "Date/Time" column
+
+Since we now show per-call rows (not per-lead), replace "Last Called" with "Date / Time" showing `started_at` timestamp + duration. Group by lead name to allow a user to see multiple calls for the same person.
+
+---
+
+## What Changes
+
+| Area | Before | After |
+|------|--------|-------|
+| Data source | Airtable (1 row/lead) | `calls` table (1 row/call) |
+| Voicemail row | shows stale interest | shows correct empty interest |
+| Multiple calls | only latest shown | all calls shown |
+| Stats accuracy | per-lead counts | per-call counts |
+
+## Files to Edit
+
+- **`supabase/functions/fetch-outbound-calls/index.ts`** — new function reading from `calls` table via Supabase service role
+- **`src/hooks/useOutboundCallResults.ts`** — point to new function, remap fields
+- **`src/pages/ai-agent/Dashboard.tsx`** — update `ExpandableRow` to show date/time + duration per call; show grouped lead name
+
+No database migration needed.
