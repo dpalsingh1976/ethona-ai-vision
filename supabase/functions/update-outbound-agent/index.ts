@@ -983,7 +983,8 @@ Deno.serve(async (req) => {
       },
     });
 
-    const agentResult = await agentRes.json();
+    const agentBodyText = await agentRes.text();
+    const agentResult = agentBodyText ? JSON.parse(agentBodyText) : { published: true };
     if (!agentRes.ok) {
       return new Response(JSON.stringify({ error: "Agent publish failed", details: agentResult }), {
         status: agentRes.status,
