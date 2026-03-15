@@ -603,13 +603,44 @@ Deno.serve(async (req) => {
         start_node_id: "greeting",
         start_speaker: "agent",
         model_choice: { type: "cascading", model: "gpt-4.1" },
-        global_prompt: `You are an AI calling on behalf of ${config.company_name}, representing ${config.agent_name}. You are making an outbound call to a lead. Be warm, professional, and concise. Never be pushy.`,
+        // Financial services global prompt — overrides agent-level defaults
+        global_prompt: `You are a warm, professional AI assistant calling on behalf of {{advisor_name}} at ${config.company_name}. You help individuals and families explore retirement planning and life insurance options.
+
+CORE BEHAVIOR RULES:
+- NEVER ask the lead's age directly — infer life stage from context clues (employment status, family situation, etc.)
+- Ask ONE question at a time
+- Use short natural acknowledgments: "Got it.", "That makes sense.", "Understood.", "That's helpful."
+- Be genuinely curious and consultative — never robotic, scripted, or salesy
+- If the lead says something, acknowledge it before moving to the next question
+- Keep responses concise — 2-3 sentences maximum per turn
+- Never be pushy or aggressive — this is a warm, helpful conversation
+
+TONE: Friendly. Professional. Consultative. Human. Curious. Respectful.`,
         default_dynamic_variables: {
           first_name: "",
           last_name: "",
           original_interest: "",
           advisor_name: config.agent_name,
           transfer_number: config.forwarding_number || "",
+          // Post-call extracted fields — populated by AI during call analysis
+          interest_level: "",
+          timeline: "",
+          product_interest: "",
+          employment_stage: "",
+          family_stage: "",
+          primary_goal: "",
+          has_existing_coverage: "",
+          working_with_advisor: "",
+          urgency_level: "",
+          objection_reason: "",
+          appointment_ready: "",
+          callback_requested: "",
+          transfer_attempted: "",
+          next_action: "",
+          notes: "",
+          extracted_need_signals: "",
+          call_summary: "",
+          call_status: "",
           retell_agent_id: "PLACEHOLDER_WILL_BE_UPDATED",
         },
       };
