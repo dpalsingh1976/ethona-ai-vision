@@ -905,13 +905,8 @@ RULES:
   },
 ];
 
-const TOOLS = [
-  {
-    type: "end_call",
-    name: "end_call",
-    description: "End the call after wrap-up is complete",
-  },
-];
+const TOOLS: unknown[] = [];
+
 
 const DEFAULT_DYNAMIC_VARIABLES: Record<string, string> = {
   primary_goal: "",
