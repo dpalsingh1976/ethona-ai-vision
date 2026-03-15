@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.fetch-outbound-calls]
 verify_jwt = false
+
+[functions.update-outbound-agent]
+verify_jwt = false
