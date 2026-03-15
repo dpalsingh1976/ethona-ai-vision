@@ -38,7 +38,10 @@ export function useOutboundCallResults() {
 
       const stats: OutboundCallStats = {
         totalCalled: records.length,
-        answered: records.filter((r) => r.call_status === "answered").length,
+        answered: records.filter((r) => {
+          const s = r.call_status?.toLowerCase();
+          return s === "answered" || s?.includes("connected");
+        }).length,
         interested: records.filter(
           (r) => r.interest_level === "high" || r.interest_level === "medium"
         ).length,
