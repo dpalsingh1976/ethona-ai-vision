@@ -228,7 +228,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
 //   - "Are you still working full-time, or are you already retired?"  → employment_stage
 //   - "Do you have kids still at home, in college, or are they grown?" → family_stage
 //   - "Are you thinking more about protecting your family, or building future retirement income?" → product_interest
-//   - "Is there a specific reason this topic has been on your mind lately?" → urgency_level / trigger
+//   - "Have there been any big changes in your life recently — new job, new home, growing family — that have you thinking about your financial situation?" → urgency_level / trigger (outbound-safe)
 //
 // NEW AIRTABLE COLUMNS WRITTEN BY outbound-post-call (create these in Airtable if not present):
 //   product_interest, primary_goal, family_stage, employment_stage, urgency_level,
@@ -286,7 +286,9 @@ Keep the greeting brief, warm, and human. Do not ask any discovery questions her
       type: "conversation",
       instruction: {
         type: "prompt",
-        text: `You are in a warm, consultative discovery conversation with {{first_name}}. Your goal is to understand their financial situation, life stage, and likely needs — without asking their age directly.
+        text: `CONTEXT: You are on an outbound call — YOU called {{first_name}}. Do not ask why they reached out or what brought them to you. You initiated this call on behalf of {{advisor_name}}.
+
+You are in a warm, consultative discovery conversation with {{first_name}}. Your goal is to understand their financial situation, life stage, and likely needs — without asking their age directly.
 
 OPENING THE DISCOVERY:
 - If {{original_interest}} is non-empty, open with a tailored question based on that interest (e.g. if interest is retirement-related, start with "Are you still working full-time, or are you getting closer to retirement?").
@@ -308,7 +310,7 @@ INDIRECT DISCOVERY QUESTIONS — choose based on conversation:
 6. "A lot of people worry about outliving their savings or leaving their family underprotected — which side feels more relevant to you?" → infers primary concern
 7. "Are you mostly looking for peace of mind, better long-term growth, or both?" → infers goal
 8. "Have you reviewed your current protection or retirement strategy in the last year or so?" → infers recency / urgency
-9. "Is there a specific reason this topic has been on your mind lately?" → infers trigger / urgency
+9. "Have there been any big changes in your life recently — new job, new home, growing family — that have you thinking about your financial situation?" → infers trigger / urgency (outbound-safe framing)
 
 WHAT TO LISTEN FOR and CAPTURE:
 - Employment status: working full-time, pre-retirement, semi-retired, fully retired
@@ -612,6 +614,8 @@ Deno.serve(async (req) => {
         model_choice: { type: "cascading", model: "gpt-4.1" },
         // Financial services global prompt — overrides agent-level defaults
         global_prompt: `You are a warm, professional AI assistant calling on behalf of {{advisor_name}} at ${config.company_name}. You help individuals and families explore retirement planning and life insurance options.
+
+IMPORTANT: This is an OUTBOUND call. YOU are calling the lead — they did not reach out to you. Never use inbound-style language like "what prompted you to reach out", "what brought you to us", or "how can I help you today". You initiated this call on behalf of {{advisor_name}}.
 
 CORE BEHAVIOR RULES:
 - NEVER ask the lead's age directly — infer life stage from context clues (employment status, family situation, etc.)
