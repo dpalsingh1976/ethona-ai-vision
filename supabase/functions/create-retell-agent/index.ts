@@ -310,7 +310,7 @@ INDIRECT DISCOVERY QUESTIONS — choose based on conversation:
 6. "A lot of people worry about outliving their savings or leaving their family underprotected — which side feels more relevant to you?" → infers primary concern
 7. "Are you mostly looking for peace of mind, better long-term growth, or both?" → infers goal
 8. "Have you reviewed your current protection or retirement strategy in the last year or so?" → infers recency / urgency
-9. "Is there a specific reason this topic has been on your mind lately?" → infers trigger / urgency
+9. "Have there been any big changes in your life recently — new job, new home, growing family — that have you thinking about your financial situation?" → infers trigger / urgency (outbound-safe framing)
 
 WHAT TO LISTEN FOR and CAPTURE:
 - Employment status: working full-time, pre-retirement, semi-retired, fully retired
