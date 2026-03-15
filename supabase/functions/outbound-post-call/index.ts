@@ -158,7 +158,17 @@ Deno.serve(async (req) => {
     // ── Determine call_status fallback ────────────────────────────────────
     let callStatus: string = strOrUndef(customData.call_status) ?? "";
     if (!callStatus) {
-      if (call.in_voicemail) {
+      const transcriptLower = (call.transcript || "").toLowerCase();
+      const summaryLower = (call.transcript_summary || "").toLowerCase();
+      const isVoicemail =
+        call.in_voicemail ||
+        summaryLower.includes("voicemail") ||
+        summaryLower.includes("left a message") ||
+        summaryLower.includes("reached voicemail") ||
+        transcriptLower.includes("left a message") ||
+        transcriptLower.includes("reached voicemail");
+
+      if (isVoicemail) {
         callStatus = "Voicemail Left";
       } else if (call.disconnection_reason === "dial_no_answer") {
         callStatus = "No Answer";
@@ -328,6 +338,20 @@ Deno.serve(async (req) => {
         extracted_data: {
           ...customData,
           call_status: callStatus,
+          // Always store lead identity from call metadata / dynamic variables
+          to_phone_number:
+            call.to_number ||
+            customData.to_phone_number ||
+            call.retell_llm_dynamic_variables?.to_phone_number ||
+            "",
+          first_name:
+            customData.first_name ||
+            call.retell_llm_dynamic_variables?.first_name ||
+            "",
+          last_name:
+            customData.last_name ||
+            call.retell_llm_dynamic_variables?.last_name ||
+            "",
         },
       };
 

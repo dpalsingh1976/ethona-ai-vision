@@ -1,82 +1,89 @@
 
-## Three Root Causes Found from Live DB Data
 
-Querying the `calls` table reveals exactly what's happening:
+## Generate Unique AI Images for All 50 Grocery Products
 
-```
-retell_call_id: call_7aa1face...  (the 16:06 voicemail call)
-outcome: "Connected - Interested"    ← WRONG, should be "Voicemail Left"
-extracted_data: { "call_status": "Connected - Interested" }   ← no first_name, last_name, to_phone_number
-transcript_summary: "The AI assistant called Davinder on behalf of Ganesh to discuss retirement planning and life insurance options but reached voicemail and left a message."
-```
+### Overview
+Generate an individual, unique AI image for each of the 50 products in the database and store them locally in the `public/grocery/` directory, then update the database URLs to point to the new files.
 
-### Issue 1 — "Unknown" name
-`initiate-outbound-call` passes `first_name`, `last_name`, `to_phone_number` as **Retell dynamic variables** (`retell_llm_dynamic_variables`). Those are used by the conversation flow to greet the lead, but they are NOT automatically in `custom_analysis_data`. So when `outbound-post-call` runs `...customData` into `extracted_data`, there is no `first_name`/`last_name`/`to_phone_number` — the fields are empty.
+### Approach
+Use the AI image generation model (`google/gemini-2.5-flash-image`) to create a realistic product photo for each item. Each image will be prompted with the product name, brand, and category to ensure uniqueness.
 
-**Fix**: In `outbound-post-call`, explicitly write `call.to_number` (the dialed phone) and the name from `customData` or from `call.retell_llm_dynamic_variables` into `extracted_data`.
+### Steps
 
-### Issue 2 — Voicemail showing "Connected - Interested"
-The `callStatus` fallback logic:
-```
-if (call.in_voicemail)           → "Voicemail Left"
-else if (disconnection_reason === "dial_no_answer") → "No Answer"
-else if (call.transcript)        → "Connected - Interested"   ← BUG
-```
-For the 16:06 call: `in_voicemail` was falsy (Retell didn't set it), but there WAS a transcript (the AI spoke into voicemail). So it fell to `"Connected - Interested"`.
+**Step 1: Generate images in batches**
+Generate all 50 product images using prompts like:
+> "A realistic product photo of [Brand] [Product Name] package on a clean white background, Indian grocery product, professional product photography"
 
-The transcript_summary clearly says "reached voicemail". We need to detect this.
+Save each image to `public/grocery/` with a slug-based filename (e.g., `aashirvaad-whole-wheat-atta.jpg`).
 
-**Fix**: Add a check — if `call.transcript` or `transcript_summary` contains voicemail keywords (`"voicemail"`, `"left a message"`, `"reached voicemail"`), set `callStatus = "Voicemail Left"`. This runs before the transcript fallback.
+Images will be generated in parallel batches of ~5-6 at a time to stay efficient.
 
-### Issue 3 — Interest column empty
-`custom_analysis_data` from Retell is empty for all outbound calls (the flow isn't populating it). So `interest_level` is never set. This is a Retell flow config gap, but we can improve the fallback: use `transcript_summary` text to infer interest when `interest_level` is absent.
+**Step 2: Update database URLs**
+Run a single SQL UPDATE mapping each product name to its new unique image path (e.g., `/grocery/aashirvaad-whole-wheat-atta.jpg`).
 
-**Fix for now**: Show "—" for interest when empty (already done). The real fix for interest data requires Retell flow changes — out of scope here. We can display `transcript_summary` in the expanded row for connected calls.
+### All 50 Products
 
----
+| # | Product | Brand | File |
+|---|---------|-------|------|
+| 1 | Aashirvaad Whole Wheat Atta | Aashirvaad | aashirvaad-whole-wheat-atta.jpg |
+| 2 | Besan (Gram Flour) | Rajdhani | besan-gram-flour.jpg |
+| 3 | Maida (Refined Flour) | Aashirvaad | maida-refined-flour.jpg |
+| 4 | Pillsbury Chakki Fresh Atta | Pillsbury | pillsbury-chakki-fresh-atta.jpg |
+| 5 | Sooji (Semolina) | Aashirvaad | sooji-semolina.jpg |
+| 6 | Bru Instant Coffee | Bru | bru-instant-coffee.jpg |
+| 7 | Nescafe Classic Coffee | Nescafe | nescafe-classic-coffee.jpg |
+| 8 | Red Label Tea | Brooke Bond | red-label-tea.jpg |
+| 9 | Tata Tea Premium | Tata | tata-tea-premium.jpg |
+| 10 | Chana Dal | Tata Sampann | chana-dal.jpg |
+| 11 | Kabuli Chana (Chickpeas) | Tata Sampann | kabuli-chana.jpg |
+| 12 | Masoor Dal | Tata Sampann | masoor-dal.jpg |
+| 13 | Moong Dal | Tata Sampann | moong-dal.jpg |
+| 14 | Rajma (Kidney Beans) | Tata Sampann | rajma-kidney-beans.jpg |
+| 15 | Toor Dal (Arhar) | India Gate | toor-dal.jpg |
+| 16 | Dry Fruits Mix | Nutraj | dry-fruits-mix.jpg |
+| 17 | Jaggery (Gur) | Miltop | jaggery-gur.jpg |
+| 18 | Sabudana (Tapioca Pearls) | Swad | sabudana-tapioca.jpg |
+| 19 | Sugar (Sulphurless) | Trust | sugar-sulphurless.jpg |
+| 20 | Catch Turmeric Powder | Catch | catch-turmeric-powder.jpg |
+| 21 | Everest Garam Masala | Everest | everest-garam-masala.jpg |
+| 22 | MDH Chana Masala | MDH | mdh-chana-masala.jpg |
+| 23 | MDH Deggi Mirch | MDH | mdh-deggi-mirch.jpg |
+| 24 | Sendha Namak (Rock Salt) | Tata | sendha-namak.jpg |
+| 25 | Tata Salt | Tata | tata-salt.jpg |
+| 26 | Whole Coriander Seeds | Catch | whole-coriander-seeds.jpg |
+| 27 | Whole Cumin Seeds (Jeera) | Catch | whole-cumin-seeds.jpg |
+| 28 | Amul Pure Ghee | Amul | amul-pure-ghee.jpg |
+| 29 | Coconut Oil | Parachute | coconut-oil.jpg |
+| 30 | Fortune Sunflower Oil | Fortune | fortune-sunflower-oil.jpg |
+| 31 | Mustard Oil (Kachi Ghani) | Fortune | mustard-oil.jpg |
+| 32 | Saffola Gold Refined Oil | Saffola | saffola-gold-oil.jpg |
+| 33 | Lijjat Papad - Moong | Lijjat | lijjat-papad-moong.jpg |
+| 34 | Lijjat Papad - Urad | Lijjat | lijjat-papad-urad.jpg |
+| 35 | Mother's Recipe Mango Pickle | Mother's Recipe | mango-pickle.jpg |
+| 36 | Pravin Mixed Pickle | Pravin | pravin-mixed-pickle.jpg |
+| 37 | MTR Ready to Eat Poha | MTR | mtr-poha.jpg |
+| 38 | MTR Ready to Eat Upma | MTR | mtr-upma.jpg |
+| 39 | Saffola Oats | Saffola | saffola-oats.jpg |
+| 40 | Daawat Rozana Gold Basmati | Daawat | daawat-basmati.jpg |
+| 41 | India Gate Basmati Rice | India Gate | india-gate-rice.jpg |
+| 42 | Bikaji Bikaneri Bhujia | Bikaji | bikaji-bhujia.jpg |
+| 43 | Britannia Good Day Cookies | Britannia | britannia-good-day.jpg |
+| 44 | Haldiram Aloo Bhujia | Haldiram | haldiram-aloo-bhujia.jpg |
+| 45 | Haldiram Bhujia | Haldiram | haldiram-bhujia.jpg |
+| 46 | Maggi 2-Minute Noodles | Maggi | maggi-noodles.jpg |
+| 47 | Murmura (Puffed Rice) | Local | murmura-puffed-rice.jpg |
+| 48 | Parle-G Biscuits | Parle | parle-g-biscuits.jpg |
+| 49 | Roasted Chana | Jabsons | roasted-chana.jpg |
+| 50 | Roasted Makhana (Fox Nuts) | Farmley | roasted-makhana.jpg |
 
-## Files to Edit
+### Technical Details
 
-### 1. `supabase/functions/outbound-post-call/index.ts`
-Two targeted changes:
+| Item | Detail |
+|------|--------|
+| AI model | google/gemini-2.5-flash-image |
+| Image count | 50 unique images |
+| Storage | `public/grocery/` directory (local assets) |
+| Database | Single UPDATE query mapping product names to new paths |
+| Code changes | None needed -- ProductCard already renders images correctly |
+| Estimated batches | ~10 batches of 5 images each |
 
-**a) Fix callStatus detection** — before the `else if (call.transcript)` branch, add:
-```ts
-} else if (
-  (call.transcript_summary || "").toLowerCase().includes("voicemail") ||
-  (call.transcript || "").toLowerCase().includes("left a message") ||
-  (call.transcript || "").toLowerCase().includes("reached voicemail")
-) {
-  callStatus = "Voicemail Left";
-} else if (call.transcript) {
-  callStatus = "Connected - Interested";
-```
-
-**b) Always write lead identity into extracted_data** — add `to_number`, `first_name`, `last_name` from the Retell call payload and dynamic variables into `extracted_data`:
-```ts
-extracted_data: {
-  ...customData,
-  call_status: callStatus,
-  // Always store lead identity from call metadata (not just from customData)
-  to_phone_number: call.to_number || customData.to_phone_number || "",
-  first_name: customData.first_name || call.retell_llm_dynamic_variables?.first_name || "",
-  last_name: customData.last_name || call.retell_llm_dynamic_variables?.last_name || "",
-}
-```
-
-### 2. No frontend changes needed
-The `fetch-outbound-calls` function already reads `ext.first_name`, `ext.last_name`, `ext.to_phone_number` from `extracted_data`. Once the backend writes them correctly, names will show up automatically.
-
-The `callStatusBadge` already handles `"voicemail left"` correctly — once the backend writes the right outcome, it will show the yellow Voicemail badge.
-
----
-
-## Summary
-
-| Issue | Root Cause | Fix Location |
-|-------|-----------|-------------|
-| "Unknown" name | `first_name`/`last_name` never written to `extracted_data` | `outbound-post-call` |
-| Voicemail → "Connected" | `in_voicemail` flag absent; transcript presence → wrong branch | `outbound-post-call` |
-| Interest empty | Retell flow not populating `custom_analysis_data` (out of scope) | Retell flow config |
-
-One file to edit, edge function auto-redeploys.
