@@ -39,32 +39,40 @@ function formatCurrency(val: number) {
 }
 
 function callStatusBadge(status: string) {
-  switch (status?.toLowerCase()) {
-    case "answered":
-      return (
-        <Badge className="bg-[hsl(142,70%,45%)]/15 text-[hsl(142,70%,55%)] border-[hsl(142,70%,45%)]/25 gap-1">
-          <PhoneCall className="h-3 w-3" /> Answered
-        </Badge>
-      );
-    case "voicemail":
-      return (
-        <Badge className="bg-[hsl(45,90%,51%)]/15 text-[hsl(45,90%,60%)] border-[hsl(45,90%,51%)]/25 gap-1">
-          <PhoneOff className="h-3 w-3" /> Voicemail
-        </Badge>
-      );
-    case "no_answer":
-      return (
-        <Badge className="bg-destructive/15 text-destructive border-destructive/25 gap-1">
-          <PhoneMissed className="h-3 w-3" /> No Answer
-        </Badge>
-      );
-    default:
-      return (
-        <Badge variant="secondary" className="gap-1 text-muted-foreground">
-          Pending
-        </Badge>
-      );
+  const s = status?.toLowerCase() ?? "";
+  if (s === "answered" || s.includes("connected")) {
+    return (
+      <Badge className="bg-[hsl(142,70%,45%)]/15 text-[hsl(142,70%,55%)] border-[hsl(142,70%,45%)]/25 gap-1">
+        <PhoneCall className="h-3 w-3" /> {s.includes("interested") ? "Connected" : "Answered"}
+      </Badge>
+    );
   }
+  if (s === "voicemail" || s.includes("voicemail")) {
+    return (
+      <Badge className="bg-[hsl(45,90%,51%)]/15 text-[hsl(45,90%,60%)] border-[hsl(45,90%,51%)]/25 gap-1">
+        <PhoneOff className="h-3 w-3" /> Voicemail Left
+      </Badge>
+    );
+  }
+  if (s === "no_answer" || s === "no answer") {
+    return (
+      <Badge className="bg-destructive/15 text-destructive border-destructive/25 gap-1">
+        <PhoneMissed className="h-3 w-3" /> No Answer
+      </Badge>
+    );
+  }
+  if (!s) {
+    return (
+      <Badge variant="secondary" className="gap-1 text-muted-foreground">
+        Pending
+      </Badge>
+    );
+  }
+  return (
+    <Badge variant="secondary" className="gap-1 text-muted-foreground">
+      {status}
+    </Badge>
+  );
 }
 
 function interestBadge(level: string) {
