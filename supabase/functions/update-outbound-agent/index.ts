@@ -974,14 +974,13 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Step 2: Publish the agent
-    const agentRes = await fetch(`https://api.retellai.com/update-agent/${AGENT_ID}`, {
-      method: "PATCH",
+    // Step 2: Publish the agent via the dedicated publish endpoint
+    const agentRes = await fetch(`https://api.retellai.com/publish-agent/${AGENT_ID}`, {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${retellApiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ is_published: true }),
     });
 
     const agentResult = await agentRes.json();
