@@ -38,3 +38,6 @@ verify_jwt = false
 
 [functions.fetch-outbound-call-results]
 verify_jwt = false
+
+[functions.fetch-outbound-calls]
+verify_jwt = false
