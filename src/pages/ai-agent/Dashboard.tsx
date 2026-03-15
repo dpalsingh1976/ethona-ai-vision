@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuthContext";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useOutboundCallResults, OutboundCallRecord } from "@/hooks/useOutboundCallResults";
@@ -75,7 +74,12 @@ function callStatusBadge(status: string) {
   );
 }
 
-function interestBadge(level: string) {
+function interestBadge(level: string, callStatus: string) {
+  // Don't show interest for unreached calls — it would be stale / meaningless
+  const s = callStatus?.toLowerCase() ?? "";
+  const isUnreached = s.includes("voicemail") || s.includes("no answer") || s === "no_answer";
+  if (isUnreached) return <span className="text-muted-foreground text-xs">—</span>;
+
   switch (level?.toLowerCase()) {
     case "high":
       return (
@@ -100,11 +104,12 @@ function interestBadge(level: string) {
   }
 }
 
-function formatLastCalled(dateStr: string) {
+function formatDateTime(dateStr: string) {
   if (!dateStr) return "—";
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString([], { month: "short", day: "numeric" });
+  return d.toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" }) +
+    " " + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
 function ExpandableRow({ record }: { record: OutboundCallRecord }) {
@@ -125,13 +130,18 @@ function ExpandableRow({ record }: { record: OutboundCallRecord }) {
           <div className="text-xs text-muted-foreground mt-0.5">{record.to_phone_number}</div>
         </TableCell>
         <TableCell>{callStatusBadge(record.call_status)}</TableCell>
-        <TableCell>{interestBadge(record.interest_level)}</TableCell>
-        <TableCell className="max-w-[200px]">
+        <TableCell>{interestBadge(record.interest_level, record.call_status)}</TableCell>
+        <TableCell className="max-w-[180px]">
           <span className="text-sm text-foreground/80 line-clamp-1">{record.next_action || "—"}</span>
         </TableCell>
-        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">{formatLastCalled(record.last_called)}</TableCell>
+        <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+          <div>{formatDateTime(record.started_at)}</div>
+          {record.duration_seconds ? (
+            <div className="text-muted-foreground/60 mt-0.5">{formatDuration(record.duration_seconds)}</div>
+          ) : null}
+        </TableCell>
       </TableRow>
-      {open && (record.notes || record.timeline || record.original_interest) && (
+      {open && (record.notes || record.timeline || record.original_interest || record.transcript_summary) && (
         <TableRow className="bg-muted/30 hover:bg-muted/40">
           <TableCell colSpan={5} className="py-3 px-4">
             <div className="grid gap-2 sm:grid-cols-3 text-sm">
@@ -147,12 +157,12 @@ function ExpandableRow({ record }: { record: OutboundCallRecord }) {
                   <p className="text-foreground/80">{record.timeline}</p>
                 </div>
               )}
-              {record.notes && (
+              {(record.notes || record.transcript_summary) && (
                 <div className={cn(!record.original_interest && !record.timeline ? "sm:col-span-3" : "")}>
                   <p className="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1">
                     <MessageSquare className="h-3 w-3" /> AI Notes
                   </p>
-                  <p className="text-foreground/80 leading-relaxed">{record.notes}</p>
+                  <p className="text-foreground/80 leading-relaxed">{record.notes || record.transcript_summary}</p>
                 </div>
               )}
             </div>
@@ -281,7 +291,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-2">
           <PhoneOutgoing className="h-5 w-5 text-primary" />
           <h2 className="font-display text-xl font-semibold tracking-tight">Outbound Activity</h2>
-          <span className="ml-1 rounded-full bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">Live · Airtable</span>
+          <span className="ml-1 rounded-full bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">Live · Per Call</span>
         </div>
 
         {/* Outbound summary mini-cards */}
@@ -307,9 +317,9 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-medium flex items-center justify-between">
-              <span>Recent Outbound Calls</span>
+              <span>Outbound Call Log</span>
               {outbound?.records?.length ? (
-                <span className="text-xs font-normal text-muted-foreground">{outbound.records.length} record{outbound.records.length !== 1 ? "s" : ""} · click row to expand</span>
+                <span className="text-xs font-normal text-muted-foreground">{outbound.records.length} call{outbound.records.length !== 1 ? "s" : ""} · click row to expand</span>
               ) : null}
             </CardTitle>
           </CardHeader>
@@ -327,7 +337,7 @@ export default function Dashboard() {
                       <TableHead>Status</TableHead>
                       <TableHead>Interest</TableHead>
                       <TableHead>Next Action</TableHead>
-                      <TableHead className="whitespace-nowrap">Last Called</TableHead>
+                      <TableHead className="whitespace-nowrap">Date / Time</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
