@@ -907,14 +907,6 @@ RULES:
 
 const TOOLS = [
   {
-    type: "transfer_call",
-    name: "transfer_call",
-    description: "Transfer the call to the financial advisor for a live consultation",
-    number: "{{transfer_number}}",
-    warm_transfer_option: "warm",
-    warm_transfer_prompt: "Hi {{advisor_name}}, this is Alex from your AI team. I have {{first_name}} {{last_name}} on the line — they're interested in discussing {{product_interest}}. Key context: {{call_summary}}. Connecting you now.",
-  },
-  {
     type: "end_call",
     name: "end_call",
     description: "End the call after wrap-up is complete",
