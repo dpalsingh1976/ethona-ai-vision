@@ -1,133 +1,89 @@
 
-## What we're updating
 
-Two files need changes, plus `fix-existing-outbound-flow` will also be patched to push the new flow to the live agent `conversation_flow_3ddcd04483f1`.
+## Generate Unique AI Images for All 50 Grocery Products
 
----
+### Overview
+Generate an individual, unique AI image for each of the 50 products in the database and store them locally in the `public/grocery/` directory, then update the database URLs to point to the new files.
 
-## File 1: `supabase/functions/create-retell-agent/index.ts` — `buildOutboundFlowNodes()`
+### Approach
+Use the AI image generation model (`google/gemini-2.5-flash-image`) to create a realistic product photo for each item. Each image will be prompted with the product name, brand, and category to ensure uniqueness.
 
-Replace the 6-node generic outbound flow with a rich financial services flow. Key structural changes:
+### Steps
 
-**Global prompt** (on the flow payload):
-> "You are a warm, professional AI calling on behalf of {{advisor_name}} at the company. You help individuals explore retirement planning and life insurance options. Never ask age directly. Be curious, consultative, and human. Ask one question at a time. Use short acknowledgments like 'Got it.', 'That makes sense.' Never be pushy or robotic."
+**Step 1: Generate images in batches**
+Generate all 50 product images using prompts like:
+> "A realistic product photo of [Brand] [Product Name] package on a clean white background, Indian grocery product, professional product photography"
 
-**New node structure:**
+Save each image to `public/grocery/` with a slug-based filename (e.g., `aashirvaad-whole-wheat-atta.jpg`).
 
-```text
-greeting
-  ├──[receptive]──► discovery
-  ├──[busy]────────► callback
-  └──[not interested]► not_interested
-        │
-       discovery  (retirement/insurance/family/employment needs — indirect age profiling)
-        │
-       objection_handler  (branched if objection arises during discovery)
-        │
-       appointment_pitch  (if interest detected, offer a strategy call)
-        │
-       wrap_up
-        │
-       end_call
-```
+Images will be generated in parallel batches of ~5-6 at a time to stay efficient.
 
-**Node details:**
+**Step 2: Update database URLs**
+Run a single SQL UPDATE mapping each product name to its new unique image path (e.g., `/grocery/aashirvaad-whole-wheat-atta.jpg`).
 
-`greeting`:
-- Prompt: Greet {{first_name}} by name. Introduce as calling on behalf of {{advisor_name}}. Soft, low-pressure opener. Ask "Did I catch you at an okay time for a quick minute?"
-- Edges: receptive → `discovery`, busy → `callback`, not_interested → `not_interested`
+### All 50 Products
 
-`discovery`:
-- A rich multi-question discovery node. The agent intelligently chooses questions without asking all at once.
-- Indirect life-stage inference via questions like: "Are you still working full-time, or are you already retired?", "Are you thinking more about protecting your family right now, or building future income for retirement?", "Do you have kids still at home, in college, or are they grown?"
-- Detect: retirement vs protection focus, family situation, employment status, has existing coverage, existing advisor
-- `extract_dynamic_variable` captures: `interest_level`, `timeline`, `product_interest` (retirement/life_insurance/both), `employment_stage`, `family_stage`, `primary_goal`, `has_existing_coverage`, `working_with_advisor`, `objection_reason`, `appointment_ready`, `callback_requested`, `extracted_need_signals`, `call_summary`
-- Edges: interest_detected → `appointment_pitch`, objection → `objection_handler`, end → `wrap_up`
+| # | Product | Brand | File |
+|---|---------|-------|------|
+| 1 | Aashirvaad Whole Wheat Atta | Aashirvaad | aashirvaad-whole-wheat-atta.jpg |
+| 2 | Besan (Gram Flour) | Rajdhani | besan-gram-flour.jpg |
+| 3 | Maida (Refined Flour) | Aashirvaad | maida-refined-flour.jpg |
+| 4 | Pillsbury Chakki Fresh Atta | Pillsbury | pillsbury-chakki-fresh-atta.jpg |
+| 5 | Sooji (Semolina) | Aashirvaad | sooji-semolina.jpg |
+| 6 | Bru Instant Coffee | Bru | bru-instant-coffee.jpg |
+| 7 | Nescafe Classic Coffee | Nescafe | nescafe-classic-coffee.jpg |
+| 8 | Red Label Tea | Brooke Bond | red-label-tea.jpg |
+| 9 | Tata Tea Premium | Tata | tata-tea-premium.jpg |
+| 10 | Chana Dal | Tata Sampann | chana-dal.jpg |
+| 11 | Kabuli Chana (Chickpeas) | Tata Sampann | kabuli-chana.jpg |
+| 12 | Masoor Dal | Tata Sampann | masoor-dal.jpg |
+| 13 | Moong Dal | Tata Sampann | moong-dal.jpg |
+| 14 | Rajma (Kidney Beans) | Tata Sampann | rajma-kidney-beans.jpg |
+| 15 | Toor Dal (Arhar) | India Gate | toor-dal.jpg |
+| 16 | Dry Fruits Mix | Nutraj | dry-fruits-mix.jpg |
+| 17 | Jaggery (Gur) | Miltop | jaggery-gur.jpg |
+| 18 | Sabudana (Tapioca Pearls) | Swad | sabudana-tapioca.jpg |
+| 19 | Sugar (Sulphurless) | Trust | sugar-sulphurless.jpg |
+| 20 | Catch Turmeric Powder | Catch | catch-turmeric-powder.jpg |
+| 21 | Everest Garam Masala | Everest | everest-garam-masala.jpg |
+| 22 | MDH Chana Masala | MDH | mdh-chana-masala.jpg |
+| 23 | MDH Deggi Mirch | MDH | mdh-deggi-mirch.jpg |
+| 24 | Sendha Namak (Rock Salt) | Tata | sendha-namak.jpg |
+| 25 | Tata Salt | Tata | tata-salt.jpg |
+| 26 | Whole Coriander Seeds | Catch | whole-coriander-seeds.jpg |
+| 27 | Whole Cumin Seeds (Jeera) | Catch | whole-cumin-seeds.jpg |
+| 28 | Amul Pure Ghee | Amul | amul-pure-ghee.jpg |
+| 29 | Coconut Oil | Parachute | coconut-oil.jpg |
+| 30 | Fortune Sunflower Oil | Fortune | fortune-sunflower-oil.jpg |
+| 31 | Mustard Oil (Kachi Ghani) | Fortune | mustard-oil.jpg |
+| 32 | Saffola Gold Refined Oil | Saffola | saffola-gold-oil.jpg |
+| 33 | Lijjat Papad - Moong | Lijjat | lijjat-papad-moong.jpg |
+| 34 | Lijjat Papad - Urad | Lijjat | lijjat-papad-urad.jpg |
+| 35 | Mother's Recipe Mango Pickle | Mother's Recipe | mango-pickle.jpg |
+| 36 | Pravin Mixed Pickle | Pravin | pravin-mixed-pickle.jpg |
+| 37 | MTR Ready to Eat Poha | MTR | mtr-poha.jpg |
+| 38 | MTR Ready to Eat Upma | MTR | mtr-upma.jpg |
+| 39 | Saffola Oats | Saffola | saffola-oats.jpg |
+| 40 | Daawat Rozana Gold Basmati | Daawat | daawat-basmati.jpg |
+| 41 | India Gate Basmati Rice | India Gate | india-gate-rice.jpg |
+| 42 | Bikaji Bikaneri Bhujia | Bikaji | bikaji-bhujia.jpg |
+| 43 | Britannia Good Day Cookies | Britannia | britannia-good-day.jpg |
+| 44 | Haldiram Aloo Bhujia | Haldiram | haldiram-aloo-bhujia.jpg |
+| 45 | Haldiram Bhujia | Haldiram | haldiram-bhujia.jpg |
+| 46 | Maggi 2-Minute Noodles | Maggi | maggi-noodles.jpg |
+| 47 | Murmura (Puffed Rice) | Local | murmura-puffed-rice.jpg |
+| 48 | Parle-G Biscuits | Parle | parle-g-biscuits.jpg |
+| 49 | Roasted Chana | Jabsons | roasted-chana.jpg |
+| 50 | Roasted Makhana (Fox Nuts) | Farmley | roasted-makhana.jpg |
 
-`objection_handler`:
-- Handles: not interested, already has insurance, already has advisor, not thinking about retirement, call back later, suspicious caller
-- Acknowledge → reframe gently → one soft follow-up → if still resistant exit
-- Edges: recovers to `appointment_pitch` or exits to `wrap_up`
+### Technical Details
 
-`appointment_pitch`:
-- If lead is interested: "Based on what you shared, it sounds like a quick strategy conversation with {{advisor_name}} could be really helpful. Would you be open to a short call to review options that fit your situation?"
-- No pressure, consultative tone
-- `extract_dynamic_variable`: `appointment_ready`, `callback_requested`
-- Edges → `wrap_up`
+| Item | Detail |
+|------|--------|
+| AI model | google/gemini-2.5-flash-image |
+| Image count | 50 unique images |
+| Storage | `public/grocery/` directory (local assets) |
+| Database | Single UPDATE query mapping product names to new paths |
+| Code changes | None needed -- ProductCard already renders images correctly |
+| Estimated batches | ~10 batches of 5 images each |
 
-`callback`:
-- Ask preferred callback time. Extract `notes` with time preference.
-- `extract_dynamic_variable`: `next_action: "callback"`, `notes`
-- Edge → `wrap_up`
-
-`not_interested`:
-- Gracious exit. Mention they can reach out if situation changes.
-- `extract_dynamic_variable`: `interest_level: "low"`, `next_action: "no_action"`, `call_status: "Connected - Not Interested"`
-- Edge → `wrap_up`
-
-`wrap_up`:
-- Thank {{first_name}}, briefly recap next steps if any, warm close.
-- `extract_dynamic_variable`: `call_status` (full outcome labels: Connected - Interested, Connected - Retirement Planning, Connected - Life Insurance, Connected - Both, Connected - Callback Requested, Connected - Not Interested, Voicemail Left, No Answer, Wrong Number, Do Not Contact)
-- Edge → `end_call`
-
-`end_call` (type: "end"):
-- Speak warm goodbye
-
----
-
-## File 2: `supabase/functions/outbound-post-call/index.ts`
-
-Expand the Airtable PATCH payload on `call_analyzed` to write all new fields extracted from the enhanced discovery flow.
-
-**New fields mapped from `customData` (existing fields preserved, new ones added):**
-```typescript
-// Existing (preserved)
-call_status, last_called, interest_level, timeline, has_existing_coverage,
-working_with_advisor, transfer_attempted, next_action, notes
-
-// New additions
-product_interest        // "Retirement Planning" | "Life Insurance" | "Both"
-primary_goal            // e.g. "tax-efficient retirement", "family protection"
-family_stage            // e.g. "kids at home", "grown children", "no dependents"
-employment_stage        // e.g. "working full-time", "pre-retirement", "retired"
-urgency_level           // "high" | "medium" | "low"
-objection_reason        // e.g. "already has advisor", "not thinking about it"
-callback_requested      // boolean
-appointment_ready       // boolean
-call_summary            // concise human-readable summary
-extracted_need_signals  // structured text of detected signals
-```
-
-The local Supabase `calls` table payload already captures `extracted_data: customData` so all these signals are also stored locally automatically — no DB migration needed.
-
----
-
-## File 3: `supabase/functions/fix-existing-outbound-flow/index.ts`
-
-Update the `patchedNodes` constant with the new full financial services node set (identical to what `buildOutboundFlowNodes` now produces), and also update the `global_prompt` in the PATCH body. This pushes the new flow to the live agent `conversation_flow_3ddcd04483f1` immediately.
-
-Also update `default_dynamic_variables` to include the new field names so the Retell flow knows what to extract.
-
----
-
-## New Airtable columns recommended
-
-These do not exist yet in the current schema. The `outbound-post-call` code will write them if they exist — Airtable silently ignores unknown fields only if `typecast: true` is passed, but by default returns an error. To be safe, the code will use a **safe-write pattern**: only write a field if the value is non-null/non-empty, and existing known fields are written first in a separate PATCH call if needed.
-
-Actually — the safest approach is to wrap the new fields in their own PATCH call so if any new field doesn't exist yet in Airtable it only fails the second call, not the first (which has the critical `call_status`, `last_called`). We'll split into two sequential PATCH calls:
-
-1. **Core fields PATCH** (always): `call_status`, `last_called`, `interest_level`, `timeline`, `has_existing_coverage`, `working_with_advisor`, `transfer_attempted`, `next_action`, `notes`
-2. **Enhanced fields PATCH** (best-effort, logs error but doesn't fail): `product_interest`, `primary_goal`, `family_stage`, `employment_stage`, `urgency_level`, `objection_reason`, `callback_requested`, `appointment_ready`, `call_summary`, `extracted_need_signals`
-
-This guarantees existing Airtable behavior is never broken even if new columns haven't been created yet.
-
----
-
-## Summary of files to edit
-
-- `supabase/functions/create-retell-agent/index.ts` — replace `buildOutboundFlowNodes` with financial services version + update global_prompt
-- `supabase/functions/outbound-post-call/index.ts` — expand Airtable writeback with new fields, split into core + enhanced PATCH calls
-- `supabase/functions/fix-existing-outbound-flow/index.ts` — update patchedNodes + global_prompt to push new flow to live agent
-
-**Recommended Airtable columns to add manually (new):**
-`product_interest`, `primary_goal`, `family_stage`, `employment_stage`, `urgency_level`, `objection_reason`, `callback_requested`, `appointment_ready`, `call_summary`, `extracted_need_signals`
