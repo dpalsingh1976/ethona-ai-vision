@@ -228,7 +228,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
 //   - "Are you still working full-time, or are you already retired?"  → employment_stage
 //   - "Do you have kids still at home, in college, or are they grown?" → family_stage
 //   - "Are you thinking more about protecting your family, or building future retirement income?" → product_interest
-//   - "Is there a specific reason this topic has been on your mind lately?" → urgency_level / trigger
+//   - "Have there been any big changes in your life recently — new job, new home, growing family — that have you thinking about your financial situation?" → urgency_level / trigger (outbound-safe)
 //
 // NEW AIRTABLE COLUMNS WRITTEN BY outbound-post-call (create these in Airtable if not present):
 //   product_interest, primary_goal, family_stage, employment_stage, urgency_level,
