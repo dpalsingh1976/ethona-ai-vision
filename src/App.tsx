@@ -81,6 +81,7 @@ const App = () => (
             <Route path="settings" element={<AiAgentSettings />} />
           </Route>
           <Route path="/ai-agent/auth" element={<AuthProvider><AiAgentAuth /></AuthProvider>} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
