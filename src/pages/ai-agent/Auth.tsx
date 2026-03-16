@@ -49,7 +49,6 @@ export default function Auth() {
       toast({ title: "Please fill in all fields", variant: "destructive" });
       return;
     }
-
     setLoading(true);
     try {
       if (isSignUp) {
@@ -83,32 +82,67 @@ export default function Auth() {
         </div>
 
         <Card>
-          <CardHeader>
-            <CardTitle>{isSignUp ? "Create account" : "Welcome back"}</CardTitle>
-            <CardDescription>{isSignUp ? "Sign up to start building your AI voice agents." : "Sign in to your account to continue."}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
-              </div>
-              <Button className="w-full" type="submit" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isSignUp ? "Create Account" : "Sign In"}
-              </Button>
-              <p className="text-center text-sm text-muted-foreground">
-                {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-                <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="font-medium text-primary hover:underline">
-                  {isSignUp ? "Sign in" : "Sign up"}
-                </button>
-              </p>
-            </form>
-          </CardContent>
+          {isForgot ? (
+            <>
+              <CardHeader>
+                <CardTitle>Reset password</CardTitle>
+                <CardDescription>Enter your email and we'll send you a reset link.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleForgot} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  </div>
+                  <Button className="w-full" type="submit" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Send reset link
+                  </Button>
+                  <p className="text-center text-sm text-muted-foreground">
+                    <button type="button" onClick={() => setIsForgot(false)} className="font-medium text-primary hover:underline">
+                      Back to sign in
+                    </button>
+                  </p>
+                </form>
+              </CardContent>
+            </>
+          ) : (
+            <>
+              <CardHeader>
+                <CardTitle>{isSignUp ? "Create account" : "Welcome back"}</CardTitle>
+                <CardDescription>{isSignUp ? "Sign up to start building your AI voice agents." : "Sign in to your account to continue."}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" placeholder="you@company.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="password">Password</Label>
+                      {!isSignUp && (
+                        <button type="button" onClick={() => setIsForgot(true)} className="text-xs text-muted-foreground hover:text-primary hover:underline">
+                          Forgot password?
+                        </button>
+                      )}
+                    </div>
+                    <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} />
+                  </div>
+                  <Button className="w-full" type="submit" disabled={loading}>
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isSignUp ? "Create Account" : "Sign In"}
+                  </Button>
+                  <p className="text-center text-sm text-muted-foreground">
+                    {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+                    <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="font-medium text-primary hover:underline">
+                      {isSignUp ? "Sign in" : "Sign up"}
+                    </button>
+                  </p>
+                </form>
+              </CardContent>
+            </>
+          )}
         </Card>
       </div>
     </div>

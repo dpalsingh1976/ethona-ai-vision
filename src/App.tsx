@@ -37,6 +37,7 @@ import AiAgentAppointments from "./pages/ai-agent/Appointments";
 import AiAgentAnalytics from "./pages/ai-agent/Analytics";
 import AiAgentPhoneNumbers from "./pages/ai-agent/PhoneNumbers";
 import AiAgentSettings from "./pages/ai-agent/SettingsPage";
+import ResetPassword from "./pages/ai-agent/ResetPassword";
 
 const queryClient = new QueryClient();
 
