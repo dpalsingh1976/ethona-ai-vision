@@ -1,5 +1,5 @@
 // One-shot function: updates conversation_flow_3ddcd04483f1 with the improved
-// 16-node Alex Outbound flow and publishes agent_99c3c436ddbd135950c48586fc.
+// 16-node Sarah Outbound flow and publishes agent_99c3c436ddbd135950c48586fc.
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
