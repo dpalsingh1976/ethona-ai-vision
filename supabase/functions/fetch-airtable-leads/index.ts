@@ -76,6 +76,7 @@ Deno.serve(async (req) => {
         lead_source: f.lead_source || f.Lead_Source || f["Lead Source"] || "",
         original_interest: f.original_interest || f.Original_Interest || f["Original Interest"] || "",
         advisor_name: f.advisor_name || f.Advisor_Name || f["Advisor Name"] || "",
+        agent_name: f.agent_name || f.Agent_name || f.Agent_Name || f["Agent Name"] || "Sarah",
         status: f.status || f.Status || "",
       };
     });

@@ -26,6 +26,7 @@ interface AirtableLead {
   lead_source: string;
   original_interest: string;
   advisor_name: string;
+  agent_name: string;
   transfer_number: string;
 }
 
@@ -79,6 +80,7 @@ async function lookupAirtableLead(toNumber: string): Promise<AirtableLead | null
     lead_source: fields.lead_source || fields.Lead_Source || fields["Lead Source"] || "",
     original_interest: fields.original_interest || fields.Original_Interest || fields["Original Interest"] || "",
     advisor_name: fields.advisor_name || fields.Advisor_Name || fields["Advisor Name"] || "",
+    agent_name: fields.agent_name || fields.Agent_name || fields.Agent_Name || fields["Agent Name"] || "Sarah",
     transfer_number: fields.transfer_number || fields.Transfer_Number || fields["Transfer Number"] || "",
   };
 }
@@ -127,6 +129,7 @@ Deno.serve(async (req) => {
           lead_source: leadData.lead_source,
           original_interest: leadData.original_interest,
           advisor_name: leadData.advisor_name,
+          agent_name: leadData.agent_name,
           transfer_number: leadData.transfer_number,
         };
         console.log("Injecting dynamic variables:", JSON.stringify(retell_llm_dynamic_variables));
