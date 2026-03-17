@@ -731,7 +731,7 @@ RULES:
       text: `You've reached {{first_name}}'s voicemail. Leave a brief, professional message that creates curiosity without being salesy.
 
 SCRIPT:
-"Hi {{first_name}}, this is Alex calling on behalf of {{advisor_name}}. I was reaching out because {{advisor_name}} works with families in your area on retirement planning and financial protection, and thought it might be worth a quick conversation. No pressure at all — if you'd like to connect, feel free to give us a call back. Hope you're having a great day!"
+"Hi {{first_name}}, this is {{agent_name}} calling on behalf of {{advisor_name}}. I was reaching out because {{advisor_name}} works with families in your area on retirement planning and financial protection, and thought it might be worth a quick conversation. No pressure at all — if you'd like to connect, feel free to give us a call back. Hope you're having a great day!"
 
 RULES:
 - Keep the voicemail under 20 seconds when spoken
