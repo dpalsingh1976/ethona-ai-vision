@@ -39,6 +39,7 @@ export function useAgents(orgId: string | undefined) {
       return data as Agent[];
     },
     enabled: !!orgId,
+    staleTime: 0,
   });
 }
 
