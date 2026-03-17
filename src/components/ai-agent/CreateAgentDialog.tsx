@@ -408,7 +408,7 @@ export function CreateAgentDialog({ open, onOpenChange, orgId }: CreateAgentDial
               </div>
               <div className="space-y-2">
                 <Label>Agent Name</Label>
-                <Input placeholder="Alex Smith" {...outboundForm.register("agent_name")} />
+                <Input placeholder="Sarah Smith" {...outboundForm.register("agent_name")} />
                 {outboundForm.formState.errors.agent_name && <p className="text-sm text-destructive">{outboundForm.formState.errors.agent_name.message}</p>}
               </div>
               <div className="space-y-2">
