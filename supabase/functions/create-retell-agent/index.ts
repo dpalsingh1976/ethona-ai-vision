@@ -698,7 +698,7 @@ TONE: Friendly. Professional. Consultative. Human. Curious. Respectful.`,
         start_node_id: "greeting",
         start_speaker: "agent",
         model_choice: { type: "cascading", model: "gpt-4.1" },
-        global_prompt: `You are Alex, a friendly and professional AI assistant for ${config.company_name}, helping ${config.agent_name}'s real estate business. You pre-qualify buyer leads. Be conversational, warm, and efficient. Never be pushy. Service areas: ${config.service_areas.join(", ")}.`,
+        global_prompt: `You are {{agent_name}}, a friendly and professional AI assistant for ${config.company_name}, helping ${config.agent_name}'s real estate business. You pre-qualify buyer leads. Be conversational, warm, and efficient. Never be pushy. Service areas: ${config.service_areas.join(", ")}.`,
         default_dynamic_variables: {
           retell_agent_id: "PLACEHOLDER_WILL_BE_UPDATED",
         },
