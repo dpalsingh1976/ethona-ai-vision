@@ -80,6 +80,7 @@ async function lookupAirtableLead(toNumber: string): Promise<AirtableLead | null
     lead_source: fields.lead_source || fields.Lead_Source || fields["Lead Source"] || "",
     original_interest: fields.original_interest || fields.Original_Interest || fields["Original Interest"] || "",
     advisor_name: fields.advisor_name || fields.Advisor_Name || fields["Advisor Name"] || "",
+    agent_name: fields.agent_name || fields.Agent_name || fields.Agent_Name || fields["Agent Name"] || "Sarah",
     transfer_number: fields.transfer_number || fields.Transfer_Number || fields["Transfer Number"] || "",
   };
 }
