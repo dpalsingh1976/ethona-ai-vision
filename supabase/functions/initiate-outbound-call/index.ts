@@ -26,6 +26,7 @@ interface AirtableLead {
   lead_source: string;
   original_interest: string;
   advisor_name: string;
+  agent_name: string;
   transfer_number: string;
 }
 
