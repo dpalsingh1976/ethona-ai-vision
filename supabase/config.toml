@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.update-outbound-agent]
 verify_jwt = false
+
+[functions.sync-agent-flow]
+verify_jwt = false

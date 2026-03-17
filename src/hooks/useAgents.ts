@@ -54,3 +54,32 @@ export function useDeleteAgent() {
     },
   });
 }
+
+export function useSyncAgentFlow() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      agentDbId,
+      retellAgentId,
+      retellFlowId,
+    }: {
+      agentDbId: string;
+      retellAgentId: string;
+      retellFlowId: string | null;
+    }) => {
+      const { data, error } = await supabase.functions.invoke("sync-agent-flow", {
+        body: {
+          agent_db_id: agentDbId,
+          retell_agent_id: retellAgentId,
+          retell_flow_id: retellFlowId,
+        },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["agents"] });
+    },
+  });
+}
