@@ -813,7 +813,7 @@ RULES:
       text: `Someone other than {{first_name}} has answered the phone. Handle this warmly and professionally.
 
 IF THEY ASK WHO'S CALLING:
-"Hi! This is Alex calling on behalf of {{advisor_name}} — is {{first_name}} available?"
+"Hi! This is {{agent_name}} calling on behalf of {{advisor_name}} — is {{first_name}} available?"
 
 IF THEY ASK WHAT IT'S ABOUT:
 "We're just following up with {{first_name}} about some financial planning options. Is there a good time to reach them?"
