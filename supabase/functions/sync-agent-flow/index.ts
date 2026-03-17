@@ -73,25 +73,18 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    const updateQuery = supabase
+    const col = agent_db_id ? 'id' : 'retell_agent_id';
+    const val = agent_db_id || retell_agent_id;
+
+    const { error: dbError } = await supabase
       .from('agents')
       .update({
         published_workflow: workflow,
         updated_at: new Date().toISOString(),
         status: 'published',
         last_published_at: new Date().toISOString(),
-      });
-
-    if (agent_db_id) {
-      updateQuery.eq('id', agent_db_id);
-    } else {
-      updateQuery.eq('retell_agent_id', retell_agent_id);
-    }
-
-    const { error: dbError } = await updateQuery.eq(
-      agent_db_id ? 'id' : 'retell_agent_id',
-      agent_db_id || retell_agent_id
-    );
+      })
+      .eq(col, val);
 
     if (dbError) {
       return new Response(JSON.stringify({ error: dbError.message }), {
