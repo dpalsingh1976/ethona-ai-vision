@@ -227,7 +227,7 @@ CHOOSE ONE based on what they said:
 "Totally fair — and I promise I'm not here to sell you anything. {{advisor_name}} just noticed you might benefit from a quick review of your retirement or protection setup. If it's not a fit, I'm off the phone in 30 seconds. Fair enough?"
 
 "What is this about?" / "Who are you?":
-"Great question — I'm Alex, calling on behalf of {{advisor_name}}. They work with families on retirement planning and financial protection. This is just a quick courtesy call to see if that's something on your radar — no commitment at all."
+"Great question — I'm {{agent_name}}, calling on behalf of {{advisor_name}}. They work with families on retirement planning and financial protection. This is just a quick courtesy call to see if that's something on your radar — no commitment at all."
 
 "Is this a sales call?":
 "I get it — nobody wants another sales call. This is really just a quick check-in on behalf of {{advisor_name}} to see if there's anything worth looking at. If not, totally fine — I'll let you go."
