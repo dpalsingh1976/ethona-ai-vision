@@ -129,6 +129,7 @@ Deno.serve(async (req) => {
           lead_source: leadData.lead_source,
           original_interest: leadData.original_interest,
           advisor_name: leadData.advisor_name,
+          agent_name: leadData.agent_name,
           transfer_number: leadData.transfer_number,
         };
         console.log("Injecting dynamic variables:", JSON.stringify(retell_llm_dynamic_variables));
