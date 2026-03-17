@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bot, MoreVertical, Trash2, Eye, Phone, PhoneOutgoing } from "lucide-react";
+import { Bot, MoreVertical, Trash2, Eye, Phone, PhoneOutgoing, RefreshCw } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,9 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Agent } from "@/hooks/useAgents";
+import { useSyncAgentFlow } from "@/hooks/useAgents";
 import { LaunchCallDialog } from "./LaunchCallDialog";
+import { toast } from "@/hooks/use-toast";
 
 const PERSONA_LABELS: Record<string, string> = {
   friendly_professional: "🤝 Friendly Professional",
@@ -32,6 +34,21 @@ interface AgentCardProps {
 export function AgentCard({ agent, onTest, onTestCall, onDelete }: AgentCardProps) {
   const [launchOpen, setLaunchOpen] = useState(false);
   const isOutbound = agent.category === "outbound";
+  const syncFlow = useSyncAgentFlow();
+
+  const handleSync = async () => {
+    if (!agent.retell_agent_id) return;
+    try {
+      await syncFlow.mutateAsync({
+        agentDbId: agent.id,
+        retellAgentId: agent.retell_agent_id,
+        retellFlowId: agent.retell_flow_id,
+      });
+      toast({ title: "✓ Synced from Retell", description: "Workflow is now up to date." });
+    } catch (err) {
+      toast({ title: "Sync failed", description: String(err), variant: "destructive" });
+    }
+  };
 
   return (
     <>
@@ -69,6 +86,12 @@ export function AgentCard({ agent, onTest, onTestCall, onDelete }: AgentCardProp
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  {agent.retell_agent_id && (
+                    <DropdownMenuItem onClick={handleSync} disabled={syncFlow.isPending}>
+                      <RefreshCw className={`mr-2 h-4 w-4 ${syncFlow.isPending ? "animate-spin" : ""}`} />
+                      {syncFlow.isPending ? "Syncing…" : "Sync from Retell"}
+                    </DropdownMenuItem>
+                  )}
                   {!isOutbound && (
                     <DropdownMenuItem onClick={() => onTestCall(agent)}>
                       <Phone className="mr-2 h-4 w-4" />
