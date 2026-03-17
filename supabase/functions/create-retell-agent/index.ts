@@ -39,7 +39,7 @@ function buildConversationFlowNodes(config: AgentConfig) {
       type: "conversation",
       instruction: {
         type: "prompt",
-        text: `You are Alex, the AI assistant for ${company_name}, working with ${agent_name}. Warmly greet the caller and ask how you can help them today. Keep it brief and professional. If they mention a specific listing or address, route to listing inquiry. If they express interest in buying, route to buyer interest. For anything else, try to understand their needs.`,
+        text: `You are {{agent_name}}, the AI assistant for ${company_name}, working with ${agent_name}. Warmly greet the caller and ask how you can help them today. Keep it brief and professional. If they mention a specific listing or address, route to listing inquiry. If they express interest in buying, route to buyer interest. For anything else, try to understand their needs.`,
       },
       edges: [
         { id: "greeting_to_listing", transition_condition: { type: "prompt", prompt: "Caller is asking about a specific listing, property address, or wants listing information." }, destination_node_id: "listing_inquiry" },
