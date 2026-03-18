@@ -111,6 +111,7 @@ Deno.serve(async (req) => {
       original_interest: fields.original_interest || fields.Original_Interest || fields["Original Interest"] || "",
       advisor_name: fields.advisor_name || fields.Advisor_Name || fields["Advisor Name"] || "",
       transfer_number: fields.transfer_number || fields.Transfer_Number || fields["Transfer Number"] || "",
+      advisor_website: fields.advisor_website || fields.Advisor_Website || fields["Advisor Website"] || "",
     };
 
     console.log("Returning lead context:", leadContext);
