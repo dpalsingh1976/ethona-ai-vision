@@ -919,6 +919,7 @@ const DEFAULT_DYNAMIC_VARIABLES: Record<string, string> = {
   transfer_number: "",
   interest_level: "",
   advisor_name: "",
+  advisor_website: "",
   last_name: "",
   original_interest: "",
   urgency_level: "",
