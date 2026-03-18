@@ -728,17 +728,18 @@ RULES:
     display_position: { x: 558, y: 1800 },
     instruction: {
       type: "prompt",
-      text: `You've reached {{first_name}}'s voicemail. Leave a compelling, human-sounding message that creates curiosity and gives them a clear next step.
+text: `You've reached {{first_name}}'s voicemail. Leave a compelling, human-sounding message that creates curiosity and gives them a clear next step.
 
 SCRIPT:
-"Hi {{first_name}}, this is {{agent_name}} calling on behalf of {{advisor_name}}. I had a quick question for you about your retirement strategy — specifically around tax-free income and making sure your family is properly protected. If you get a chance before we connect, {{advisor_name}}'s team has a free 5-minute risk assessment at theprosperityfinancial.com — it gives you a personalized picture of where you stand. If you'd like to chat, feel free to reach us back[PHONE_FALLBACK]. Hope to connect soon — have a great day!"
+"Hi {{first_name}}, this is {{agent_name}} calling on behalf of {{advisor_name}}. I had a quick question for you about your retirement strategy — specifically around tax-free income and making sure your family is properly protected. If you get a chance before we connect, {{advisor_name}}'s team has a free 5-minute risk assessment at {{advisor_website}} — it gives you a personalized picture of where you stand. If you'd like to chat, feel free to reach us back[PHONE_FALLBACK]. Hope to connect soon — have a great day!"
 
 Replace [PHONE_FALLBACK] with: " at {{transfer_number}}" if {{transfer_number}} is available, otherwise omit it entirely.
 
 RULES:
 - Keep the voicemail under 25 seconds when spoken
 - Sound warm and natural — like a real person leaving a message, not reading a script
-- Speak the URL clearly: "the prosperity financial dot com"
+- Speak the URL naturally as a web address (e.g. "the prosperity financial dot com")
+- If {{advisor_website}} is empty, omit the website reference entirely
 - Do NOT mention specific products, prices, or sales language
 - Do NOT reference {{original_interest}} — keep it general
 - End with a genuine, upbeat tone`,

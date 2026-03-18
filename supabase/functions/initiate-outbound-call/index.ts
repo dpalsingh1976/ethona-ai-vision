@@ -28,6 +28,7 @@ interface AirtableLead {
   advisor_name: string;
   agent_name: string;
   transfer_number: string;
+  advisor_website: string;
 }
 
 async function lookupAirtableLead(toNumber: string): Promise<AirtableLead | null> {

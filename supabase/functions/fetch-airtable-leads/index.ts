@@ -77,6 +77,7 @@ Deno.serve(async (req) => {
         original_interest: f.original_interest || f.Original_Interest || f["Original Interest"] || "",
         advisor_name: f.advisor_name || f.Advisor_Name || f["Advisor Name"] || "",
         agent_name: f.agent_name || f.Agent_name || f.Agent_Name || f["Agent Name"] || "Sarah",
+        advisor_website: f.advisor_website || f.Advisor_Website || f["Advisor Website"] || "",
         status: f.status || f.Status || "",
       };
     });
