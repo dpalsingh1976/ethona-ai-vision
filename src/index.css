@@ -126,7 +126,12 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-['Poppins',sans-serif];
+    @apply bg-background text-foreground;
+    font-family: 'Inter', 'Poppins', sans-serif;
+  }
+
+  .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
   }
 
   h1,
