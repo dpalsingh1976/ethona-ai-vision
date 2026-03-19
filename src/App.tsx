@@ -78,6 +78,15 @@ const App = () => (
           <Route path="/services/cro" element={<CRO />} />
           <Route path="/services/orm" element={<ORM />} />
 
+          {/* FlouristPlace */}
+          <Route path="/flouristPlace" element={<FlouristPlaceHome />} />
+          <Route path="/flouristPlace/products" element={<FlouristPlaceProducts />} />
+          <Route path="/flouristPlace/products/:id" element={<ProductDetail />} />
+          <Route path="/flouristPlace/cart" element={<FlouristPlaceCart />} />
+          <Route path="/flouristPlace/checkout" element={<FlouristPlaceCheckout />} />
+          <Route path="/flouristPlace/order/:id" element={<OrderConfirmation />} />
+          <Route path="/flouristPlace/admin" element={<FlouristPlaceAdmin />} />
+
           {/* AI Agent Dashboard */}
           <Route path="/ai-agent" element={<AuthProvider><AppLayout /></AuthProvider>}>
             <Route index element={<Navigate to="/ai-agent/dashboard" replace />} />
