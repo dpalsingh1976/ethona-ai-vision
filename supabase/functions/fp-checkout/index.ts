@@ -43,7 +43,8 @@ serve(async (req) => {
       userId = user?.id || null;
     }
 
-    // Validate inventory for each item
+    // Validate & snapshot inventory for each item
+    const inventorySnapshots: Record<string, number> = {};
     for (const item of items) {
       const { data: product } = await supabase
         .from("fp_products")
@@ -63,6 +64,7 @@ serve(async (req) => {
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
+      inventorySnapshots[item.product_id] = product.inventory_count;
     }
 
     // Calculate totals
@@ -116,19 +118,15 @@ serve(async (req) => {
     const { error: itemsError } = await supabase.from("fp_order_items").insert(orderItems);
     if (itemsError) throw itemsError;
 
-    // Deduct inventory
+    // Deduct inventory (single clean loop using snapshotted values)
     for (const item of items) {
-      await supabase.rpc("fp_deduct_inventory", {
-        p_product_id: item.product_id,
-        p_quantity: item.quantity,
-        p_order_id: order.id,
-      }).catch(() => {
-        // Fallback if RPC doesn't exist — direct update
-        return supabase
-          .from("fp_products")
-          .update({ inventory_count: supabase.rpc("fp_products_inventory_count - " + item.quantity) })
-          .eq("id", item.product_id);
-      });
+      const currentInventory = inventorySnapshots[item.product_id] ?? 0;
+      const newInventory = Math.max(0, currentInventory - item.quantity);
+
+      await supabase
+        .from("fp_products")
+        .update({ inventory_count: newInventory })
+        .eq("id", item.product_id);
 
       // Log inventory event
       await supabase.from("fp_inventory_events").insert({
@@ -137,28 +135,6 @@ serve(async (req) => {
         reason: "order_placed",
         order_id: order.id,
       });
-    }
-
-    // Directly decrement inventory with raw SQL via service role
-    for (const item of items) {
-      await supabase
-        .from("fp_products")
-        .update({ inventory_count: 0 }) // placeholder — see below
-        .eq("id", "placeholder");
-      
-      // Use proper RPC approach
-      const { data: prod } = await supabase
-        .from("fp_products")
-        .select("inventory_count")
-        .eq("id", item.product_id)
-        .single();
-      
-      if (prod) {
-        await supabase
-          .from("fp_products")
-          .update({ inventory_count: Math.max(0, prod.inventory_count - item.quantity) })
-          .eq("id", item.product_id);
-      }
     }
 
     return new Response(
