@@ -123,6 +123,8 @@ export default function FlouristPlaceCheckout() {
               items={items}
               onBack={() => setStep("event")}
               onNext={() => setStep("review")}
+              shippingAddress={shippingAddress}
+              onAddressChange={setShippingAddress}
             />
           )}
           {step === "review" && (
