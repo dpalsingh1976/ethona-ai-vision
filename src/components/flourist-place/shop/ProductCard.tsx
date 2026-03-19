@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import type { FPProduct } from "@/hooks/useFleuristSearch";
 import { ShoppingCart, Clock, Star } from "lucide-react";
@@ -24,6 +24,25 @@ const occasionLabel: Record<string, { emoji: string; label: string }> = {
   festival: { emoji: "🌟", label: "Festival" },
 };
 
+// Gradient fallbacks keyed by flower type keywords in product name/tags
+function getFallbackGradient(product: FPProduct): { gradient: string; emoji: string } {
+  const text = (product.name + " " + (product.tags || []).join(" ")).toLowerCase();
+  if (text.includes("marigold") || text.includes("guldaudi")) return { gradient: "from-amber-100 to-orange-200", emoji: "🌼" };
+  if (text.includes("lotus")) return { gradient: "from-pink-100 to-purple-200", emoji: "🪷" };
+  if (text.includes("rose")) return { gradient: "from-rose-100 to-pink-200", emoji: "🌹" };
+  if (text.includes("jasmine") || text.includes("mogra") || text.includes("gajra")) return { gradient: "from-white to-yellow-50", emoji: "🌸" };
+  if (text.includes("sunflower")) return { gradient: "from-yellow-100 to-amber-200", emoji: "🌻" };
+  if (text.includes("orchid")) return { gradient: "from-purple-100 to-violet-200", emoji: "🌸" };
+  if (text.includes("peony")) return { gradient: "from-pink-50 to-rose-100", emoji: "🌸" };
+  if (text.includes("cherry") || text.includes("sakura")) return { gradient: "from-pink-100 to-rose-50", emoji: "🌸" };
+  if (text.includes("chrysanthemum")) return { gradient: "from-yellow-50 to-amber-100", emoji: "💮" };
+  if (text.includes("tropical") || text.includes("hibiscus")) return { gradient: "from-red-100 to-orange-100", emoji: "🌺" };
+  if (text.includes("lavender")) return { gradient: "from-purple-100 to-violet-100", emoji: "💜" };
+  if (text.includes("carnation")) return { gradient: "from-pink-100 to-red-100", emoji: "🌸" };
+  if (text.includes("gerbera") || text.includes("daisy")) return { gradient: "from-orange-100 to-yellow-100", emoji: "🌼" };
+  return { gradient: "from-rose-50 to-pink-100", emoji: "🌸" };
+}
+
 function getOccasionBadge(tags: string[] = []) {
   for (const tag of tags) {
     if (occasionLabel[tag]) return occasionLabel[tag];
@@ -33,12 +52,14 @@ function getOccasionBadge(tags: string[] = []) {
 
 export function ProductCard({ product, compact = false }: ProductCardProps) {
   const { addItem } = useFleuristCart();
+  const [imgError, setImgError] = useState(false);
   const discount =
     product.mrp && product.mrp > product.price
       ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
       : null;
 
   const occasionBadge = getOccasionBadge(product.tags || []);
+  const fallback = getFallbackGradient(product);
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -58,6 +79,9 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
     });
   };
 
+  const imageUrl = product.images?.[0];
+  const showImage = imageUrl && !imgError;
+
   return (
     <Link to={`/flouristPlace/products/${product.id}`} className="group block">
       <div
@@ -73,23 +97,24 @@ export function ProductCard({ product, compact = false }: ProductCardProps) {
           className={`relative overflow-hidden ${compact ? "h-44" : "h-56"}`}
           style={{ background: "hsl(var(--fp-cream))" }}
         >
-          {product.images?.[0] ? (
+          {showImage ? (
             <img
-              src={product.images[0]}
+              src={imageUrl}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-107 transition-transform duration-500"
-              style={{ transitionDuration: "600ms" }}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={() => setImgError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-5xl opacity-50">🌸</div>
+            <div className={`w-full h-full bg-gradient-to-br ${fallback.gradient} flex items-center justify-center`}>
+              <span className="text-6xl opacity-70">{fallback.emoji}</span>
+            </div>
           )}
 
           {/* Gradient overlay */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 50%)",
+              background: "linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 50%)",
             }}
           />
 
