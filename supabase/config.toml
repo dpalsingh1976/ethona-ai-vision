@@ -47,3 +47,15 @@ verify_jwt = false
 
 [functions.sync-agent-flow]
 verify_jwt = false
+
+[functions.fp-search]
+verify_jwt = false
+
+[functions.fp-shipping-rules]
+verify_jwt = false
+
+[functions.fp-checkout]
+verify_jwt = false
+
+[functions.fp-delivery-dates]
+verify_jwt = false

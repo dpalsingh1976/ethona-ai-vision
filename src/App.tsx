@@ -26,6 +26,15 @@ import GrowthAssessment from "./pages/GrowthAssessment";
 import AiAgents from "./pages/AiAgents";
 import NotFound from "./pages/NotFound";
 
+// FlouristPlace
+import FlouristPlaceHome from "./pages/flourist-place/Index";
+import FlouristPlaceProducts from "./pages/flourist-place/Products";
+import ProductDetail from "./pages/flourist-place/ProductDetail";
+import FlouristPlaceCart from "./pages/flourist-place/Cart";
+import FlouristPlaceCheckout from "./pages/flourist-place/Checkout";
+import OrderConfirmation from "./pages/flourist-place/OrderConfirmation";
+import FlouristPlaceAdmin from "./pages/flourist-place/Admin";
+
 // AI Agent Dashboard
 import { AuthProvider } from "./hooks/useAuthContext";
 import { AppLayout } from "./components/ai-agent/AppLayout";
