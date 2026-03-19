@@ -1,78 +1,150 @@
 
-## Plan: Fix All Product Images — Accurate, Unique, Reliable Flower Photos
 
-### Root Cause
-All Unsplash `images.unsplash.com/photo-{id}` CDN URLs are broken (Unsplash now requires authorization headers for direct CDN access). Additionally, many products share the same URL, and some point to photos of people rather than flowers.
+## Plan: Complete Admin Dashboard — Product Image Upload + Full CRUD + All Business Settings
 
-### Solution
+### What's Currently Missing
 
-**Two-part fix:**
+The current `Admin.tsx` is a stub with:
+- Read-only inventory table (only stock count can be edited inline)
+- No product photo upload
+- No product create/edit/delete
+- No ability to add/edit pickup locations
+- No holiday/blackout date management
+- No warehouse address setting
+- Settings tab has no "Add Location" button and can't edit location details
+- No storage bucket for product images
 
-**Part 1 — SQL Migration to update all 37 product image URLs**
+### What We're Building
 
-Switch all products from broken `images.unsplash.com/photo-{id}` URLs to `source.unsplash.com/600x600/?{keyword}` format. This uses Unsplash's public redirect service (no auth needed in the browser) which returns the best matching photo for a keyword query. Every product gets a unique, accurate keyword that matches its actual flower type.
+**5 fully working admin tabs:**
 
-Complete mapping (all 37 products):
+1. **Products** (new) — full product CRUD with image upload per product
+2. **Business Rules** (existing, enhanced) — add warehouse address + holiday blackouts
+3. **Pickup Locations** (existing, enhanced) — add/edit/delete locations inline
+4. **Inventory** (existing, enhanced) — bulk stock adjustment with visual indicators
+5. **Orders** (new) — read-only recent orders view
 
-| Product | New Image URL |
+---
+
+### Phase 1 — Storage Bucket Migration
+
+Create `fp-product-images` Supabase Storage bucket (public) via SQL migration:
+
+```sql
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES ('fp-product-images', 'fp-product-images', true, 5242880, ARRAY['image/jpeg','image/png','image/webp','image/gif']);
+
+-- Allow public read
+CREATE POLICY "fp product images public read" ON storage.objects FOR SELECT TO public USING (bucket_id = 'fp-product-images');
+
+-- Allow anyone to upload (admin panel — no auth required for demo)
+CREATE POLICY "fp product images public upload" ON storage.objects FOR INSERT TO public WITH CHECK (bucket_id = 'fp-product-images');
+
+-- Allow update/delete too
+CREATE POLICY "fp product images public update" ON storage.objects FOR UPDATE TO public USING (bucket_id = 'fp-product-images');
+CREATE POLICY "fp product images public delete" ON storage.objects FOR DELETE TO public USING (bucket_id = 'fp-product-images');
+```
+
+Also add an `fp_products` UPDATE policy for the public role (currently only `service_role` can write):
+```sql
+CREATE POLICY "fp_products admin update" ON public.fp_products FOR UPDATE TO public USING (true) WITH CHECK (true);
+CREATE POLICY "fp_products admin insert" ON public.fp_products FOR INSERT TO public WITH CHECK (true);
+```
+
+And for pickup locations:
+```sql
+CREATE POLICY "fp_pickup_locations admin write" ON public.fp_pickup_locations FOR ALL TO public USING (true) WITH CHECK (true);
+```
+
+---
+
+### Phase 2 — Rewrite `Admin.tsx` (Complete)
+
+Replace the existing stub with a full 5-tab admin dashboard:
+
+**Tab: Products**
+- Product list with thumbnail, name, price, category, stock, active toggle
+- "Add Product" button → opens slide-over panel
+- Each row has Edit and Delete actions
+- Image upload: click product row → image upload section at top of edit form
+  - Upload button → `<input type="file" accept="image/*">` → uploads to `fp-product-images` storage bucket → stores public URL in `fp_products.images[0]`
+  - Shows current image preview OR fallback gradient
+  - "Replace image" to upload new one
+- Edit fields: Name, Description, Price, MRP, Category, Tags (comma-sep), is_perishable toggle, prep_time_days, inventory_count, is_active toggle, shipping_class
+
+**Tab: Business Rules**
+- All existing fields (delivery radius, local delivery price, min perishable days, same-day cutoff)
+- NEW: Warehouse Address (text input → stored as `warehouse_address` in `fp_admin_settings`)
+- NEW: Holiday Blackout Dates — date picker that adds dates to a list, shows them as chips with ×remove
+- Carrier toggles (already exist)
+- Save button
+
+**Tab: Pickup Locations**
+- List of locations with full details
+- "Add Location" button → inline form at top
+- Edit button per row → expands inline edit form with all fields: name, address, city, state, zip, phone, hours
+- Enable/Disable toggle (already exists)
+- Delete button with confirmation
+
+**Tab: Inventory**
+- Existing table but with:
+  - Product thumbnail
+  - Low stock warning (red if ≤ 5, amber if ≤ 10)
+  - Quick +/− buttons alongside the number input
+  - "Save All" batch update button
+
+**Tab: Orders** (new, read-only)
+- Recent 50 orders from `fp_orders`
+- Columns: Order #, Guest Name/Email, Event Type, Event Date, Delivery Date, Mode, Total, Status
+- Status badge (pending/confirmed/shipped/delivered)
+- Expandable row showing order items
+
+---
+
+### Phase 3 — Image Upload Helper Component
+
+Create `src/components/flourist-place/admin/ProductImageUpload.tsx`:
+- Receives `productId` + current `images[]` array
+- Shows image preview (or gradient fallback)
+- `<label>` wrapping hidden `<input type="file">` 
+- On change: uploads file to `fp-product-images/${productId}/${filename}` using `supabase.storage.from('fp-product-images').upload()`
+- Gets public URL via `supabase.storage.from('fp-product-images').getPublicUrl(path)`
+- Calls `supabase.from('fp_products').update({ images: [publicUrl] }).eq('id', productId)`
+- Shows upload progress spinner
+- Toast on success/error
+
+---
+
+### Phase 4 — Product List/Edit Panel Component
+
+Create `src/components/flourist-place/admin/ProductEditPanel.tsx` (slide-over drawer):
+- Slide in from right (using existing `Sheet` component from shadcn/ui)
+- All product fields with `useFleuristProducts` style data
+- Save calls `supabase.from('fp_products').update(...)` or `.insert(...)` 
+- Image upload section at top
+- Categories dropdown populated from `fp_categories`
+
+---
+
+### Phase 5 — ProductCard and ProductDetail: Real-time Image Refresh
+
+After admin uploads a new image, the products listing should show the new image. Since we're already reading from DB, a simple page refresh or re-query picks it up. The `useFleuristProducts.reload()` function already exists — we just need to call it after any product save in admin.
+
+---
+
+### Files to Create/Edit
+
+| File | Action |
 |---|---|
-| Rose Wedding Garland | `?rose,garland,wedding` |
-| Marigold Pooja Garland | `?marigold,garland,flower` |
-| Romantic Red Rose Bouquet | `?red,rose,bouquet` |
-| Wedding Table Centerpiece | `?flower,centerpiece,arrangement` |
-| Loose Marigold Flowers (1kg) | `?marigold,loose,orange,flower` |
-| Lotus Flowers for Pooja | `?lotus,pink,flower,water` |
-| Premium Flower Vase (Ceramic) | `?flower,vase,arrangement` |
-| Dried Flower Wreath | `?dried,flower,wreath` |
-| Anniversary Mixed Bouquet | `?mixed,bouquet,colorful,flower` |
-| Jasmine Gajra (Hair Flowers) | `?jasmine,white,flower` |
-| Artisan Floral Arrangement | `?floral,arrangement,stand` |
-| Sunflower Cheer Bouquet | `?sunflower,bouquet,yellow` |
-| Premium Marigold Wedding Garland | `?marigold,orange,garland,wedding` |
-| Jasmine Gajra Hair Garland | `?jasmine,white,mogra,flower` |
-| Rose Mandap Garland | `?rose,red,gold,garland` |
-| Rajnigandha Tuberose Temple Garland | `?tuberose,white,flower,temple` |
-| Sacred Lotus Bundle | `?lotus,pink,sacred,flower` |
-| Chrysanthemum Pooja Wreath | `?chrysanthemum,yellow,flower` |
-| Bulk Marigold Loose Flowers | `?marigold,orange,bulk,flower` |
-| Wedding Sehra | `?jasmine,marigold,flower,garland` |
-| Mehendi Ceremony Flower Basket | `?rose,jasmine,flower,basket` |
-| Haldi Ceremony Marigold Bundle | `?marigold,yellow,flower,petals` |
-| Navratri Nine-Color Flower Bundle | `?colorful,flower,bouquet,festive` |
-| Pooja Thali Flower Set | `?marigold,rose,flower,offering` |
-| Indian Rose Bouquet Red Pink | `?rose,red,pink,bouquet` |
-| Rajasthani Mogra Jasmine Bouquet | `?jasmine,white,mogra,bouquet` |
-| Gerbera Daisy Bollywood Bouquet | `?gerbera,daisy,colorful,bouquet` |
-| Turmeric Marigold Bridal Shower | `?marigold,yellow,bridal,flower` |
-| Carnation Marigold Festival Bunch | `?carnation,orange,flower,festival` |
-| Phalaenopsis Orchid Arrangement | `?orchid,purple,white,flower` |
-| Peony Bouquet Blush White | `?peony,blush,white,flower` |
-| White Chrysanthemum Korean Bundle | `?chrysanthemum,white,flower` |
-| Mixed Tropical Festival Bouquet | `?hibiscus,tropical,flower,bird-of-paradise` |
-| Artificial Marigold Toran | `?marigold,decoration,door,flower` |
-| Cherry Blossom Branch Décor | `?cherry,blossom,sakura,pink` |
-| Lotus Silk Vase Arrangement | `?lotus,vase,silk,flower` |
-| Diwali Marigold Decoration Kit | `?marigold,diwali,orange,decoration` |
-| Silk Rose Garland Gold Red | `?rose,gold,red,garland` |
+| New migration | Storage bucket + RLS policies for fp-product-images + fp_products public write |
+| `src/pages/flourist-place/Admin.tsx` | Complete rewrite — 5-tab full admin |
+| `src/components/flourist-place/admin/ProductImageUpload.tsx` | New — image upload component |
+| `src/components/flourist-place/admin/ProductEditPanel.tsx` | New — slide-over edit/create panel |
 
-**Part 2 — Add `onError` fallback in ProductCard and ProductDetail**
+### Technical Notes
 
-If `source.unsplash.com` returns a redirect that fails in any browser, the `<img>` tag fires `onError`. Add a handler that replaces the `src` with a gradient CSS background (set image to empty string + show a beautiful flower emoji + colored gradient background per product type). This guarantees zero broken/blank images ever.
+- No auth needed on admin for this demo (matches original spec — admin is an internal tool page)
+- Storage public URL format: `https://{project}.supabase.co/storage/v1/object/public/fp-product-images/{path}`
+- After image upload, update `fp_products.images = ARRAY[newUrl]` so all existing ProductCard and ProductDetail components immediately reflect the change on next load
+- The `fp_products` RLS currently only allows service_role writes. The migration must add a public write policy so the browser client can do `update`/`insert` from the admin page
 
-The fallback logic in `ProductCard.tsx`:
-- Add `useState` for `imgError`
-- `onError={() => setImgError(true)}`
-- When `imgError=true`, show a styled div with a gradient background (warm gold for marigold, pink for rose, etc.) with a large flower emoji centered
-
-### Files to Change
-
-| File | Change |
-|---|---|
-| New migration file | `UPDATE fp_products SET images = ARRAY[...] WHERE id = '...'` for all 37 products — unique `source.unsplash.com` keyword URL per product |
-| `src/components/flourist-place/shop/ProductCard.tsx` | Add `onError` fallback — replace broken image with gradient+emoji placeholder |
-| `src/pages/flourist-place/ProductDetail.tsx` | Same `onError` fallback on the main product image |
-
-### Build Order
-1. SQL migration with `UPDATE` statements for all 37 product image URLs
-2. Update `ProductCard.tsx` with `onError` image fallback
-3. Update `ProductDetail.tsx` with `onError` image fallback
