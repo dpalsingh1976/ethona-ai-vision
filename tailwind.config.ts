@@ -57,6 +57,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // FlouristPlace design tokens
+        "fp-rose": "hsl(var(--fp-rose))",
+        "fp-blush": "hsl(var(--fp-blush))",
+        "fp-cream": "hsl(var(--fp-cream))",
+        "fp-forest": "hsl(var(--fp-forest))",
+        "fp-sage": "hsl(var(--fp-sage))",
+        "fp-gold": "hsl(var(--fp-gold))",
       },
       borderRadius: {
         lg: "var(--radius)",
