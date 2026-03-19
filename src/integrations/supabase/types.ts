@@ -267,6 +267,361 @@ export type Database = {
         }
         Relationships: []
       }
+      fp_admin_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
+      fp_cart_sessions: {
+        Row: {
+          created_at: string
+          event_details: Json | null
+          id: string
+          items: Json
+          session_token: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          event_details?: Json | null
+          id?: string
+          items?: Json
+          session_token: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          event_details?: Json | null
+          id?: string
+          items?: Json
+          session_token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      fp_categories: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          icon: string | null
+          id: string
+          name: string
+          occasion_tags: string[] | null
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name: string
+          occasion_tags?: string[] | null
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name?: string
+          occasion_tags?: string[] | null
+          slug?: string
+        }
+        Relationships: []
+      }
+      fp_inventory_events: {
+        Row: {
+          created_at: string
+          delta: number
+          id: string
+          order_id: string | null
+          product_id: string
+          reason: string
+        }
+        Insert: {
+          created_at?: string
+          delta: number
+          id?: string
+          order_id?: string | null
+          product_id: string
+          reason: string
+        }
+        Update: {
+          created_at?: string
+          delta?: number
+          id?: string
+          order_id?: string | null
+          product_id?: string
+          reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fp_inventory_events_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "fp_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fp_inventory_events_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "fp_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fp_order_items: {
+        Row: {
+          created_at: string
+          id: string
+          is_perishable: boolean
+          order_id: string
+          product_id: string
+          quantity: number
+          shipping_group: string | null
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_perishable?: boolean
+          order_id: string
+          product_id: string
+          quantity?: number
+          shipping_group?: string | null
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_perishable?: boolean
+          order_id?: string
+          product_id?: string
+          quantity?: number
+          shipping_group?: string | null
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fp_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "fp_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fp_order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "fp_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fp_orders: {
+        Row: {
+          created_at: string
+          custom_event_name: string | null
+          delivery_date: string
+          delivery_mode: string
+          event_date: string
+          event_type: string
+          guest_email: string | null
+          guest_name: string | null
+          id: string
+          notes: string | null
+          pickup_location_id: string | null
+          shipping_address: Json | null
+          shipping_cost_breakdown: Json | null
+          shipping_groups: Json | null
+          shipping_total: number
+          status: string
+          stripe_payment_intent: string | null
+          subtotal: number
+          total_amount: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          custom_event_name?: string | null
+          delivery_date: string
+          delivery_mode: string
+          event_date: string
+          event_type: string
+          guest_email?: string | null
+          guest_name?: string | null
+          id?: string
+          notes?: string | null
+          pickup_location_id?: string | null
+          shipping_address?: Json | null
+          shipping_cost_breakdown?: Json | null
+          shipping_groups?: Json | null
+          shipping_total?: number
+          status?: string
+          stripe_payment_intent?: string | null
+          subtotal?: number
+          total_amount?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          custom_event_name?: string | null
+          delivery_date?: string
+          delivery_mode?: string
+          event_date?: string
+          event_type?: string
+          guest_email?: string | null
+          guest_name?: string | null
+          id?: string
+          notes?: string | null
+          pickup_location_id?: string | null
+          shipping_address?: Json | null
+          shipping_cost_breakdown?: Json | null
+          shipping_groups?: Json | null
+          shipping_total?: number
+          status?: string
+          stripe_payment_intent?: string | null
+          subtotal?: number
+          total_amount?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fp_orders_pickup_location_id_fkey"
+            columns: ["pickup_location_id"]
+            isOneToOne: false
+            referencedRelation: "fp_pickup_locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fp_pickup_locations: {
+        Row: {
+          address: string
+          city: string
+          created_at: string
+          hours: string | null
+          id: string
+          is_active: boolean
+          name: string
+          phone: string | null
+          state: string
+          zip: string
+        }
+        Insert: {
+          address: string
+          city: string
+          created_at?: string
+          hours?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          phone?: string | null
+          state: string
+          zip: string
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string
+          hours?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          phone?: string | null
+          state?: string
+          zip?: string
+        }
+        Relationships: []
+      }
+      fp_products: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          delivery_constraints: Json | null
+          description: string | null
+          embedding: string | null
+          id: string
+          images: string[] | null
+          inventory_count: number
+          is_active: boolean | null
+          is_perishable: boolean
+          mrp: number | null
+          name: string
+          prep_time_days: number
+          price: number
+          shipping_class: string
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          delivery_constraints?: Json | null
+          description?: string | null
+          embedding?: string | null
+          id?: string
+          images?: string[] | null
+          inventory_count?: number
+          is_active?: boolean | null
+          is_perishable?: boolean
+          mrp?: number | null
+          name: string
+          prep_time_days?: number
+          price: number
+          shipping_class?: string
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          delivery_constraints?: Json | null
+          description?: string | null
+          embedding?: string | null
+          id?: string
+          images?: string[] | null
+          inventory_count?: number
+          is_active?: boolean | null
+          is_perishable?: boolean
+          mrp?: number | null
+          name?: string
+          prep_time_days?: number
+          price?: number
+          shipping_class?: string
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fp_products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "fp_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       grocery_products: {
         Row: {
           brand: string
