@@ -69,6 +69,14 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* FlouristPlace design tokens */
+    --fp-rose: 347 75% 60%;
+    --fp-blush: 347 60% 88%;
+    --fp-cream: 40 60% 96%;
+    --fp-forest: 150 30% 22%;
+    --fp-sage: 145 25% 55%;
+    --fp-gold: 40 85% 58%;
   }
 
   .dark {
