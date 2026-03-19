@@ -4,9 +4,26 @@ import { FPNavbar } from "@/components/flourist-place/layout/FPNavbar";
 import { FPFooter } from "@/components/flourist-place/layout/FPFooter";
 import { useFleuristProducts } from "@/hooks/useFleuristProducts";
 import { useFleuristCart } from "@/hooks/useFleuristCart";
-import { ShoppingCart, Clock, Leaf, Package, ChevronLeft, Truck, MapPin } from "lucide-react";
+import { ShoppingCart, Clock, Leaf, Package, Truck, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import type { FPProduct } from "@/hooks/useFleuristSearch";
+
+function getFallbackGradient(product: FPProduct): { gradient: string; emoji: string } {
+  const text = (product.name + " " + (product.tags || []).join(" ")).toLowerCase();
+  if (text.includes("marigold") || text.includes("guldaudi")) return { gradient: "from-amber-100 to-orange-200", emoji: "🌼" };
+  if (text.includes("lotus")) return { gradient: "from-pink-100 to-purple-200", emoji: "🪷" };
+  if (text.includes("rose")) return { gradient: "from-rose-100 to-pink-200", emoji: "🌹" };
+  if (text.includes("jasmine") || text.includes("mogra") || text.includes("gajra")) return { gradient: "from-white to-yellow-50", emoji: "🌸" };
+  if (text.includes("sunflower")) return { gradient: "from-yellow-100 to-amber-200", emoji: "🌻" };
+  if (text.includes("orchid")) return { gradient: "from-purple-100 to-violet-200", emoji: "🌸" };
+  if (text.includes("peony")) return { gradient: "from-pink-50 to-rose-100", emoji: "🌸" };
+  if (text.includes("cherry") || text.includes("sakura")) return { gradient: "from-pink-100 to-rose-50", emoji: "🌸" };
+  if (text.includes("chrysanthemum")) return { gradient: "from-yellow-50 to-amber-100", emoji: "💮" };
+  if (text.includes("tropical") || text.includes("hibiscus")) return { gradient: "from-red-100 to-orange-100", emoji: "🌺" };
+  if (text.includes("carnation")) return { gradient: "from-pink-100 to-red-100", emoji: "🌸" };
+  if (text.includes("gerbera") || text.includes("daisy")) return { gradient: "from-orange-100 to-yellow-100", emoji: "🌼" };
+  return { gradient: "from-rose-50 to-pink-100", emoji: "🌸" };
+}
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +33,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
   const [imgIdx, setImgIdx] = useState(0);
+  const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     if (id) {
@@ -60,6 +78,8 @@ export default function ProductDetail() {
     ? Math.round(((product.mrp - product.price) / product.mrp) * 100)
     : null;
 
+  const fallback = getFallbackGradient(product);
+
   const handleAddToCart = () => {
     addItem({
       id: crypto.randomUUID(),
@@ -76,6 +96,9 @@ export default function ProductDetail() {
       description: `${qty} item${qty > 1 ? "s" : ""} · $${(product.price * qty).toFixed(2)}`,
     });
   };
+
+  const currentImgUrl = product.images?.[imgIdx];
+  const currentImgFailed = imgErrors[imgIdx];
 
   return (
     <div className="min-h-screen bg-fp-cream/20 font-sans">
@@ -95,14 +118,17 @@ export default function ProductDetail() {
           {/* Images */}
           <div className="space-y-3">
             <div className="aspect-square rounded-3xl overflow-hidden bg-fp-cream border border-fp-blush/20">
-              {product.images?.[imgIdx] ? (
+              {currentImgUrl && !currentImgFailed ? (
                 <img
-                  src={product.images[imgIdx]}
+                  src={currentImgUrl}
                   alt={product.name}
                   className="w-full h-full object-cover"
+                  onError={() => setImgErrors(prev => ({ ...prev, [imgIdx]: true }))}
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-7xl">🌸</div>
+                <div className={`w-full h-full bg-gradient-to-br ${fallback.gradient} flex items-center justify-center`}>
+                  <span className="text-8xl opacity-60">{fallback.emoji}</span>
+                </div>
               )}
             </div>
             {product.images && product.images.length > 1 && (
@@ -113,7 +139,18 @@ export default function ProductDetail() {
                     onClick={() => setImgIdx(i)}
                     className={`w-16 h-16 rounded-xl overflow-hidden border-2 ${imgIdx === i ? "border-fp-rose" : "border-fp-blush/30"}`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    {img && !imgErrors[i] ? (
+                      <img
+                        src={img}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        onError={() => setImgErrors(prev => ({ ...prev, [i]: true }))}
+                      />
+                    ) : (
+                      <div className={`w-full h-full bg-gradient-to-br ${fallback.gradient} flex items-center justify-center`}>
+                        <span className="text-xl">{fallback.emoji}</span>
+                      </div>
+                    )}
                   </button>
                 ))}
               </div>
