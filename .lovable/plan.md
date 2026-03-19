@@ -1,168 +1,78 @@
 
-## Plan: FleuristPlace — Indian/Asian Flower Catalog + Modern UI Redesign + End-to-End Cart Fix
+## Plan: Fix All Product Images — Accurate, Unique, Reliable Flower Photos
 
-### What needs to be done
+### Root Cause
+All Unsplash `images.unsplash.com/photo-{id}` CDN URLs are broken (Unsplash now requires authorization headers for direct CDN access). Additionally, many products share the same URL, and some point to photos of people rather than flowers.
 
-**3 main goals:**
-1. Add ~25 Indian/Asian flower products seeded into the database via the insert tool
-2. Complete modern UI overhaul — premium feel with better hero, cards, typography, transitions
-3. Fix end-to-end cart/checkout bugs — inventory deduction duplicate logic in `fp-checkout`, shipping options for pickup flow, and `DeliveryModeStep` edge case where delivery mode shows no options on first load
+### Solution
 
----
+**Two-part fix:**
 
-### Issue Audit Before Building
+**Part 1 — SQL Migration to update all 37 product image URLs**
 
-**fp-checkout/index.ts bugs (lines 120-162):**
-- Inventory is deducted TWICE — once via failed RPC, and again via a direct update loop. The second loop also has a `placeholder` dummy update that hits no real row. Need to strip all but the working direct-update loop.
+Switch all products from broken `images.unsplash.com/photo-{id}` URLs to `source.unsplash.com/600x600/?{keyword}` format. This uses Unsplash's public redirect service (no auth needed in the browser) which returns the best matching photo for a keyword query. Every product gets a unique, accurate keyword that matches its actual flower type.
 
-**DeliveryModeStep / Checkout.tsx:**
-- Shipping rules are only fetched on "Continue to Delivery" from EventDetails step, but if user switches between pickup↔delivery, it re-fetches correctly via `handleDeliveryModeChange`. This flow is correct but needs `shippingAddress` field wired into ReviewStep — currently no address input is collected for delivery mode.
+Complete mapping (all 37 products):
 
-**ReviewStep:** No shipping address collection when `deliveryMode === "delivery"`. The `fp-checkout` edge function receives `shipping_address: {}` always. Need to add a simple address form inside ReviewStep or DeliveryModeStep.
-
----
-
-### Phase 1 — Seed Indian/Asian Products (insert tool, NOT migration)
-
-Insert ~28 new products covering:
-
-**Indian Occasion Flowers:**
-- Marigold Garland (pooja, temple, wedding) — fresh, perishable
-- Jasmine Gajra Hair Garland (wedding, mehendi) — fresh
-- Rose Mandap Garland (wedding) — fresh
-- Tuberose (Rajnigandha) Garland — fresh
-- Lotus Flowers Bundle (pooja) — fresh
-- Chrysanthemum (Guldaudi) Wreath — fresh
-- Marigold Loose Flowers 1kg (bulk pooja) — fresh
-- Banana Leaf Decoration Pack (non-perishable)
-
-**Asian / Chinese / Korean Flowers:**
-- Orchid Arrangement (Chinese New Year, home décor) — fresh
-- Peony Bouquet (Chinese New Year, wedding) — fresh
-- Cherry Blossom Branch Décor — non-perishable
-- Lotus Silk Flower Vase Arrangement — non-perishable
-- White Chrysanthemum Bundle (Korean Chuseok) — fresh
-
-**South Asian Occasions:**
-- Diwali Marigold Decoration Kit — mixed (garland + loose)
-- Navratri Flower Bundle — fresh
-- Pooja Thali Flower Set — fresh
-- Wedding Sehra (groom's flower veil) — fresh
-- Mehendi Ceremony Flower Basket — fresh
-- Haldi Ceremony Marigold Shower Bundle — fresh
-
-**General Indian/Asian bouquets:**
-- Indian Rose Bouquet (red/pink mix) — fresh
-- Rajasthani Mogra (Jasmine) Bouquet — fresh
-- Mixed Tropical Bouquet (hibiscus, bird of paradise) — fresh
-- Carnation & Marigold Festival Bunch — fresh
-- Gerbera Daisy Bollywood Bouquet — fresh
-- Turmeric & Marigold Bridal Shower Bundle — fresh
-
-**Non-perishable décor:**
-- Artificial Marigold Toran Door Hanging — non-perishable
-- Brass Puja Flower Stand Decoration — non-perishable
-- Silk Rose Garland 6ft — non-perishable
-
-Each product will use Unsplash/Pexels URLs for real flower images, proper tags matching occasion categories, and appropriate prep_time_days (3-10 days for wedding items).
-
----
-
-### Phase 2 — Fix fp-checkout Edge Function
-
-Remove the broken double-inventory-deduction. Keep only the working single direct-update loop. Also remove the `placeholder` dummy `.update()` call.
-
-**File:** `supabase/functions/fp-checkout/index.ts` — lines 120-162 condensed to single clean loop.
-
----
-
-### Phase 3 — Add Shipping Address Form to DeliveryModeStep
-
-Add a collapsible address form (name, street, city, state, zip) inside `DeliveryModeStep` when mode is "delivery". Wire the address state from `useFleuristCheckout`'s `shippingAddress` / `setShippingAddress`.
-
-**File:** `src/components/flourist-place/checkout/DeliveryModeStep.tsx`
-
-Update `canProceed` logic to also require address fields when delivery mode is selected.
-
----
-
-### Phase 4 — Modern UI Redesign
-
-**Homepage (`src/pages/flourist-place/Index.tsx`):**
-- Richer hero: full-width gradient with diagonal split, large serif headline with word highlight animation, two CTA buttons with better styling
-- New "Why FleuristPlace" section: 3 horizontal feature cards with icons (freshness guarantee, event specialists, Indian/Asian occasions)
-- Occasion tiles: redesign to larger cards with gradient backgrounds and hover lift effect
-- Add a "Best Sellers" horizontal scroll rail for featured products on mobile
-
-**Navbar (`FPNavbar.tsx`):**
-- Add "Occasions" dropdown with Indian occasion links (Pooja, Wedding, Diwali, Mehendi)
-- Add Cart count badge animation on add-to-cart
-
-**ProductCard (`src/components/flourist-place/shop/ProductCard.tsx`):**
-- Bigger image area (h-56 instead of h-52)
-- Gradient overlay at bottom instead of white info box
-- Star rating placeholder (4.5 stars visual)
-- "Add to Cart" button visible on mobile (not just hover)
-- Tags as colored chips below product name
-- Occasion badge (e.g. "🪔 Pooja")
-
-**OccasionTiles (`src/components/flourist-place/shop/OccasionTiles.tsx`):**
-- Add more Indian occasions: Diwali, Navratri, Mehendi, Haldi, Eid
-- Richer design: real photo backgrounds with overlay text (using CSS bg-image or gradient)
-
-**ProductGrid:** Add "No results" state with AI suggestions.
-
-**Cart Page (`src/pages/flourist-place/Cart.tsx`):**
-- Sticky floating mini-cart summary at bottom on mobile
-- More visual item rows with image thumbnails
-
-**Checkout Progress Bar (`src/pages/flourist-place/Checkout.tsx`):**
-- Animate step transitions
-- Numbered circles with completed checkmarks
-
-**OrderConfirmation (`src/pages/flourist-place/OrderConfirmation.tsx`):**
-- Confetti effect (CSS animation)
-- More detailed "What's next" timeline
-
-**Global CSS (`src/index.css`):**
-- Import Google Fonts: `Playfair Display` for serif, `Inter` for sans
-- Add `font-serif` mapping to Playfair Display
-- Refine `fp-*` color tokens: slightly warmer rose, deeper forest green
-- Add `animate-float` keyframe for hero petals
-
----
-
-### Phase 5 — Add Address Form in Checkout
-
-**`src/components/flourist-place/checkout/DeliveryModeStep.tsx`:**
-Add address fields section below shipping options when mode is "delivery":
-- Full Name, Street Address, City, State, ZIP
-- Validate all required before allowing "Review Order →"
-
----
-
-### Files to Create/Edit
-
-| File | Action |
+| Product | New Image URL |
 |---|---|
-| `supabase/functions/fp-checkout/index.ts` | Fix double inventory deduction |
-| `src/pages/flourist-place/Index.tsx` | Hero redesign, new sections |
-| `src/pages/flourist-place/Cart.tsx` | Mobile sticky summary, image thumbnails |
-| `src/pages/flourist-place/OrderConfirmation.tsx` | Confetti, better timeline |
-| `src/components/flourist-place/layout/FPNavbar.tsx` | Occasions dropdown, animations |
-| `src/components/flourist-place/shop/ProductCard.tsx` | Modern card design |
-| `src/components/flourist-place/shop/OccasionTiles.tsx` | More occasions, richer tiles |
-| `src/components/flourist-place/checkout/DeliveryModeStep.tsx` | Address form, wire state |
-| `src/index.css` | Playfair Display font, refined tokens |
+| Rose Wedding Garland | `?rose,garland,wedding` |
+| Marigold Pooja Garland | `?marigold,garland,flower` |
+| Romantic Red Rose Bouquet | `?red,rose,bouquet` |
+| Wedding Table Centerpiece | `?flower,centerpiece,arrangement` |
+| Loose Marigold Flowers (1kg) | `?marigold,loose,orange,flower` |
+| Lotus Flowers for Pooja | `?lotus,pink,flower,water` |
+| Premium Flower Vase (Ceramic) | `?flower,vase,arrangement` |
+| Dried Flower Wreath | `?dried,flower,wreath` |
+| Anniversary Mixed Bouquet | `?mixed,bouquet,colorful,flower` |
+| Jasmine Gajra (Hair Flowers) | `?jasmine,white,flower` |
+| Artisan Floral Arrangement | `?floral,arrangement,stand` |
+| Sunflower Cheer Bouquet | `?sunflower,bouquet,yellow` |
+| Premium Marigold Wedding Garland | `?marigold,orange,garland,wedding` |
+| Jasmine Gajra Hair Garland | `?jasmine,white,mogra,flower` |
+| Rose Mandap Garland | `?rose,red,gold,garland` |
+| Rajnigandha Tuberose Temple Garland | `?tuberose,white,flower,temple` |
+| Sacred Lotus Bundle | `?lotus,pink,sacred,flower` |
+| Chrysanthemum Pooja Wreath | `?chrysanthemum,yellow,flower` |
+| Bulk Marigold Loose Flowers | `?marigold,orange,bulk,flower` |
+| Wedding Sehra | `?jasmine,marigold,flower,garland` |
+| Mehendi Ceremony Flower Basket | `?rose,jasmine,flower,basket` |
+| Haldi Ceremony Marigold Bundle | `?marigold,yellow,flower,petals` |
+| Navratri Nine-Color Flower Bundle | `?colorful,flower,bouquet,festive` |
+| Pooja Thali Flower Set | `?marigold,rose,flower,offering` |
+| Indian Rose Bouquet Red Pink | `?rose,red,pink,bouquet` |
+| Rajasthani Mogra Jasmine Bouquet | `?jasmine,white,mogra,bouquet` |
+| Gerbera Daisy Bollywood Bouquet | `?gerbera,daisy,colorful,bouquet` |
+| Turmeric Marigold Bridal Shower | `?marigold,yellow,bridal,flower` |
+| Carnation Marigold Festival Bunch | `?carnation,orange,flower,festival` |
+| Phalaenopsis Orchid Arrangement | `?orchid,purple,white,flower` |
+| Peony Bouquet Blush White | `?peony,blush,white,flower` |
+| White Chrysanthemum Korean Bundle | `?chrysanthemum,white,flower` |
+| Mixed Tropical Festival Bouquet | `?hibiscus,tropical,flower,bird-of-paradise` |
+| Artificial Marigold Toran | `?marigold,decoration,door,flower` |
+| Cherry Blossom Branch Décor | `?cherry,blossom,sakura,pink` |
+| Lotus Silk Vase Arrangement | `?lotus,vase,silk,flower` |
+| Diwali Marigold Decoration Kit | `?marigold,diwali,orange,decoration` |
+| Silk Rose Garland Gold Red | `?rose,gold,red,garland` |
 
-**Data inserts (via insert tool):**
-- ~28 new Indian/Asian products into `fp_products`
-- Ensure categories have `asian-flowers` and `indian-occasions` entries
+**Part 2 — Add `onError` fallback in ProductCard and ProductDetail**
+
+If `source.unsplash.com` returns a redirect that fails in any browser, the `<img>` tag fires `onError`. Add a handler that replaces the `src` with a gradient CSS background (set image to empty string + show a beautiful flower emoji + colored gradient background per product type). This guarantees zero broken/blank images ever.
+
+The fallback logic in `ProductCard.tsx`:
+- Add `useState` for `imgError`
+- `onError={() => setImgError(true)}`
+- When `imgError=true`, show a styled div with a gradient background (warm gold for marigold, pink for rose, etc.) with a large flower emoji centered
+
+### Files to Change
+
+| File | Change |
+|---|---|
+| New migration file | `UPDATE fp_products SET images = ARRAY[...] WHERE id = '...'` for all 37 products — unique `source.unsplash.com` keyword URL per product |
+| `src/components/flourist-place/shop/ProductCard.tsx` | Add `onError` fallback — replace broken image with gradient+emoji placeholder |
+| `src/pages/flourist-place/ProductDetail.tsx` | Same `onError` fallback on the main product image |
 
 ### Build Order
-1. Insert product data (categories first, then products)
-2. Fix fp-checkout edge function
-3. Update CSS/fonts
-4. Redesign UI components (ProductCard, OccasionTiles, Navbar)
-5. Redesign pages (Home, Cart, OrderConfirmation)
-6. Add address form to DeliveryModeStep
+1. SQL migration with `UPDATE` statements for all 37 product image URLs
+2. Update `ProductCard.tsx` with `onError` image fallback
+3. Update `ProductDetail.tsx` with `onError` image fallback
